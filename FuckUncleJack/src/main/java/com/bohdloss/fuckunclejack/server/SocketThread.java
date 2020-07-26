@@ -5,8 +5,10 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
 
+import com.bohdloss.fuckunclejack.client.ChunkRequest;
 import com.bohdloss.fuckunclejack.components.BlockLayer;
 import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Inventory;
@@ -31,7 +33,7 @@ public Player player;
 //in case inventory is edited
 public boolean sendInventory=false;
 
-public List<Integer> done = new ArrayList<Integer>();
+//public List<Integer> done = new ArrayList<Integer>();
 
 public List<GameEvent> events = new ArrayList<GameEvent>();
 
@@ -42,7 +44,8 @@ public ByteBuffer lengthBuf=ByteBuffer.allocate(4);
 
 private ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 
-public List<Chunk> pregen = new ArrayList<Chunk>();
+//public HashMap<Integer, ChunkRequest> pregen = new HashMap<Integer, ChunkRequest>();
+public List<Chunk> calcChunks = new ArrayList<Chunk>();
 //END
 
 //Important: check last time a whole package has been received,
@@ -195,10 +198,13 @@ public void fillObject() {
 			return;
 		}
 		
-		if(!pregen.isEmpty()) {
+		if(!calcChunks.isEmpty()) {
+			
+//			processChunks();
+			
 			buf.put(CHUNKS);
-			buf.putInt(pregen.size());
-			pregen.forEach(chunk->{
+			buf.putInt(calcChunks.size());
+			calcChunks.forEach(chunk->{
 				buf.putInt(chunk.getOffsetx());
 				BlockLayer[][] layers = chunk.blocks;
 				for(int x=0;x<16;x++) {
@@ -209,7 +215,7 @@ public void fillObject() {
 					}
 				}
 			});
-			pregen.clear();
+			calcChunks.clear();
 		}
 		
 		if(sendInventory) {
@@ -230,5 +236,25 @@ public void fillObject() {
 	}
 	putEnd(buf);
 }
-
+/*
+public void processChunks() {
+	calcChunks.clear();
+	pregen.forEach((k,v)->{
+		switch(v.status) {
+		case ChunkRequest.UNSENT:
+			v.status=ChunkRequest.ELABORATING;
+			v.chunk=player.getWorld().getChunk(v.x, true);
+			v.status=ChunkRequest.READY;
+		break;
+		case ChunkRequest.ELABORATING:
+			
+		break;
+		case ChunkRequest.READY:
+			calcChunks.add(v.chunk);
+			pregen.remove(k);
+		break;
+		}
+	});
+}
+*/
 }

@@ -152,7 +152,7 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 				break;
 			case ChunkRequest.READY:
 				lWorld.putChunk(request.chunk);
-				chunkrequest.remove(request.x);
+				chunkrequest.remove(k);
 			}
 		});
 	}

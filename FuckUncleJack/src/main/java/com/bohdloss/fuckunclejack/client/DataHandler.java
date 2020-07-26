@@ -35,7 +35,9 @@ private static List<Integer> uids = new ArrayList<Integer>();
 		while(buf.hasRemaining()) {
 			byte operation = buf.get();
 			switch(operation) {
-			default: return;
+			default: 
+				
+				return;
 			case CREDENTIALS:
 				
 				if(buf.get()==(byte)1) Client.auth=true;
@@ -45,6 +47,8 @@ private static List<Integer> uids = new ArrayList<Integer>();
 				lPlayer.setUID(CRED_UID);
 				
 				lWorld.join(lPlayer, 0, 100);
+				
+				System.out.println("login successful");
 				
 			break;
 			case PLAYERDATA:

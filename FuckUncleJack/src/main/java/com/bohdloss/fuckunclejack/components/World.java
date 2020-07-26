@@ -43,9 +43,11 @@ private int getChunk;
 
 	public Chunk getChunk(int x, boolean queue) {
 		if(chunks.containsKey(x)) return chunks.get(x);
-		if(GameState.isClient.getValue()&queue) {
-			if(Client.chunkrequest.get(x)==null) {
-				Client.chunkrequest.put(x, new ChunkRequest(x));
+		if(GameState.isClient.getValue()) {
+			if(queue) {
+				if(Client.chunkrequest.get(x)==null) {
+					Client.chunkrequest.put(x, new ChunkRequest(x));
+				}
 			}
 			return null;
 		}
@@ -79,19 +81,10 @@ private int getChunk;
 		
 		//Check if there are chunks to generate/gather from server
 		
-		if(queuedChunks.size()>0) {
-			
-			int toCalc = queuedChunks.get(0);
-			
-			if(GameState.isClient.getValue()) {
-				Chunk c = getChunk(toCalc, true);
-				if(c!=null) putChunk(c);
-			} else {
-				getChunk(toCalc, true);
-			}
-			
-			queuedChunks.remove(0);
-		}
+		queuedChunks.forEach(v->{
+			Chunk c = getChunk(v, true);
+			if(c!=null) chunks.put(v, c);
+		});
 		
 		//Client only, calculate unused chunks for removal
 		

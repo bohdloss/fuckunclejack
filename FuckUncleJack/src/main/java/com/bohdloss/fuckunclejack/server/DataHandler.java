@@ -3,6 +3,7 @@ package com.bohdloss.fuckunclejack.server;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
+import com.bohdloss.fuckunclejack.client.ChunkRequest;
 import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Item;
@@ -18,12 +19,15 @@ import static com.bohdloss.fuckunclejack.server.CSocketUtils.*;
 public class DataHandler {
 	
 	public static void handleBuffer(ByteBuffer buf, SocketThread input) {
+		
 		try {
 			buf.clear();
 		while(buf.hasRemaining()) {
+			
 			byte operation = buf.get();
 			switch(operation) {
-			default: return;
+			default: 
+				return;
 			case CREDENTIALS:
 				String name = readString(buf);
 				String matchcode = readString(buf);
@@ -41,7 +45,6 @@ public class DataHandler {
 						input.writeAuth=true;
 						input.UPID=player.getUID();
 						input.player=player;
-						
 					}
 				}
 			break;
@@ -114,12 +117,13 @@ public class DataHandler {
 			break;
 			case CHUNKS:
 				int CHUNKS_LENGTH = buf.getInt();
-				input.done.clear();
+				System.out.println(CHUNKS_LENGTH);
 				for(int i=0;i<CHUNKS_LENGTH;i++) {
 					int CHUNKS_CUR = buf.getInt();
-					if(!input.done.contains(CHUNKS_CUR)&input.done.size()<10) {
-						input.done.add(CHUNKS_CUR);
-						input.pregen.add(input.player.getWorld().getChunk(CHUNKS_CUR, true));
+					Chunk CHUNKS_CALC = input.player.getWorld().getChunk(CHUNKS_CUR, true);
+					
+					if(!input.calcChunks.contains(CHUNKS_CALC)&input.calcChunks.size()<10) {
+						input.calcChunks.add(CHUNKS_CALC);
 					}
 				}
 			break;
