@@ -64,7 +64,7 @@ public void tick() {
 	}
 }
 
-public boolean destroyBlock(byte cause, Entity issuer, int x, int y, boolean send) {
+public boolean destroyBlock(byte cause, Entity issuer, int x, int y, boolean background, boolean send) {
 	try {
 		
 		BlockLayer b = blocks[x-(offsetx)*16][y];
@@ -72,12 +72,17 @@ public boolean destroyBlock(byte cause, Entity issuer, int x, int y, boolean sen
 		
 		//NOTICE: Call to event handler: BLOCK DESROY
 		
-		if(EventHandler.blockDestroyed(send, new BlockDestroyedEvent(cause, issuer, b.getTop(), air)).isCancelled()) return false;
+		if(EventHandler.blockDestroyed(send, new BlockDestroyedEvent(cause, issuer, background?b.getBackground():b.getTop(), air)).isCancelled()) return false;
 		
 		//END
 		
-		b.getTop().breakBlock();
-		b.setTop(air);
+		if(background) {
+			b.getBackground().breakBlock();
+			b.setBackground(air);
+		} else {
+			b.getTop().breakBlock();
+			b.setTop(air);
+		}
 		return true;
 	} catch(Exception e) {
 		e.printStackTrace();
@@ -85,18 +90,22 @@ public boolean destroyBlock(byte cause, Entity issuer, int x, int y, boolean sen
 	return false;
 }
 
-public boolean placeBlock(byte cause, Entity issuer, int x, int y, Block place, boolean send) {
+public boolean placeBlock(byte cause, Entity issuer, int x, int y, Block place, boolean background, boolean send) {
 	try {
 		
 		BlockLayer b = blocks[x-(offsetx)*16][y];
 		
 		//NOTICE: Call to event handler: BLOCK PLACE
 		
-		if(EventHandler.blockPlaced(send, new BlockPlacedEvent(cause, issuer, b.getTop(), place)).isCancelled()) return false;
+		if(EventHandler.blockPlaced(send, new BlockPlacedEvent(cause, issuer, background?b.getBackground():b.getTop(), place)).isCancelled()) return false;
 		
 		//END
 		
-		b.setTop(place);
+		if(background) {
+			b.setBackground(place);
+		} else {
+			b.setTop(place);
+		}
 		return true;
 	} catch(Exception e) {
 		e.printStackTrace();

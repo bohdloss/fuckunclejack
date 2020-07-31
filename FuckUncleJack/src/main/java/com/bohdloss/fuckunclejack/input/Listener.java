@@ -84,7 +84,7 @@ public class Listener implements KeyListen {
 				
 				Item i = lPlayer.getInventory().slots[sel()].getContent();
 				if(i!=null) i.onLeftClickBegin((int)blockx, (int)blocky, null);
-				lWorld.destroyBlock(GameEvent.handDestroy, lPlayer, (int)blockx, (int) blocky, true);
+				lWorld.destroyBlock(GameEvent.handDestroy, lPlayer, (int)blockx, (int) blocky, false, true);
 			
 				//
 			

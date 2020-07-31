@@ -13,32 +13,33 @@ public static final byte invPlace=(byte)1;
 //BLOCK DESTROY
 
 public static final byte handDestroy=(byte)2;
+public static final byte tickDestroy=(byte)3;
 
 //ITEM PICKUP
 
-public static final byte groundPick=(byte)3;
+public static final byte groundPick=(byte)4;
 	
 //ITEM DROP
 
-public static final byte blockDrop=(byte)4;
-public static final byte invDrop=(byte)5;
+public static final byte blockDrop=(byte)5;
+public static final byte invDrop=(byte)6;
 
 //ENTITY SPAWN
 
-public static final byte dropSpawn=(byte)6;
+public static final byte dropSpawn=(byte)7;
 
 //PLAYER JOIN
 
-public static final byte join=(byte)7;
-public static final byte changeDim=(byte)8;
+public static final byte join=(byte)8;
+public static final byte changeDim=(byte)9;
 
 //PLAYER LEAVE
 
-public static final byte leave=(byte)9;
+public static final byte leave=(byte)10;
 
 //MOVE INV ITEM
 
-public static final byte userInput=(byte)10;
+public static final byte userInput=(byte)11;
 
 protected Object issuer;
 protected boolean serveronly;

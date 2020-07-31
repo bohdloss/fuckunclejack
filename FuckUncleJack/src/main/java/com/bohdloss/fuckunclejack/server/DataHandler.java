@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import com.bohdloss.fuckunclejack.client.ChunkRequest;
 import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Entity;
+import com.bohdloss.fuckunclejack.components.Inventory;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.components.entities.Player;
@@ -78,8 +79,13 @@ public class DataHandler {
 						try {
 						
 						Player e_BDE_ISSUER = players.get(e_BDE_UID);
-						e_BDE_ISSUER.getWorld().destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, true);
-					
+						Inventory e_BDE_INV = e_BDE_ISSUER.getInventory();
+						Item e_BDE_I = e_BDE_INV.slots[e_BDE_INV.selected].getContent();
+						if(e_BDE_I!=null) e_BDE_I.onLeftClickBegin(e_BDE_X, e_BDE_Y, e_BDE_ISSUER);
+						e_BDE_ISSUER.getWorld().destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, e_BDE_BG, true);
+						
+						input.sendInventory=true;
+						
 						}catch(Exception e) {
 							e.printStackTrace();
 						}
@@ -95,7 +101,13 @@ public class DataHandler {
 						try {
 						
 						Player e_BPE_ISSUER = players.get(e_BPE_UID);
-						e_BPE_ISSUER.getWorld().placeBlock(cause, e_BPE_ISSUER, e_BPE_X, e_BPE_Y, genBlockById(e_BPE_ID, e_BPE_ISSUER.getWorld(), e_BPE_X, e_BPE_Y), true);
+						Inventory e_BPE_INV = e_BPE_ISSUER.getInventory();
+						Item e_BPE_I = e_BPE_INV.slots[e_BPE_INV.selected].getContent();
+						if(e_BPE_I!=null) {
+							e_BPE_I.onRightClickBegin(e_BPE_X, e_BPE_Y, e_BPE_ISSUER);
+						}
+						
+						input.sendInventory=true;
 						
 						} catch(Exception e) {
 							e.printStackTrace();
@@ -117,7 +129,6 @@ public class DataHandler {
 			break;
 			case CHUNKS:
 				int CHUNKS_LENGTH = buf.getInt();
-				System.out.println(CHUNKS_LENGTH);
 				for(int i=0;i<CHUNKS_LENGTH;i++) {
 					int CHUNKS_CUR = buf.getInt();
 					Chunk CHUNKS_CALC = input.player.getWorld().getChunk(CHUNKS_CUR, true);

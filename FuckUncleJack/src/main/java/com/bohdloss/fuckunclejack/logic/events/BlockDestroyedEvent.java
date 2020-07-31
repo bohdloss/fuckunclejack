@@ -20,10 +20,10 @@ public BlockDestroyedEvent(byte cause, Entity issuer, Block start, Block destina
 	super(issuer, cause, false);
 	this.start=start;
 	this.destination=destination;
-	buf=ByteBuffer.allocate(15);
+	buf=ByteBuffer.allocate(11+(cause==tickDestroy?0:4));
 	buf.put(BlockDestroyedEvent);//object.put("type", "BlockDestroyedEvent");
 	buf.put(cause);//object.put("cause", cause);
-	buf.putInt(issuer.getUID());//object.put("issuer", issuer.getUID());
+	if(cause!=tickDestroy) buf.putInt(issuer.getUID());//object.put("issuer", issuer.getUID());
 	buf.putInt(start.getWorldx());//object.put("startx", ""+start.getWorldx());
 	buf.putInt(start.getY());//object.put("starty", ""+start.getY());
 	buf.put(start.isBackground()?(byte)1:(byte)0);//object.put("startbg", ""+start.isBackground());

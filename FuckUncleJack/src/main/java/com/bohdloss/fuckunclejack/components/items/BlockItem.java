@@ -28,7 +28,7 @@ public abstract class BlockItem extends Item{
 		Block b = executor.getWorld().getBlock(x, y);
 		if(b==null) return defaultProperties();
 		if(available) {
-			boolean placed = executor.getWorld().placeBlock(GameEvent.invPlace, executor, x, y, generateInstance(x, y, executor.getWorld()), true);
+			boolean placed = executor.getWorld().placeBlock(GameEvent.invPlace, executor, x, y, generateInstance(x, y, executor.getWorld()), false, true);
 			if(placed) {
 			decrease(1);
 			}

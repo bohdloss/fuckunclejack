@@ -19,6 +19,8 @@ import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 public class Client extends Thread{
 
 public static List<GameEvent> events = new ArrayList<GameEvent>();
+public static List<GameEvent> swapBuf = new ArrayList<GameEvent>();
+
 public static HashMap<Integer, ChunkRequest> chunkrequest = new HashMap<Integer, ChunkRequest>();
 public static Socket socket;	
 public static boolean auth=false;
@@ -36,6 +38,12 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 
 	public Client() {
 		start();
+	}
+	
+	public void swap() {
+		List<GameEvent> save = events;
+		events=swapBuf;
+		swapBuf=save;
 	}
 	
 	public void run() {
@@ -81,6 +89,8 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 	
 	public void fillObject() throws Exception{
 		
+		swap();
+		
 		//clear buffer
 		
 		clearBuf(buf);
@@ -97,14 +107,15 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 			buf.putInt(lPlayer.getInventory().selected);
 			
 			
-			buf.put(EVENT);
+			
 			
 			try {
-				buf.putInt(events.size());
-				events.forEach(e->{
+				buf.put(EVENT);
+				buf.putInt(swapBuf.size());
+				swapBuf.forEach(e->{
 					buf.put(e.bytes().array());
 				});
-				events.clear();
+				swapBuf.clear();
 				} catch(ConcurrentModificationException e) {
 					clearBuf(buf);
 					putEnd(buf);

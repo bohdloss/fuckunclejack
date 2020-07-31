@@ -5,8 +5,9 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Fuck Uncle Jack</name>
   
-  <properties>
+  	<properties>
 		<lwjgl.version>3.2.3</lwjgl.version>
+		<joml.version>1.9.25</joml.version>
 	</properties>
 
 	<profiles>
@@ -429,10 +430,10 @@
 			<classifier>${lwjgl.natives}</classifier>
 		</dependency>
 		<dependency>
-  <groupId>org.joml</groupId>
-  <artifactId>joml</artifactId>
-  <version>1.9.24</version>
-</dependency>
+			<groupId>org.joml</groupId>
+			<artifactId>joml</artifactId>
+			<version>${joml.version}</version>
+		</dependency>
 	</dependencies>
   
 </project>

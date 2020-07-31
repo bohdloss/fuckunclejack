@@ -86,12 +86,15 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					
 					switch(event) {
 					case BlockDestroyedEvent:
-						int e_BDE_UID = buf.getInt();
+						int e_BDE_UID=-1;
+						if(cause!=tickDestroy) {e_BDE_UID = buf.getInt();}
 						int e_BDE_X = buf.getInt();
 						int e_BDE_Y = buf.getInt();
 						boolean e_BDE_BG = buf.get()==(byte)1;
+						
 						Entity e_BDE_ISSUER = lWorld.getEntity(e_BDE_UID);
-						lWorld.destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, false);
+						lWorld.destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, e_BDE_BG, false);
+						
 					break;
 					case PlayerLeaveEvent:
 						int e_PLE_UID = buf.getInt();
@@ -106,7 +109,7 @@ private static List<Integer> uids = new ArrayList<Integer>();
 						int e_BPE_ID = buf.getInt();
 						
 						Player e_BPE_ISSUER = lWorld.player.get(e_BPE_UID);
-						lWorld.placeBlock(cause, e_BPE_ISSUER, e_BPE_X, e_BPE_Y, genBlockById(e_BPE_ID, lWorld, e_BPE_X, e_BPE_Y), false);
+						lWorld.placeBlock(cause, e_BPE_ISSUER, e_BPE_X, e_BPE_Y, genBlockById(e_BPE_ID, lWorld, e_BPE_X, e_BPE_Y), e_BPE_BG, false);
 						
 					break;
 					}

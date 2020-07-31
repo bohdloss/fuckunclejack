@@ -37,6 +37,8 @@ public boolean sendInventory=false;
 
 public List<GameEvent> events = new ArrayList<GameEvent>();
 
+public List<GameEvent> swapBuf = new ArrayList<GameEvent>();
+
 //CACHE
 private ByteBuffer buf = ByteBuffer.allocate(bufferSize);
 
@@ -59,6 +61,12 @@ public SocketThread(Socket socket) {
 	Server.threads.add(this);
 }
 	
+public void swap() {
+	List<GameEvent> save = events;
+	events=swapBuf;
+	swapBuf=save;
+}
+
 public void run() {
 	try {
 	while(!socket.isClosed()) {
@@ -116,6 +124,9 @@ public void run() {
 }
 
 public void fillObject() {
+	
+	swap();
+	
 	clearBuf(buf);
 	
 	if(writeAuth) {
@@ -150,12 +161,12 @@ public void fillObject() {
 		buf.put(EVENT);
 		
 		try {
-		buf.putInt(events.size());
-		events.forEach(e->{
+		buf.putInt(swapBuf.size());
+		swapBuf.forEach(e->{
 			
 			buf.put(e.bytes().array());
 		});
-		events.clear();
+		swapBuf.clear();
 		
 		//in case of exception, clear the buffer, to avoid corrupt data
 		

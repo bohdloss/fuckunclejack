@@ -10,8 +10,8 @@ import com.bohdloss.fuckunclejack.render.CMath;
 
 public abstract class House extends Entity{
 
+public static int dimID=0;
 
-	
 	public House(String model, String texture, int width, int height) {
 		super(model, texture, 1);
 		this.width=width;
@@ -39,7 +39,9 @@ public abstract class House extends Entity{
 	}
 	
 	public void enterHouse(Player p) {
-		
+		if(GameState.isClient.getValue()) {
+			
+		}
 	}
 	
 	@Override

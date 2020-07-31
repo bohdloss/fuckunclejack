@@ -169,18 +169,18 @@ private int getChunk;
 		return seed;
 	}
 
-	public boolean destroyBlock(byte cause, Entity issuer, int x, int y, boolean send) {
+	public boolean destroyBlock(byte cause, Entity issuer, int x, int y, boolean background, boolean send) {
 		int chunk = CMath.fastFloor(((double)x/16d));
 		Chunk c = getChunk(chunk, false);
 		if(c==null) return false;
-		return c.destroyBlock(cause, issuer, x, y, send);
+		return c.destroyBlock(cause, issuer, x, y, background, send);
 	}
 	
-	public boolean placeBlock(byte cause, Entity issuer, int x, int y, Block place, boolean send) {
+	public boolean placeBlock(byte cause, Entity issuer, int x, int y, Block place, boolean background, boolean send) {
 		int chunk = CMath.fastFloor(((double)x/16d));
 		Chunk c = getChunk(chunk, false);
 		if(c==null) return false;
-		return c.placeBlock(cause, issuer, x, y, place, send);
+		return c.placeBlock(cause, issuer, x, y, place, background, send);
 	}
 	
 	public String getName() {

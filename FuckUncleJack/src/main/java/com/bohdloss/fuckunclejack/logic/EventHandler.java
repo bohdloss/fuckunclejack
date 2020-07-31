@@ -54,9 +54,9 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 				Client.events.add(event);
 			} else {
 				Server.threads.forEach(t -> {
-					if(t.player.getWorld().equals(event.getIssuer().getWorld())) {
-					t.events.add(event);
-					}
+						if(t.player.getWorld().equals(event.getStart().getChunk().getWorld())) {
+							t.events.add(event);
+						}
 				});
 			}
 		}
@@ -77,7 +77,7 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 				Client.events.add(event);
 			} else {
 				Server.threads.forEach(t -> {
-					if(t.player.getWorld().equals(event.getIssuer().getWorld())) {
+					if(t.player.getWorld().equals(event.getDestination().getChunk().getWorld())) {
 						t.events.add(event);
 					}
 				});

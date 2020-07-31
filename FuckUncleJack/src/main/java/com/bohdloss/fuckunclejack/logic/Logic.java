@@ -8,6 +8,7 @@ import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.ItemSlot;
 import com.bohdloss.fuckunclejack.components.blocks.AirBlock;
+import com.bohdloss.fuckunclejack.components.blocks.StoneBlock;
 import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
@@ -77,12 +78,17 @@ private CRectanglef ebounds;
 			//In case the block is being broken regularly by an entity
 			
 			double distance = CMath.distance(e.getDestination().getWorldx(), e.getDestination().getY(), e.getIssuer().getX(), e.getIssuer().getY());
-			if(distance>8) {
+			if(distance>8|(e.getStart() instanceof StoneBlock)) {
 				e.cancel();
 			}
 			
 			//End of condition
+		break;
+		case tickDestroy:
 			
+			
+			
+		break;
 		}
 	}
 
