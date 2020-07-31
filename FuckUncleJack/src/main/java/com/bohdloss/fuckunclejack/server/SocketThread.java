@@ -44,7 +44,6 @@ public ByteBuffer lengthBuf=ByteBuffer.allocate(4);
 
 private ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 
-//public HashMap<Integer, ChunkRequest> pregen = new HashMap<Integer, ChunkRequest>();
 public List<Chunk> calcChunks = new ArrayList<Chunk>();
 //END
 
@@ -206,12 +205,15 @@ public void fillObject() {
 			buf.putInt(calcChunks.size());
 			calcChunks.forEach(chunk->{
 				buf.putInt(chunk.getOffsetx());
-				BlockLayer[][] layers = chunk.blocks;
-				for(int x=0;x<16;x++) {
-					for(int y=0;y<256;y++) {
-						BlockLayer layer = layers[x][y];
-						buf.putInt(layer.getTop().getId());
-						buf.putInt(layer.getBackground().getId());
+				buf.put(chunk!=null?(byte)1:(byte)0);
+				if(chunk!=null) {
+					BlockLayer[][] layers = chunk.blocks;
+					for(int x=0;x<16;x++) {
+						for(int y=0;y<256;y++) {
+							BlockLayer layer = layers[x][y];
+							buf.putInt(layer.getTop().getId());
+							buf.putInt(layer.getBackground().getId());
+						}
 					}
 				}
 			});

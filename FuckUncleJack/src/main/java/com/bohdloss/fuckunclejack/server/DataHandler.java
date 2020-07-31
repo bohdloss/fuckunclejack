@@ -124,6 +124,8 @@ public class DataHandler {
 					
 					if(!input.calcChunks.contains(CHUNKS_CALC)&input.calcChunks.size()<10) {
 						input.calcChunks.add(CHUNKS_CALC);
+					} else {
+						input.calcChunks.add(null);
 					}
 				}
 			break;

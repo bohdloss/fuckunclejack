@@ -25,7 +25,6 @@ public HashMap<Integer, Player> player = new HashMap<Integer, Player>();
 protected long seed;
 protected WorldGenerator generator;
 private static Matrix4f res = new Matrix4f().scale(2);
-private List<Integer> queuedChunks = new ArrayList<Integer>();
 
 private String name;
 
@@ -35,14 +34,15 @@ public HashMap<Integer, Chunk> cachedChunks = new HashMap<Integer, Chunk>();
 private List<Integer> used = new ArrayList<Integer>();
 private int getChunk;
 //end
-	
+
 	public void putChunk(Chunk c) {
 		chunks.put(c.getOffsetx(), c);
 		cachedChunks.put(c.getOffsetx(), c);
 	}
 
 	public Chunk getChunk(int x, boolean queue) {
-		if(chunks.containsKey(x)) return chunks.get(x);
+		Chunk toRet=null;
+		if((toRet=chunks.get(x))!=null) return toRet;
 		if(GameState.isClient.getValue()) {
 			if(queue) {
 				if(Client.chunkrequest.get(x)==null) {
@@ -51,13 +51,13 @@ private int getChunk;
 			}
 			return null;
 		}
-		if(cachedChunks.containsKey(x)) return cachedChunks.get(x);
+		if((toRet=cachedChunks.get(x))!=null) return toRet;
 		if(queue) {
-				Chunk c = generator.generateChunk(x);
-				putChunk(c);
-				return c;
+				toRet = generator.generateChunk(x);
+				putChunk(toRet);
+				return toRet;
 		}
-		return null;
+		return toRet;
 	}
 	
 	public void tick() {
@@ -78,22 +78,6 @@ private int getChunk;
 		try {
 		player.forEach((k,v)->v.tick());
 		} catch(ConcurrentModificationException e) {}
-		
-		//Check if there are chunks to generate/gather from server
-		
-		queuedChunks.forEach(v->{
-			Chunk c = getChunk(v, true);
-			if(c!=null) chunks.put(v, c);
-		});
-		
-		//Client only, calculate unused chunks for removal
-		
-		
-		
-		//ONLY ON CLIENTS, TO REDUCE IMPACT ON RENDERING PERFORMANCE
-		
-		//Shut the fuck up this also impacts on physics calculation performance
-		//on the server side you idiot
 		
 		//removed GameState.isClient.getValue() check here
 			
@@ -142,10 +126,6 @@ private int getChunk;
 				e.join(this, x, y);
 			}
 		}
-	}
-	
-	public void queueChunk(int x) {
-		queuedChunks.add(x);
 	}
 	
 	public void render(Shader s, Matrix4f matrix) {

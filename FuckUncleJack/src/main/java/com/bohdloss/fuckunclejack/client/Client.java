@@ -149,6 +149,8 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 				request.status=ChunkRequest.ELABORATING;
 				break;
 			case ChunkRequest.ELABORATING:
+				request.expiration--;
+				if(request.expiration<=0) chunkrequest.remove(k);
 				break;
 			case ChunkRequest.READY:
 				lWorld.putChunk(request.chunk);

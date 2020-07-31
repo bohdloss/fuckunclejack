@@ -164,18 +164,26 @@ private static List<Integer> uids = new ArrayList<Integer>();
 				int CHUNKS_LENGTH=buf.getInt();
 				for(int i=0;i<CHUNKS_LENGTH;i++) {
 					int CH_CUR = buf.getInt();
-					Chunk CH_GEN = new Chunk(lWorld, CH_CUR);
-					for(int x=0;x<16;x++) {
-						for(int y=0;y<256;y++) {
-							int CH_BLOCK_ID = buf.getInt();
-							int CH_BLOCK_BG_ID = buf.getInt();
-							CH_GEN.blocks[x][y].setTop(genBlockByIdChunk(CH_BLOCK_ID, CH_GEN, x, y));
-							CH_GEN.blocks[x][y].setBackground(genBlockByIdChunk(CH_BLOCK_BG_ID, CH_GEN, x, y));
+					boolean CH_OK = buf.get()==(byte)1;
+					Chunk CH_GEN=null;
+					if(CH_OK) {
+					CH_GEN = new Chunk(lWorld, CH_CUR);
+						for(int x=0;x<16;x++) {
+							for(int y=0;y<256;y++) {
+								int CH_BLOCK_ID = buf.getInt();
+								int CH_BLOCK_BG_ID = buf.getInt();
+								CH_GEN.blocks[x][y].setTop(genBlockByIdChunk(CH_BLOCK_ID, CH_GEN, x, y));
+								CH_GEN.blocks[x][y].setBackground(genBlockByIdChunk(CH_BLOCK_BG_ID, CH_GEN, x, y));
+							}
 						}
 					}
+					if(CH_OK) {
 					ChunkRequest CH_REQUEST = Client.chunkrequest.get(CH_CUR);
 					CH_REQUEST.status=ChunkRequest.READY;
 					CH_REQUEST.chunk=CH_GEN;
+					} else {
+						Client.chunkrequest.remove(CH_CUR);
+					}
 				}
 			break;
 			case INVENTORY:

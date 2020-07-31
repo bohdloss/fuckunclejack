@@ -96,6 +96,7 @@ public class Assets {
 		textures.put("bar_bg", new Texture("/data/textures/hud/bar_bg.png"));
 		textures.put("bar_health", new Texture("/data/textures/hud/bar_health.png"));
 		textures.put("bar_armour", new Texture("/data/textures/hud/bar_armour.png"));
+		textures.put("green", new Texture("/data/textures/hud/green.png"));
 		textures.put("inventory_bg", new Texture("/data/textures/hud/inventory_bg.png"));
 		textures.put("slot_bg", new Texture("/data/textures/hud/slot_bg.png"));
 		textures.put("slot_bg_hovered", new Texture("/data/textures/hud/slot_bg_hovered.png"));
@@ -144,6 +145,7 @@ public class Assets {
 		blocks.put("sand", new BlockTexture("/data/textures/blocks/sand.png"));
 		blocks.put("sandstone", new BlockTexture("/data/textures/blocks/sandstone.png"));
 		blocks.put("cactus", new BlockTexture("/data/textures/blocks/cactus.png"));
+		blocks.put("leaves", new BlockTexture("/data/textures/blocks/leaves.png"));
 	}
 	
 }

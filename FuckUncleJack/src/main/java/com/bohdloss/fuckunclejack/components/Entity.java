@@ -281,13 +281,13 @@ private void chunkTest() {
 	
 	chunkIndex = getChunk();
 	if(world.chunks.get(chunkIndex-1)==null) {
-		world.queueChunk(chunkIndex-1);
+		world.getChunk(chunkIndex-1, true);
 	}
 	if(world.chunks.get(chunkIndex)==null) {
-		world.queueChunk(chunkIndex);
+		world.getChunk(chunkIndex, true);
 	}
 	if(world.chunks.get(chunkIndex+1)==null) {
-		world.queueChunk(chunkIndex+1);
+		world.getChunk(chunkIndex+1, true);
 	}
 }
 

@@ -30,17 +30,17 @@ public static final int max=100;
 public ItemSlot owner;
 
 //GC
-private static Matrix4f translate=new Matrix4f();
-private static Matrix4f res=new Matrix4f();
+static Matrix4f translate=new Matrix4f();
+static Matrix4f res=new Matrix4f();
 
-private static Model slot;
-private static TileSheet sheet;
-private static Shader gui;
-private static Model itemm;
-private static Model smallrect;
-private static Model rect;
-private static Model bigrect;
-private static Texture smallrectt;
+static Model slot;
+static TileSheet sheet;
+static Shader gui;
+static Model itemm;
+static Model smallrect;
+static Model rect;
+static Model bigrect;
+static Texture smallrectt;
 //End
 
 static {
