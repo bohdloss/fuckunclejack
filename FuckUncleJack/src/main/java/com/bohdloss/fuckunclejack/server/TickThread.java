@@ -1,14 +1,17 @@
 package com.bohdloss.fuckunclejack.server;
 
+import java.util.ConcurrentModificationException;
 import java.util.Random;
 
 import com.bohdloss.fuckunclejack.components.World;
+import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
+
 import static com.bohdloss.fuckunclejack.logic.GameState.*;
 
 public class TickThread extends Thread {
 
 	public TickThread() {
-		dimensions.put("world", new World(new Random().nextLong(), "world"));
+		dimensions.put("world", new OverworldWorld(new Random().nextLong(), "world"));
 		start();
 	}
 	
@@ -31,13 +34,19 @@ public class TickThread extends Thread {
 				delay(time+tickDelay);
 				
 			} catch(Exception e) {
+				if(!(e instanceof ConcurrentModificationException)) {
 				e.printStackTrace();
+				}
 			}
 		}
 	}
 	
 	public void update() {
-		dimensions.forEach((k,v)->v.tick());
+		dimensions.forEach((k,v)->{
+			if(v.player.size()>0) {
+			v.tick();
+			}
+		});
 	}
 	
 }

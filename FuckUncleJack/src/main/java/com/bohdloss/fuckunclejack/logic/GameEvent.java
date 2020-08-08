@@ -41,6 +41,10 @@ public static final byte leave=(byte)10;
 
 public static final byte userInput=(byte)11;
 
+//ENTER HOUSE
+
+public static final byte enterHouse=(byte)12;
+
 protected Object issuer;
 protected boolean serveronly;
 protected boolean cancelled=false;
@@ -98,5 +102,6 @@ public static final byte PlayerJoinEvent=(byte)6;
 public static final byte PlayerLeaveEvent=(byte)7;
 public static final byte AddInvItemEvent=(byte)8;
 public static final byte ItemMovedEvent=(byte)9;
+public static final byte EnterHouseEvent=(byte)10;
 
 }

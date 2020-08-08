@@ -12,6 +12,7 @@ public class BedrockBlock extends Block{
 
 	public BedrockBlock(Chunk chunk, int chunkx, int y) {
 		super(chunk, chunkx, y, "bedrock");
+		this.setUnbreakable();
 	}
 
 	@Override

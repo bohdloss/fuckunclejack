@@ -10,7 +10,9 @@ import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.ItemSlot;
+import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 
 import static com.bohdloss.fuckunclejack.logic.GameState.*;
 import static com.bohdloss.fuckunclejack.logic.GameEvent.*;
@@ -101,6 +103,26 @@ private static List<Integer> uids = new ArrayList<Integer>();
 						players.remove(e_PLE_UID);
 						lWorld.player.remove(e_PLE_UID);
 					break;
+					case PlayerJoinEvent:
+						int e_PJE_UID = buf.getInt();
+						int e_PJE_ID = buf.getInt();
+						String dimension = readString(buf);
+						
+						if(cause==changeDim) {
+							if(e_PJE_UID==lPlayer.getUID()) {
+								lWorld=null;
+								System.gc();
+								lWorld=genWorldById(e_PJE_ID, dimension);
+								lWorld.join(lPlayer, 0, 100);
+							} else {
+								if(!dimension.equals(lPlayer.getWorld().getName())) {
+									players.remove(e_PJE_UID);
+									lWorld.player.remove(e_PJE_UID);
+								}
+							}
+						}
+						
+					break;
 					case BlockPlacedEvent:
 						int e_BPE_UID = buf.getInt();
 						int e_BPE_X = buf.getInt();
@@ -140,6 +162,12 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					data = new Object[2];
 					data[0]=buf.getInt();
 					data[1]=buf.getInt();
+					break;
+					case 3:
+					case 4:
+					data = new Object[2];
+					data[0]=(boolean)(buf.get()==(byte)1);
+					data[1]=buf.get();
 					break;
 					}
 					

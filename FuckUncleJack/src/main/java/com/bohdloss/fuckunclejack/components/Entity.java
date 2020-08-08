@@ -1,6 +1,7 @@
 package com.bohdloss.fuckunclejack.components;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 
@@ -8,6 +9,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.Table;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Assets;
@@ -26,6 +28,7 @@ public float y;
 public float width;
 public float height;
 public boolean collision=true;
+public boolean blockCollision=false;
 public String texture;
 public String model;
 
@@ -52,16 +55,12 @@ private Vector2f vel=new Vector2f(0,0);
 private Matrix4f res=new Matrix4f();
 private Vector2f airCheck=new Vector2f(0, -0.01f);
 
-private Block highest;
-private Block lowest;
-private Block mleft;
-private Block mright;
-private Block last;
 private Vector2f exec=new Vector2f();
 
 private boolean intersect;
 private int chunkIndex;
 private List<Block> collisions = new ArrayList<Block>();
+private List<Entity> entCollisions = new ArrayList<Entity>();
 //end
 
 public Entity(String model, String texture, float maxhealth) {
@@ -127,6 +126,7 @@ public boolean move(Vector2f vec, boolean move) {
 	
 	chunkIndex = getChunk();
 	
+	entCollisions.clear();
 	collisions.clear();
 	
 	Block[] blocks = getSurroundings();
@@ -139,6 +139,16 @@ public boolean move(Vector2f vec, boolean move) {
 		}
 		
 	}
+	try {
+		world.entities.forEach((k,v)->{
+			if(v!=this) {
+				if(Collision.collideEnt(this, v, vec)) {
+					intersect=true;
+					entCollisions.add(v);
+				}
+			}
+		});
+	} catch(ConcurrentModificationException e) {}
 	
 	if(!intersect) {
 		if(move) {
@@ -157,15 +167,19 @@ public boolean move(Vector2f vec, boolean move) {
 		
 		exec.x=x;
 		exec.y=y;
+		boolean ry=false;
+		boolean rx=false;
 		
-		highest=null;
-		lowest=null;
-		mleft=null;
-		mright=null;
+		if(collisions.size()>0) {
+		
+		Block highest=null;
+		Block lowest=null;
+		Block mleft=null;
+		Block mright=null;
 		//WARNING
 		//PROGRAMMING HORROR
 		
-		last=null;
+		Block last=null;
 		last=collisions.get(0);
 		for(int i=0;i<collisions.size();i++) {
 			if(collisions.get(i).getY()<last.getY()) {
@@ -198,8 +212,7 @@ public boolean move(Vector2f vec, boolean move) {
 		//END OF FIRST PART OF HORROR
 		//PROGRAMMING HORROR PT.2
 		
-		boolean ry=false;
-		boolean rx=false;
+		
 		
 		if(vec.y<0) {
 			exec.y=highest.y+0.5f+height/2f;
@@ -216,6 +229,69 @@ public boolean move(Vector2f vec, boolean move) {
 		if(vec.x<0) {
 			exec.x=mright.worldx+0.505f+width/2f;
 			rx=true;
+		}
+		
+		}
+		
+		if(entCollisions.size()>0) {
+		
+		Entity ehighest=null;
+		Entity elowest=null;
+		Entity emleft=null;
+		Entity emright=null;
+		//WARNING
+		//PROGRAMMING HORROR
+		
+		Entity elast=null;
+		elast=entCollisions.get(0);
+		for(int i=0;i<entCollisions.size();i++) {
+			if(entCollisions.get(i).getY()<elast.getY()) {
+				elast=entCollisions.get(i);
+			}
+		}
+		elowest=elast;
+		elast=entCollisions.get(0);
+		for(int i=0;i<entCollisions.size();i++) {
+			if(entCollisions.get(i).getY()>elast.getY()) {
+				elast=entCollisions.get(i);
+			}
+		}
+		ehighest=elast;
+		elast=entCollisions.get(0);
+		for(int i=0;i<entCollisions.size();i++) {
+			if(entCollisions.get(i).getX()<elast.getX()) {
+				elast=entCollisions.get(i);
+			}
+		}
+		emleft=elast;
+		elast=entCollisions.get(0);
+		for(int i=0;i<entCollisions.size();i++) {
+			if(entCollisions.get(i).getX()>elast.getX()) {
+				elast=entCollisions.get(i);
+			}
+		}
+		emright=elast;
+		
+		//END OF FIRST PART OF HORROR
+		//PROGRAMMING HORROR PT.2
+		
+		if(vec.y<0) {
+			exec.y=ehighest.y+ehighest.height/2+height/2f;
+			ry=true;
+		}
+		if(vec.y>0) {
+			exec.y=elowest.y-elowest.height/2-height/2f;
+			ry=true;
+		}
+		if(vec.x>0) {
+			exec.x=emleft.x-emleft.width/2-0.005f-width/2f;
+			rx=true;
+		}
+		if(vec.x<0) {
+			exec.x=emright.x+emright.width/2+0.005f+width/2f;
+			rx=true;
+		}
+		
 		}
 		
 		execPos(exec);

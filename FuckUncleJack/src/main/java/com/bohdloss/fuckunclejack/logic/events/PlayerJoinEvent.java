@@ -4,34 +4,31 @@ import java.nio.ByteBuffer;
 
 import org.json.simple.JSONObject;
 
+import com.bohdloss.fuckunclejack.components.Entity;
+import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.Player;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.server.CSocketUtils;
 
 public class PlayerJoinEvent extends GameEvent {
 
-public String dimension;
+public World dimension;
 	
 private ByteBuffer buf;
 
-	public PlayerJoinEvent(Player issuer, byte cause, String dimension) {
+	public PlayerJoinEvent(Player issuer, byte cause, World dimension) {
 		super(issuer, cause, true);
 		this.dimension=dimension;
 		
-		buf=ByteBuffer.allocate(6+dimension.length());
+		buf=ByteBuffer.allocate(14+dimension.getName().length());
 		buf.put(PlayerJoinEvent);//object.put("type", "PlayerJoinEvent");
 		buf.put(cause);//object.put("cause", cause);
 		//object.put("issuer", issuer.getX()+"/"+issuer.getY()+"/"+issuer.getName()+"/"+issuer.getUID());
-	
-		//Some other shit
-		//TODO
-		//i dont give a fuck
 		
-		//rip i must do it now
+		buf.putInt(issuer.getUID());
+		buf.putInt(dimension.getID());
+		CSocketUtils.writeString(buf, dimension.getName());
 		
-		CSocketUtils.writeString(buf, dimension);
-		
-		//aha done fuck you
 	}
 
 	@Override
@@ -39,7 +36,7 @@ private ByteBuffer buf;
 		return (Player)issuer;
 	}
 
-	public String getDimension() {
+	public World getDimension() {
 		return dimension;
 	}
 

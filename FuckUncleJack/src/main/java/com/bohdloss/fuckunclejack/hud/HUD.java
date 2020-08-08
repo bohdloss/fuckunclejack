@@ -6,6 +6,7 @@ import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Inventory;
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 import com.bohdloss.fuckunclejack.main.Assets;
+import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.BlockTexture;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.FontManager;
@@ -22,6 +23,7 @@ public Bar health;
 public Bar armour;
 public InvDisplay invdisplay;
 public Hotbar hotbar;
+public InteractionDisplay interact;
 
 private boolean invopen;
 
@@ -49,10 +51,11 @@ static {
 }
 
 	public HUD() {
-		health=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_health"), -10.5f, -6.6f, 20, 20);
-		armour=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_armour"), -10.5f, -5.4f, 100, 25);
+		health=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_health"), -10.5f, -4f, 20, 20);
+		armour=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_armour"), -10.5f, -6f, 100, 25);
 		invdisplay=new InvDisplay();
 		hotbar=new Hotbar();
+		interact = new InteractionDisplay();
 	}
 	
 	public void toggleInventory() {
@@ -73,9 +76,10 @@ static {
 			hotbar.render(s, matrix);
 		}
 		if(grabbed!=null) {
-			mpoint=CMath.mGLCoord();
+			mpoint=CMath.mGLCoord(Game.guiScale);
 			grabbed.render(s, matrix, mpoint.x, mpoint.y);
 		}
+		interact.render(s, matrix);
 		/*
 		try {
 			i=0;

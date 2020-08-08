@@ -1,5 +1,7 @@
 package com.bohdloss.fuckunclejack.components;
 
+import static com.bohdloss.fuckunclejack.logic.GameState.dimensions;
+
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -15,25 +17,33 @@ import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.render.CMath;
+import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Shader;
+import com.bohdloss.fuckunclejack.render.Texture;
 
-public class World implements Tickable{
+public abstract class World implements Tickable{
 
 public HashMap<Integer, Chunk> chunks = new HashMap<Integer, Chunk>();
 public HashMap<Integer, Entity> entities = new HashMap<Integer, Entity>();
 public HashMap<Integer, Player> player = new HashMap<Integer, Player>();
 protected long seed;
 protected WorldGenerator generator;
-private static Matrix4f res = new Matrix4f().scale(2);
+protected static Matrix4f res = new Matrix4f().scale(2);
 
 private String name;
 
 public HashMap<Integer, Chunk> cachedChunks = new HashMap<Integer, Chunk>();
 
-//faster GC
-private List<Integer> used = new ArrayList<Integer>();
-private int getChunk;
-//end
+//cache
+protected List<Integer> used = new ArrayList<Integer>();
+protected int getChunk;
+protected static Model square;
+protected Texture bg;
+//
+
+static {
+	square=Assets.models.get("square");
+}
 
 	public void putChunk(Chunk c) {
 		chunks.put(c.getOffsetx(), c);
@@ -117,8 +127,12 @@ private int getChunk;
 	public void join(Entity e, float x, float y) {
 		if(e instanceof Player) {
 			if(!player.containsKey(e.getUID())) {
-				player.put(e.getUID(), (Player)e);
+				Player p = (Player)e;
+				player.put(e.getUID(), p);
 				e.join(this, x, y);
+				if(!GameState.isClient.getValue()) {
+					System.out.println("Player "+p.getName()+" joined world "+ getName());
+				}
 			}
 		} else {
 			if(!entities.containsKey(e.getUID())) {
@@ -128,10 +142,16 @@ private int getChunk;
 		}
 	}
 	
-	public void render(Shader s, Matrix4f matrix) {
+	protected abstract Texture getTexture();
+	
+	protected void renderBackground(Shader s, Matrix4f matrix) {
 		s.setUniform("projection", res);
-		Assets.textures.get("sky").bind(0);
-		Assets.models.get("square").render();
+		bg.bind(0);
+		square.render();
+	}
+	
+	public void render(Shader s, Matrix4f matrix) {
+		renderBackground(s, matrix);
 		try {
 			entities.forEach((k,v)->{
 				if(CMath.distance2((double)v.getX(), (double)v.getY(), ClientState.lPlayer.getX(), ClientState.lPlayer.getY())<ClientState.drawDistance) {
@@ -153,16 +173,15 @@ private int getChunk;
 	}
 	
 	public World(long seed, String name) {
+		this(name);
 		this.seed=seed;
-		this.name=name;
 		generator=new WorldGenerator(this, seed);
 	}
 	
 	//For client copy of the world, the client shouldn't know the seed
 	public World(String name) {
-		this.seed=0;
 		this.name=name;
-		generator=null;
+		bg = getTexture();
 	}
 	
 	public long getSeed() {
@@ -186,5 +205,7 @@ private int getChunk;
 	public String getName() {
 		return name;
 	}
+	
+	public abstract int getID();
 	
 }

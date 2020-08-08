@@ -124,7 +124,7 @@ public void run() {
 }
 
 public void hoverCalc(float scale) {
-	pos = CMath.mGLCoord();
+	pos = CMath.mGLCoord(Game.scaleAmount);
 	
 	blockx=CMath.fastFloor(pos.x+camera.getPosition().x/Game.scaleAmount+0.5f);
 	blocky=CMath.fastFloor(pos.y+camera.getPosition().y/Game.scaleAmount+0.5f);
@@ -153,7 +153,15 @@ public void baseUpdate() {
 		camera.setX(Game.scaleAmount*ClientState.lPlayer.x);
 		camera.setY(Game.scaleAmount*ClientState.lPlayer.y);
 	}
+	nearHouseB=false;
 	ClientState.lWorld.tick();
+	if(nearHouseB==true) {
+		nearHouse=lastHouse;
+	} else {
+		nearHouse=null;
+		
+	}
+	
 }
 
 }

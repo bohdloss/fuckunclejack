@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL;
 
 import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.input.InputManager;
 import com.bohdloss.fuckunclejack.logic.ClientState;
@@ -30,8 +31,8 @@ public static InputManager input=new InputManager();
 public static Camera camera;
 public static HUD hud;
 
-public static float scaleAmount=50f*((float)Toolkit.getDefaultToolkit().getScreenResolution()/120f);
-public static float guiScale=scaleAmount;
+public static float scaleAmount=60*((float)Toolkit.getDefaultToolkit().getScreenResolution()/120f);
+public static float guiScale=scaleAmount-10;
 
 private int frames=0;
 private String fps="0 FPS";
@@ -43,7 +44,7 @@ public static boolean pendingToggle=false;
 		setup();
 
 		lPlayer=new Player(Main.name);
-		lWorld=new World("world");
+		lWorld=new OverworldWorld("world");
 		ClientState.connect(Main.ip, Server.port);
 		
 		hud=new HUD();
@@ -85,25 +86,32 @@ public static boolean pendingToggle=false;
 		Matrix4f scale = new Matrix4f().scale(scaleAmount);
 		Matrix4f target = new Matrix4f();
 		
+		Matrix4f guiscale = new Matrix4f().scale(guiScale);
+		Matrix4f guitarget = new Matrix4f();
+		
 		Matrix4f tempres = new Matrix4f();
 		
 		Shader shader = Assets.shaders.get("shader");
 		
 		while(!window.shouldClose()) {
+			scale.identity().scale(scaleAmount);
+			guiscale.identity().scale(guiScale);
 			if(pendingToggle) {
 				pendingToggle=false;
 				window.toggleFullscreen();
 			}
 			if(window.isDestroyed()) continue;
-			target=scale;
+			
 			glfwPollEvents();
 			
 			glClear(GL_COLOR_BUFFER_BIT);
 			
 			if(lWorld!=null&lPlayer!=null) {
-				
+			
+			target=scale;
 			properRender(shader, camera.projection().mul(target, tempres));
-			hud.render(shader, camera.unTransformedProjection().mul(target, tempres));
+			guitarget=guiscale;
+			hud.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
 			
 			}
 			
@@ -116,6 +124,8 @@ public static boolean pendingToggle=false;
 				frames=0;
 				lastTime=System.currentTimeMillis();
 			}
+			
+			//fps=""+scaleAmount;
 			
 			frames++;
 		}

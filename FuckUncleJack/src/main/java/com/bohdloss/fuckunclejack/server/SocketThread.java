@@ -198,6 +198,11 @@ public void fillObject() {
 					buf.putInt(d.getItem().getId());
 					buf.putInt(d.getItem().getAmount());
 				break;
+				case 3:
+					Table t = (Table) v;
+					buf.put(t.blockCollision?(byte)1:(byte)0);
+					buf.put(t.variant);
+				break;
 				}
 				
 			});

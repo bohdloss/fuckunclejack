@@ -2,6 +2,7 @@ package com.bohdloss.fuckunclejack.logic;
 
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.World;
+import com.bohdloss.fuckunclejack.components.entities.House;
 import com.bohdloss.fuckunclejack.components.entities.Player;
 
 public class ClientState {
@@ -18,6 +19,10 @@ public static final double drawDistance=20*20;
 public static Item grabbed;
 public static boolean grabbing=false;
 public static int grabSlot;
+
+public static House nearHouse;
+public static boolean nearHouseB=false;
+public static House lastHouse=null;
 
 public static int hovx;
 public static int hovy;

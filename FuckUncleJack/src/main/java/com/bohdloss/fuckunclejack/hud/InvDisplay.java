@@ -22,7 +22,7 @@ public int hovIndex=-1;
 private Texture background;
 private Model bgmodel;
 
-//faster GC
+//cache
 private Matrix4f translate=new Matrix4f();
 private Matrix4f res=new Matrix4f();
 

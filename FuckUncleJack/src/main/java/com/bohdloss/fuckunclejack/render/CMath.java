@@ -105,9 +105,9 @@ public class CMath {
 			return new Point2f(blockx, blocky);
 	}
 	
-	public static Point2f mGLCoord() {
+	public static Point2f mGLCoord(float scale) {
 		Point p = Game.window.getCursorPos();
-		return toGLCoord(p.x, p.y, Game.scaleAmount);
+		return toGLCoord(p.x, p.y, scale);
 	}
 	
 	public static boolean random(Random r, int iterations) {

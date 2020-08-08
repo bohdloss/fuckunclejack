@@ -35,7 +35,7 @@ public class Empty extends ColumnGenerator {
 
 	@Override
 	public int height(OpenSimplexNoise noise, int x, Chunk c) {
-		return 60;
+		return 2;
 	}
 
 	@Override

@@ -17,7 +17,7 @@ protected World world;
 protected long seed;
 	
 protected ColumnGenerator[] gen = {new Empty(seed, this), new Desert(seed, this), new Hills(seed, this)};
-protected int[] biomes = new Random(seed).ints(1000, 0, gen.length-1).toArray();
+protected int[] biomes;
 
 
 	public double difference(double a, double b) {
@@ -28,10 +28,15 @@ protected int[] biomes = new Random(seed).ints(1000, 0, gen.length-1).toArray();
 		return (int)Math.abs(a-b);
 	}
 	
+	protected void initBiomes() {
+		biomes=new Random(seed).ints(1000, 0, gen.length-1).toArray();
+	}
+	
 	public WorldGenerator(World world, long seed) {
 		this.world=world;
 		this.seed=seed;
 		noise=new OpenSimplexNoise(seed);
+		initBiomes();
 	}
 	
 	public double noise(int target) {
@@ -45,7 +50,7 @@ protected int[] biomes = new Random(seed).ints(1000, 0, gen.length-1).toArray();
 		Random height = new Random(seed+offsetx*16);
 		Random freq = new Random(seed+offsetx*16);
 		
-		boolean spawn=CMath.random(new Random(), 2);
+		boolean spawn=CMath.random(new Random(), 1);
 		
 		int b = biome(res.getOffsetx());
 		biome=gen[b];

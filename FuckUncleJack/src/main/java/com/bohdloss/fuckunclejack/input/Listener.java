@@ -8,6 +8,7 @@ import java.awt.Point;
 
 import org.lwjgl.glfw.GLFWScrollCallback;
 
+import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
@@ -26,23 +27,31 @@ public class Listener implements KeyListen {
 		glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
 		    @Override public void invoke (long win, double dx, double dy) {
 		        lPlayer.getInventory().selected=(int)CMath.limit(sel()-(int)dy, 27, 35);
+		        //Game.scaleAmount+=(int)dy;
 		    }
 		});
 	}
 	
 	@Override
 	public void onKeyPressed(int code) {
-		if(code==GLFW_KEY_F11) {
-			pendingToggle=true;
-		}
 		
-		if(code==GLFW_KEY_T) {
+		switch(code) {
+		case GLFW_KEY_F11:
+			pendingToggle=true;
+			break;
+		case GLFW_KEY_T:
 			lPlayer.x=32000;
 			lPlayer.y=100;
-		}
-		
-		if(code==GLFW_KEY_E) {
+			break;
+		case GLFW_KEY_E:
 			hud.toggleInventory();
+			break;
+		case GLFW_KEY_F:
+			if(nearHouse!=null) nearHouse.enterHouse(lPlayer);
+			break;
+		case GLFW_KEY_P:
+			Client.sendDebug=true;
+			break;
 		}
 	}
 
@@ -61,10 +70,13 @@ public class Listener implements KeyListen {
 				
 				if(CMath.inrange(hud.invdisplay.hovIndex, 0f, 35f)) {
 						if(!grabbing) {
+							Item i = lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].getContent();
+							if(i!=null) {
 							grabbing=true;
 							grabSlot=Game.hud.invdisplay.hovIndex;
 							grabbed=lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].getContent();
 							lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].setContent(null);
+							}
 						} else {
 							Item i = lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].getContent();
 							if(i==null) {

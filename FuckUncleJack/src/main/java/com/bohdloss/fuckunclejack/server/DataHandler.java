@@ -8,8 +8,12 @@ import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Inventory;
 import com.bohdloss.fuckunclejack.components.Item;
+import com.bohdloss.fuckunclejack.components.entities.DesertHouse;
+import com.bohdloss.fuckunclejack.components.entities.House;
 import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.Table;
+import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.render.CMath;
 
 import static com.bohdloss.fuckunclejack.logic.FunctionUtils.*;
@@ -20,7 +24,6 @@ import static com.bohdloss.fuckunclejack.server.CSocketUtils.*;
 public class DataHandler {
 	
 	public static void handleBuffer(ByteBuffer buf, SocketThread input) {
-		
 		try {
 			buf.clear();
 		while(buf.hasRemaining()) {
@@ -40,7 +43,7 @@ public class DataHandler {
 						System.out.println("Assigned uid "+player.getUID()+" to player "+player.getName());
 						dimensions.get("world").join(player, 0, 100);
 						players.put(player.getUID(), player);
-						System.out.println("Player "+player.getName()+" joined world "+ dimensions.get("world").getName());
+						
 						
 						input.auth=true;
 						input.writeAuth=true;
@@ -84,10 +87,12 @@ public class DataHandler {
 						if(e_BDE_I!=null) e_BDE_I.onLeftClickBegin(e_BDE_X, e_BDE_Y, e_BDE_ISSUER);
 						e_BDE_ISSUER.getWorld().destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, e_BDE_BG, true);
 						
-						input.sendInventory=true;
+						
 						
 						}catch(Exception e) {
 							e.printStackTrace();
+						}finally {
+							input.sendInventory=true;
 						}
 						
 					break;
@@ -107,10 +112,12 @@ public class DataHandler {
 							e_BPE_I.onRightClickBegin(e_BPE_X, e_BPE_Y, e_BPE_ISSUER);
 						}
 						
-						input.sendInventory=true;
+						
 						
 						} catch(Exception e) {
 							e.printStackTrace();
+						} finally {
+							input.sendInventory=true;
 						}
 						
 					break;
@@ -121,6 +128,19 @@ public class DataHandler {
 						Item e_IME_get = e_IME_ISSUER.getInventory().slots[e_IME_origin].getContent();
 						e_IME_ISSUER.getInventory().slots[e_IME_origin].setContent(e_IME_ISSUER.getInventory().slots[e_IME_dest].getContent());
 						e_IME_ISSUER.getInventory().slots[e_IME_dest].setContent(e_IME_get);
+					break;
+					case EnterHouseEvent:
+						try {
+						Player e_EHE_ISSUER=input.player;
+						buf.getInt();
+						int e_EHE_UID = buf.getInt();
+						House e_EHE_HOUSE = (House) e_EHE_ISSUER.getWorld().entities.get(e_EHE_UID);
+						
+						e_EHE_HOUSE.enterHouse(e_EHE_ISSUER);
+						
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
 					break;
 					}
 					
@@ -140,12 +160,24 @@ public class DataHandler {
 					}
 				}
 			break;
+			case DEBUG:
+				//input.player.getWorld().join(new Table(false, (byte)1), input.player.getX(), input.player.getY()+20);
+				input.player.getWorld().join(new DesertHouse(), input.player.getX(), input.player.getY()+20);;
+				System.out.println("spawned");
+			break;
 			}
 		}
 		} catch(BufferUnderflowException e) {
 			System.out.println("Out of bounds at position "+buf.position()+" with stacktrace: ");
 			e.printStackTrace();
 		}
+	}
+	
+	public static void print(byte[] b) {
+		for(int i=0;i<b.length;i++) {
+			System.out.print((b[i]&0xff)+".");
+		}
+		System.out.println();
 	}
 	
 }

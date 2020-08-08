@@ -9,8 +9,11 @@ import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.blocks.*;
 import com.bohdloss.fuckunclejack.components.entities.*;
+import com.bohdloss.fuckunclejack.generator.generators.*;
 import com.bohdloss.fuckunclejack.components.items.blocks.*;
+import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
 import com.bohdloss.fuckunclejack.render.CMath;
+import com.bohdloss.fuckunclejack.server.Server;
 
 public class FunctionUtils {
 
@@ -85,6 +88,32 @@ public class FunctionUtils {
 			return new ItemDrop(genItemById(id, amount));
 		case 2:
 			return new DesertHouse();
+		case 3:
+			return new Table((boolean)data[0], (byte)data[1]);
+		}
+		return null;
+	}
+	
+	public static void travel(Player p, World w, int x, int y) {
+		if(GameState.isClient.getValue()) return;
+		
+		p.getWorld().player.remove(p.getUID());
+		
+		Server.threads.forEach(v->{
+			v.events.add(new PlayerJoinEvent(p, GameEvent.changeDim, w));
+		});
+		
+		w.join(p, x, y);
+		
+		System.out.println("Player "+p.getName()+" traveled to world "+w.getName());
+	}
+	
+	public static World genWorldById(int id, String name) {
+		switch(id) {
+		case 0:
+			return new OverworldWorld(name);
+		case 1:
+			return new DeserthouseWorld(name);
 		}
 		return null;
 	}

@@ -21,6 +21,8 @@ public class CSocketUtils {
 	public static final byte CHUNKS=(byte)6;
 	public static final byte INVENTORY=(byte)7;
 	
+	public static final byte DEBUG=(byte)8;
+	
 	public static void read(Socket s, ByteBuffer buf, ByteBuffer lengthBuf) throws Exception{
 		
 		

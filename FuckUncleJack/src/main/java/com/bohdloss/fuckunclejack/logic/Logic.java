@@ -13,6 +13,7 @@ import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
+import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemMovedEvent;
@@ -78,7 +79,7 @@ private CRectanglef ebounds;
 			//In case the block is being broken regularly by an entity
 			
 			double distance = CMath.distance(e.getDestination().getWorldx(), e.getDestination().getY(), e.getIssuer().getX(), e.getIssuer().getY());
-			if(distance>8|(e.getStart() instanceof StoneBlock)) {
+			if(distance>8|e.getStart().isUnbreakable()) {
 				e.cancel();
 			}
 			
@@ -272,6 +273,27 @@ private CRectanglef ebounds;
 			
 		break;
 		}
+	}
+
+	@Override
+	public void onEnterHouse(EnterHouseEvent e) {
+		if(e.isServerOnly()&GameState.isClient.getValue()) {
+			e.cancel();
+			return;
+		}
+		switch(e.getCause()) {
+		default: e.cancel("nocause");
+		case enterHouse:
+			
+			double distance = CMath.distance(e.getTarget().getX(),e.getTarget().getY(),e.getIssuer().getX(),e.getIssuer().getY());
+			
+			if(distance>4) {
+				e.cancel();
+			}
+			
+		break;
+		}
+		
 	}
 	
 }

@@ -12,6 +12,7 @@ import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
+import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemMovedEvent;
@@ -163,7 +164,7 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 				Client.events.add(event);
 			} else {
 				Server.threads.forEach(t -> {
-					if(t.UPID==(event.getIssuer().getUID())) {
+					if(t.UPID!=(event.getIssuer().getUID())) {
 						t.events.add(event);
 					}
 				});
@@ -221,6 +222,23 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 		logic.onInvItemMoved(event);
 		try {
 			listeners.forEach(i -> i.onInvItemMoved(event));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(send&!event.isCancelled()) {
+			if(GameState.isClient.getValue()) {
+				Client.events.add(event);
+			}
+		}
+		
+		return event;
+	}
+	
+	public static EnterHouseEvent enteredHouse(boolean send, EnterHouseEvent event) {
+		logic.onEnterHouse(event);
+		try {
+			listeners.forEach(i -> i.onEnterHouse(event));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

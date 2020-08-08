@@ -82,6 +82,8 @@ public class Assets {
 		models.put("bigrect", ModelLoader.load("/data/models/bigrect.json"));
 		models.put("house", ModelLoader.load("/data/models/house.json"));
 		models.put("deserthouse", ModelLoader.load("/data/models/deserthouse.json"));
+		models.put("interaction", ModelLoader.load("/data/models/interaction.json"));
+		models.put("table", ModelLoader.load("/data/models/table.json"));
 	}
 	
 	private static void loadShaders() throws Exception{
@@ -90,6 +92,8 @@ public class Assets {
 	}
 	
 	private static void loadTextures() throws Exception{
+		//Hud textures
+		
 		textures.put("hud_bg", new Texture("/data/textures/hud/bg.png"));
 		textures.put("hud_buttons", new Texture("/data/textures/hud/buttons.png"));
 		textures.put("icon_health", new Texture("/data/textures/hud/health.png"));
@@ -102,13 +106,22 @@ public class Assets {
 		textures.put("slot_bg_hovered", new Texture("/data/textures/hud/slot_bg_hovered.png"));
 		textures.put("hotbar_bg", new Texture("/data/textures/hud/hotbar_bg.png"));
 		textures.put("smallrect", new Texture("/data/textures/hud/smallrect.png"));
+		textures.put("interaction", new Texture("/data/textures/hud/interaction.png"));
 		
-		textures.put("sky", new Texture("/data/textures/sky/color.png"));
+		//World backgrounds
+		
+		textures.put("overworld_world_sky", new Texture("/data/textures/worlds/overworld.png"));
+		textures.put("deserthouse_world_sky", new Texture("/data/textures/worlds/deserthouseworld.png"));
+		
+		//Generic environment textures
 		
 		textures.put("hovered_block", new Texture("/data/textures/blocks/assets/hovered.png"));
 		textures.put("background_block", new Texture("/data/textures/blocks/assets/background.png"));
 		
-		textures.put("house", new Texture("/data/textures/entities/structures/house.png"));
+		//Props entities textures
+		
+		textures.put("table0", new Texture("/data/textures/entities/props/table0.png"));
+		textures.put("table1", new Texture("/data/textures/entities/props/table1.png"));
 		
 		loadBlocks();
 	}

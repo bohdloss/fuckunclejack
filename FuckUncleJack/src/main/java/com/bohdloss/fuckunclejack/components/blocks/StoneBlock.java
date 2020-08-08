@@ -10,6 +10,7 @@ public class StoneBlock extends Block{
 
 	public StoneBlock(Chunk chunk, int chunkx, int y) {
 		super(chunk, chunkx, y, "stone");
+		this.setUnbreakable();
 	}
 
 	@Override

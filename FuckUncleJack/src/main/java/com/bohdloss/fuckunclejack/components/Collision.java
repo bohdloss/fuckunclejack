@@ -17,4 +17,15 @@ public class Collision {
 		return last.intersects(b.getBounds());
 	}
 	
+	public static boolean collideEnt(Entity p, Entity b, Vector2f dest) {
+		if(p.blockCollision|b.blockCollision) {
+		
+		last.setFrame(p.getBounds().x+dest.x, p.getBounds().y+dest.y, p.getBounds().width, p.getBounds().height);
+		
+		return last.intersects(b.getBounds());
+		} else {
+			return false;
+		}
+	}
+	
 }

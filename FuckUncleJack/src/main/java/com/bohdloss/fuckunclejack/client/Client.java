@@ -26,6 +26,8 @@ public static Socket socket;
 public static boolean auth=false;
 public static String upid;
 
+public static boolean sendDebug=false;
+
 //cache
 private static ByteBuffer buf = ByteBuffer.allocate(bufferSize);
 
@@ -106,7 +108,10 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 			buf.putFloat(lPlayer.getVelocity().y);
 			buf.putInt(lPlayer.getInventory().selected);
 			
-			
+			if(sendDebug) {
+				buf.put(DEBUG);
+				sendDebug=false;
+			}
 			
 			
 			try {

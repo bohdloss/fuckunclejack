@@ -42,6 +42,14 @@ public class Camera {
 		projection = new Matrix4f().setOrtho2D(-width/2, width/2, -height/2, height/2);
 	}
 	
+	public float getX() {
+		return position.x;
+	}
+	
+	public float getY() {
+		return position.y;
+	}
+	
 	public void setX(float x) {
 		xlerpdest=x;
 	}
