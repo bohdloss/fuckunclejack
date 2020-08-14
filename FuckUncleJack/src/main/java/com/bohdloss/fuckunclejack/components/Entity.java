@@ -18,8 +18,6 @@ import com.bohdloss.fuckunclejack.render.CRectanglef;
 import com.bohdloss.fuckunclejack.render.Shader;
 
 public abstract class Entity implements Tickable{
-
-private static final char[] alphabet="abcdefghijklmnopqrstuvwxyz".toCharArray();
 	
 public static int randID=0;
 
@@ -27,8 +25,8 @@ public float x;
 public float y;
 public float width;
 public float height;
-public boolean collision=true;
-public boolean blockCollision=false;
+public boolean physics=true;
+public boolean collision=false;
 public String texture;
 public String model;
 
@@ -48,6 +46,8 @@ protected float health;
 protected float maxhealth;
 
 private int uid;
+
+public boolean flight;
 
 //better GC
 private Vector2f vel=new Vector2f(0,0);
@@ -116,7 +116,7 @@ protected abstract Block[] getSurroundings();
 
 public boolean move(Vector2f vec, boolean move) {
 	if(world==null) return false;
-	if(!collision) {
+	if(!physics) {
 		if(move) {
 		execMove(vec);
 		}
@@ -348,7 +348,18 @@ public void jump() {
 }
 
 public void moveLateral(float direction) {
-	velx=CMath.limit(velx+(direction*(running?runSpeed:speed))/7f, -(running?runSpeed:speed), (running?runSpeed:speed));
+	
+	float speedAmount = (running?runSpeed:speed)*(flight?2:1);
+	
+	velx=CMath.limit(velx+(direction*speedAmount)/7f, -speedAmount, speedAmount);
+}
+
+public void moveVertical(float direction) {
+	if(!flight) return;
+	
+	float speedAmount = (running?runSpeed:speed)*2;
+	
+	vely=CMath.limit(vely+(direction*speedAmount)/7f, -speedAmount, speedAmount);
 }
 
 private void chunkTest() {
@@ -369,7 +380,7 @@ private void chunkTest() {
 
 public void tick() {
 	chunkTest();
-	if(collision) physics();
+	if(physics) physics();
 }
 
 public void physics() {
@@ -379,11 +390,22 @@ public void physics() {
 	vel.x=0;
 	vel.y=vely;
 	move(vel, true);
-	if(inAir()) {
-	vely+=gravity.y;
-	vely=CMath.limitMin(vely, -0.5f);
+	if(!flight) {
+		if(inAir()) {
+			vely+=gravity.y;
+			vely=CMath.limitMin(vely, -0.5f);
+		} else {
+			vely=0;
+		}
 	} else {
-		vely=0;
+		if(vely>0) {
+			vely-=0.01f;
+			vely=CMath.limitMin(vely, 0);
+		}
+		if(vely<0) {
+			vely+=0.01f;
+			vely=CMath.limitMax(vely, 0);
+		}
 	}
 if(velx>0) {
 	velx-=0.01f;

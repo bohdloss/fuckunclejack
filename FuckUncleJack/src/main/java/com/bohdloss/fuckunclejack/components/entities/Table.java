@@ -12,7 +12,7 @@ public byte variant;
 		super("table", "table"+(variant&0xff), 1);
 		width=3.25f;
 		height=1.3f;
-		blockCollision=collision;
+		this.collision=collision;
 		this.variant=variant;
 		updateBounds();
 	}

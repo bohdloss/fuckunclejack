@@ -23,6 +23,11 @@ public boolean intersects(CRectanglef in) {
 	return true;
 }
 
+public boolean pIntersects(Point2f in) {
+	if(in.x>=x&in.x<=x+width&in.y<=y+height&in.y>=y) return true;
+	return false;
+}
+
 public double distance(CRectanglef in) {
 	return CMath.distance(x+width/2f, y+height/2f, in.x+in.width/2f, in.y/in.height/2f);
 }
@@ -32,6 +37,14 @@ public CRectanglef setFrame(float x, float y, float width, float height) {
 	this.y=y;
 	this.width=width;
 	this.height=height;
+	return this;
+}
+
+public CRectanglef setFrame(CRectanglef in) {
+	this.x=in.x;
+	this.y=in.y;
+	this.width=in.width;
+	this.height=in.height;
 	return this;
 }
 

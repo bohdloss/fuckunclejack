@@ -10,6 +10,9 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 
 import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Item;
+import com.bohdloss.fuckunclejack.editor.Editor;
+import com.bohdloss.fuckunclejack.hud.Button;
+import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
@@ -26,8 +29,12 @@ public class Listener implements KeyListen {
 	public void init() {
 		glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
 		    @Override public void invoke (long win, double dx, double dy) {
-		        lPlayer.getInventory().selected=(int)CMath.limit(sel()-(int)dy, 27, 35);
-		        //Game.scaleAmount+=(int)dy;
+		    	if(state==GAME) {
+		    		lPlayer.getInventory().selected=(int)CMath.limit(sel()-(int)dy, 27, 35);
+		    		//Game.scaleAmount+=(int)dy;
+		    	} else if(state==EDITMODE) {
+		    		Editor.scroll+=dy;
+		    	}
 		    }
 		});
 	}
@@ -52,6 +59,17 @@ public class Listener implements KeyListen {
 		case GLFW_KEY_P:
 			Client.sendDebug=true;
 			break;
+		case GLFW_KEY_L:
+			lPlayer.flight=!lPlayer.flight;
+			break;
+		case GLFW_KEY_O:
+			if(state==GAME) {
+				state=EDITMODE;
+			} else if(state==EDITMODE) {
+				state=GAME;
+			}
+			
+			break;
 		}
 	}
 
@@ -64,6 +82,17 @@ public class Listener implements KeyListen {
 		double blockx=hovx;
 		double blocky=hovy;
 		if(code==GLFW_MOUSE_BUTTON_1) {
+			
+			try {
+				Button.buttons.forEach(v->{
+					if(v.status==Button.HOVERED) {
+						v.status=Button.PRESSED;
+					}
+				});
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
 			if(hud.isInvOpen()) {
 				
 				// [M1] Actions within inventory GUI in case it is open
@@ -128,6 +157,22 @@ public class Listener implements KeyListen {
 		double blockx=hovx;
 		double blocky=hovy;
 		if(code==GLFW_MOUSE_BUTTON_1) {
+			
+			try {
+				Button.buttons.forEach(v->{
+					if(v.status==Button.PRESSED) {
+						if(v.bounds.pIntersects(HUD.mpoint)) {
+						v.click();
+						v.status=Button.HOVERED;
+						} else {
+							v.status=Button.IDLE;
+						}
+					}
+				});
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
 			Item i = lPlayer.getInventory().slots[sel()].getContent();
 			if(i!=null) i.onLeftClickEnd((int)blockx, (int)blocky, null);
 		} else if(code==GLFW_MOUSE_BUTTON_2) {

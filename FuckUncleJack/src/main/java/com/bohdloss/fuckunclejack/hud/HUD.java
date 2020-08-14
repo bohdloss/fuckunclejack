@@ -5,10 +5,14 @@ import org.joml.Matrix4f;
 import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Inventory;
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
+
+import java.util.concurrent.Callable;
+
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.BlockTexture;
 import com.bohdloss.fuckunclejack.render.CMath;
+import com.bohdloss.fuckunclejack.render.CRectanglef;
 import com.bohdloss.fuckunclejack.render.FontManager;
 import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Point2f;
@@ -28,7 +32,7 @@ public InteractionDisplay interact;
 private boolean invopen;
 
 //cache
-static Point2f mpoint;
+public static Point2f mpoint;
 static Model square;
 static Matrix4f res=new Matrix4f();
 static Matrix4f translate=new Matrix4f();
@@ -56,6 +60,12 @@ static {
 		invdisplay=new InvDisplay();
 		hotbar=new Hotbar();
 		interact = new InteractionDisplay();
+		new Button("fuck off :D",0,0).setAction(new Callable<Integer>() {
+			public Integer call() {
+				System.out.println("Clicked!");
+				return 0;
+			}
+		});
 	}
 	
 	public void toggleInventory() {
@@ -67,6 +77,8 @@ static {
 	}
 	
 	public void render(Shader s, Matrix4f matrix) {
+		mpoint=CMath.mGLCoord(Game.guiScale);
+		
 		health.current=lPlayer.getHealth();
 		health.render(s, matrix);
 		armour.render(s, matrix);
@@ -76,10 +88,25 @@ static {
 			hotbar.render(s, matrix);
 		}
 		if(grabbed!=null) {
-			mpoint=CMath.mGLCoord(Game.guiScale);
+			
 			grabbed.render(s, matrix, mpoint.x, mpoint.y);
 		}
 		interact.render(s, matrix);
+		
+		Button.buttons.forEach(v->{
+			if(v.status!=Button.DISABLED) {
+				if(v.bounds.pIntersects(mpoint)) {
+					if(v.status==Button.IDLE) {
+						v.status=Button.HOVERED;
+					}
+				} else {
+					if(v.status==Button.HOVERED) {
+						v.status=Button.IDLE;
+					}
+				}
+			}
+			v.render(s, matrix);
+		});
 		/*
 		try {
 			i=0;

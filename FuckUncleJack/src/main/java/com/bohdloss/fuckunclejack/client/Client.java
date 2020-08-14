@@ -75,8 +75,6 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 				
 					sleep(GameState.replicationDelay);
 					
-					
-					
 				}
 		
 			}

@@ -69,6 +69,12 @@ public void gameUpdate() {
 		ClientState.lPlayer.moveLateral(1);
 		moved=true;
 	}
+	if(keys[GLFW_KEY_W]) {
+		ClientState.lPlayer.moveVertical(1);
+	}
+	if(keys[GLFW_KEY_S]) {
+		ClientState.lPlayer.moveVertical(-1);
+	}
 	if(moved) {
 		lPlayer.setActiveMov(true);
 	} else {
@@ -92,9 +98,9 @@ public void gameUpdate() {
 		ClientState.lPlayer.setRunning(false);
 	}
 	if(keys[GLFW_KEY_ENTER]) {
-		ClientState.lPlayer.collision=true;
+		ClientState.lPlayer.physics=true;
 	} else {
-		ClientState.lPlayer.collision=true;
+		ClientState.lPlayer.physics=true;
 	}
 }
 

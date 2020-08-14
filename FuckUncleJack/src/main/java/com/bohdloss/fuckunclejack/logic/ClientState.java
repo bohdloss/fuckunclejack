@@ -4,6 +4,7 @@ import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.House;
 import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.editor.Editor;
 
 public class ClientState {
 
@@ -11,6 +12,12 @@ public static final int MENU=0;
 public static final int LOBBY=1;
 public static final int GAME=2;
 	
+public static final int EDITMODE=3;
+
+//editmode
+public static Editor editor;
+//
+
 public static World lWorld;
 public static Player lPlayer;
 

@@ -14,7 +14,7 @@ public class Main {
 public static Game game;
 
 public static String ip=true?"localhost":"95.111.250.134";
-public static String name="";
+public static String name=null;
 
 	public static void main(String[] args) {
 		boolean set=false;
@@ -34,10 +34,10 @@ public static String name="";
 		if(GameState.isClient.getValue()) {
 			name = JOptionPane.showInputDialog("username");
 			game = new Game();
-			Client c = new Client();
+			new Client();
 			game.begin();
 		} else {
-			Server s = new Server();
+			new Server();
 		}
 	}
 

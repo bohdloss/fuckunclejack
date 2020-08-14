@@ -66,9 +66,13 @@ public class Assets {
 			JOptionPane.showMessageDialog(null, "Crashed(While loading models)! :D");
 			System.exit(1);
 		}
+		
+		System.out.println("Assets loaded");
 	}
 	
 	private static void loadModels() throws Exception{
+		System.out.println("Loading models...");
+		
 		models.put("square", ModelLoader.load("/data/models/square.json"));
 		models.put("player_model", ModelLoader.load("/data/models/rectangle.json"));
 		models.put("hud_bar", ModelLoader.load("/data/models/hud_bar.json"));
@@ -87,11 +91,15 @@ public class Assets {
 	}
 	
 	private static void loadShaders() throws Exception{
+		System.out.println("Loading shaders...");
+		
 		shaders.put("shader", new Shader("/data/shaders/shader"));
 		shaders.put("gui", new Shader("/data/shaders/gui"));
 	}
 	
 	private static void loadTextures() throws Exception{
+		System.out.println("Loading textures...");
+		
 		//Hud textures
 		
 		textures.put("hud_bg", new Texture("/data/textures/hud/bg.png"));
@@ -127,7 +135,9 @@ public class Assets {
 	}
 	
 	private static void loadTileSheets() throws Exception{
-		sheets.put("buttons", new TileSheet(textures.get("hud_buttons"), 6));
+		System.out.println("Loading tile sheets...");
+		
+		sheets.put("buttons", new TileSheet(textures.get("hud_buttons"), 4));
 		sheets.put("font", FontManager.load(new Font("Arial", 1, 32), new Color(127,127,127,255)));
 	
 		sheets.put("dad_walking_sheet", new TileSheet(new Texture("/data/textures/entities/player/dad/walking.png"), 4));
@@ -137,6 +147,8 @@ public class Assets {
 	}
 	
 	private static void loadAnimations() throws Exception{
+		System.out.println("Loading animations...");
+		
 		AnimationSet dad_default = new AnimationSet("dad");
 		dad_default.idle=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/idle.png"), 1), false);
 		dad_default.walking=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/walking.png"), 4), true);
@@ -150,6 +162,8 @@ public class Assets {
 	}
 	
 	private static void loadBlocks() throws Exception{
+		System.out.println("Loading block textures...");
+		
 		blocks.put("grass", new BlockTexture("/data/textures/blocks/grass_block_side.png"));
 		blocks.put("dirt", new BlockTexture("/data/textures/blocks/dirt.png"));
 		blocks.put("stone", new BlockTexture("/data/textures/blocks/stone.png"));

@@ -24,7 +24,7 @@ public abstract class House extends Entity{
 		this.width=width;
 		this.height=height;
 		updateBounds();
-		collision=true;
+		physics=true;
 	}
 
 	@Override
