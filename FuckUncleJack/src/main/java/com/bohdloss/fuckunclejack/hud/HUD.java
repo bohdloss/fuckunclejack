@@ -60,7 +60,7 @@ static {
 		invdisplay=new InvDisplay();
 		hotbar=new Hotbar();
 		interact = new InteractionDisplay();
-		new Button("fuck off :D",0,0).setAction(new Callable<Integer>() {
+		new Button("fuck off",0,0).setAction(new Callable<Integer>() {
 			public Integer call() {
 				System.out.println("Clicked!");
 				return 0;
