@@ -12,8 +12,13 @@ public class ModelLoader {
 	public static Model load(String location) throws Exception {
 		Model res=null;
 		String file = read(location);
+		return loadString(file);
+	}
+	
+	public static Model loadString(String in) throws Exception {
+		Model res=null;
 		JSONParser parser = new JSONParser();
-		JSONObject obj = (JSONObject) parser.parse(file);
+		JSONObject obj = (JSONObject) parser.parse(in);
 		
 		JSONArray vertices = (JSONArray) obj.get("vertices");
 		JSONArray tex_coords = (JSONArray) obj.get("tex_coords");

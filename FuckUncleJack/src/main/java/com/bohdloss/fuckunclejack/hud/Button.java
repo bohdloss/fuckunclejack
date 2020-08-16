@@ -60,7 +60,7 @@ static {
 	
 	public void render(Shader s, Matrix4f matrix) {
 		if(!visible) return;
-		float width=FontManager.strWidth(text);
+		float width=2;
 		float scale=width+0.8f;
 		translate.identity().translate(x, y, 0).scale(scale, 1, 1);
 		bounds.setFrame(x-0.5f*scale, y-0.5f, scale, 1);

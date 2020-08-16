@@ -17,6 +17,7 @@ private int height;
 private int id;
 
 public Texture(BufferedImage img) {
+	this.img=img;
 	int w=img.getWidth();
 	int h=img.getHeight();
 	width=w;

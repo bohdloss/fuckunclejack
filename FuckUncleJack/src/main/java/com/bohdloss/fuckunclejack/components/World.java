@@ -34,6 +34,8 @@ private String name;
 
 public HashMap<Integer, Chunk> cachedChunks = new HashMap<Integer, Chunk>();
 
+public boolean needsLightmap=true;
+
 //cache
 protected List<Integer> used = new ArrayList<Integer>();
 protected int getChunk;

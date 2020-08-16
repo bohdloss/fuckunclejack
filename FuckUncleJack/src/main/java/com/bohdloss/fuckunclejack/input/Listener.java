@@ -34,6 +34,19 @@ public class Listener implements KeyListen {
 		    		//Game.scaleAmount+=(int)dy;
 		    	} else if(state==EDITMODE) {
 		    		Editor.scroll+=dy;
+		    		if(Editor.status==Editor.MODEL|Editor.status==Editor.COLLISION) {
+		    			if(Editor.vertical) {
+		    				Editor.yscale+=dy*0.25f;
+		    			} else {
+		    				Editor.xscale+=dy*0.25f;
+		    			}
+		    		} else if(Editor.status==Editor.TRANSLATE) {
+		    			if(Editor.vertical) {
+		    				Editor.savedy+=dy*0.25f;
+		    			} else {
+		    				Editor.savedx+=dy*0.25f;
+		    			}
+		    		}
 		    	}
 		    }
 		});
@@ -81,7 +94,12 @@ public class Listener implements KeyListen {
 	public void onMouseButtonPressed(int code) {
 		double blockx=hovx;
 		double blocky=hovy;
+		if(code==GLFW_MOUSE_BUTTON_3) {
+			Editor.scroll=0;
+		}
 		if(code==GLFW_MOUSE_BUTTON_1) {
+			
+			if(state==EDITMODE) Editor.vertical=!Editor.vertical;
 			
 			try {
 				Button.buttons.forEach(v->{

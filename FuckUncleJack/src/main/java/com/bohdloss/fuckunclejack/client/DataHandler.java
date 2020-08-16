@@ -187,7 +187,9 @@ private static List<Integer> uids = new ArrayList<Integer>();
 				Object[] val=lWorld.entities.entrySet().toArray();
 				for(int i=0;i<val.length;i++) {
 					Entry<Integer, Entity> cur = (Entry<Integer, Entity>) val[i];
-					if(!uids.contains(cur.getKey())) lWorld.entities.remove(cur.getKey());
+					if(state==GAME) {
+						if(!uids.contains(cur.getKey())) lWorld.entities.remove(cur.getKey());
+					}
 				}
 				
 			break;

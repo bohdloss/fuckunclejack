@@ -4,9 +4,16 @@ import org.joml.Matrix4f;
 
 import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Inventory;
+import com.bohdloss.fuckunclejack.editor.Editor;
+
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 
+import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.main.Game;
@@ -60,12 +67,6 @@ static {
 		invdisplay=new InvDisplay();
 		hotbar=new Hotbar();
 		interact = new InteractionDisplay();
-		new Button("fuck off",0,0).setAction(new Callable<Integer>() {
-			public Integer call() {
-				System.out.println("Clicked!");
-				return 0;
-			}
-		});
 	}
 	
 	public void toggleInventory() {
@@ -93,20 +94,7 @@ static {
 		}
 		interact.render(s, matrix);
 		
-		Button.buttons.forEach(v->{
-			if(v.status!=Button.DISABLED) {
-				if(v.bounds.pIntersects(mpoint)) {
-					if(v.status==Button.IDLE) {
-						v.status=Button.HOVERED;
-					}
-				} else {
-					if(v.status==Button.HOVERED) {
-						v.status=Button.IDLE;
-					}
-				}
-			}
-			v.render(s, matrix);
-		});
+		
 		/*
 		try {
 			i=0;

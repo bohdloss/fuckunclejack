@@ -215,11 +215,11 @@ public boolean move(Vector2f vec, boolean move) {
 		
 		
 		if(vec.y<0) {
-			exec.y=highest.y+0.5f+height/2f;
+			exec.y=highest.y+0.5f+0.005f+height/2f;
 			ry=true;
 		}
 		if(vec.y>0) {
-			exec.y=lowest.y-0.5f-height/2f;
+			exec.y=lowest.y-0.5f-0.005f-height/2f;
 			ry=true;
 		}
 		if(vec.x>0) {
@@ -276,11 +276,11 @@ public boolean move(Vector2f vec, boolean move) {
 		//PROGRAMMING HORROR PT.2
 		
 		if(vec.y<0) {
-			exec.y=ehighest.y+ehighest.height/2+height/2f;
+			exec.y=ehighest.y+ehighest.height/2+0.005f+height/2f;
 			ry=true;
 		}
 		if(vec.y>0) {
-			exec.y=elowest.y-elowest.height/2-height/2f;
+			exec.y=elowest.y-elowest.height/2-0.005f-height/2f;
 			ry=true;
 		}
 		if(vec.x>0) {

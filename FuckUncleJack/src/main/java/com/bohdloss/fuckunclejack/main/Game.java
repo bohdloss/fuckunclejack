@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import org.joml.Matrix4f;
@@ -18,7 +19,9 @@ import com.bohdloss.fuckunclejack.input.InputManager;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.render.Camera;
 import com.bohdloss.fuckunclejack.render.FontManager;
+import com.bohdloss.fuckunclejack.render.ModelLoader;
 import com.bohdloss.fuckunclejack.render.Shader;
+import com.bohdloss.fuckunclejack.render.Texture;
 import com.bohdloss.fuckunclejack.server.Server;
 
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
@@ -40,13 +43,17 @@ private String fps="0 FPS";
 private long lastTime=0;
 
 public static boolean pendingToggle=false;
+public static BufferedImage createTexture=null;
+public static String createTextureName=null;
+public static String createModel;
+public static String createModelName;
 
-private static Matrix4f scale;
-private static Matrix4f target;
-private static Matrix4f guiscale2;
-private static Matrix4f guitarget;
-private static Matrix4f tempres;
-private static Shader shader;
+public static Matrix4f scale;
+public static Matrix4f target;
+public static Matrix4f guiscale2;
+public static Matrix4f guitarget;
+public static Matrix4f tempres;
+public static Shader shader;
 
 	public void begin() {
 		setup();
@@ -128,6 +135,21 @@ private static Shader shader;
 				pendingToggle=false;
 				window.toggleFullscreen();
 			}
+			if(createTexture!=null&createTextureName!=null) {
+				Assets.textures.put(createTextureName, new Texture(createTexture));
+				createTexture=null;
+				createTextureName=null;
+			}
+			if(createModel!=null&createModelName!=null) {
+				try {
+				Assets.models.put(createModelName, ModelLoader.loadString(createModel));
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				createModel=null;
+				createModelName=null;
+			}
+			
 			if(window.isDestroyed()) continue;
 			
 			glfwPollEvents();
