@@ -46,6 +46,12 @@ public class Listener implements KeyListen {
 		    			} else {
 		    				Editor.savedx+=dy*0.25f;
 		    			}
+		    		} else if(Editor.status==Editor.NORMAL) {
+		    			if(Editor.vertical) {
+		    				Editor.savedy+=dy*0.25f;
+		    			} else {
+		    				Editor.savedx+=dy*0.25f;
+		    			}
 		    		}
 		    	}
 		    }

@@ -19,10 +19,12 @@ import org.joml.Matrix4f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.entities.Prop;
 import com.bohdloss.fuckunclejack.hud.Button;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
+import com.bohdloss.fuckunclejack.logic.FunctionUtils;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.CMath;
@@ -59,11 +61,21 @@ public static List<Float> ys = new ArrayList<Float>();
 public static List<Boolean> collision = new ArrayList<Boolean>();
 public static List<Boolean> physics = new ArrayList<Boolean>();
 
+public static List<Integer> normalids = new ArrayList<Integer>();
+public static List<Float> normx = new ArrayList<Float>();
+public static List<Float> normy = new ArrayList<Float>();
+
+public static int curID;
+public static Entity curEnt;
+public static boolean savedPhysics;
+
+public static int currentNormIndex=0;
 public static int currentIndex=0;
 
 public static float savedx=0;
 public static float savedy=0;
 
+public static final int NORMAL=-1;
 public static final int READY=0;
 public static final int CHOOSE=1;
 public static final int MODEL=2;
@@ -82,7 +94,6 @@ static {
 	new Button("new entity",-9,6).setAction(new Callable<Integer>() {
 		public Integer call() {
 			if(state==EDITMODE&status==READY) {
-				System.out.println("a");
 				collision.add(JOptionPane.showInputDialog("true/false has collision").equals("true"));
 				physics.add(JOptionPane.showInputDialog("true/false has physics").equals("true"));
 				Editor.status=Editor.CHOOSE;
@@ -193,7 +204,6 @@ static {
 				Texture t = Assets.textures.get(name);
 				if(t!=null) {
 					usedtxt=t;
-					System.out.println(usedtxt.getImg());
 					txts.add(usedtxt.getImg());
 					txtname.add(name);
 					status=MODEL;
@@ -206,7 +216,9 @@ static {
 	});
 	new Button("finish translation",3,6).setAction(new Callable<Integer>() {
 		public Integer call() {
-			if(state==EDITMODE&status==TRANSLATE) {
+			if(state==EDITMODE) {
+				
+				if(status==TRANSLATE) {
 				
 				xs.add(savedx);
 				ys.add(savedy);
@@ -222,13 +234,56 @@ static {
 				Prop p = new Prop(modelname, txt, sw, sh, collision.get(currentIndex), physics.get(currentIndex));
 				ClientState.lWorld.join(p, sx, sy);
 				
+				savedx=0;
+				savedy=0;
+				xscale=1;
+				yscale=1;
+				
 				currentIndex++;
 				status=READY;
+				
+				} else if(status==NORMAL) {
+					normx.add(savedx);
+					normy.add(savedy);
+					normalids.add(curID);
+					
+					currentNormIndex++;
+					
+					savedx=0;
+					savedy=0;
+					xscale=1;
+					yscale=1;
+					
+					curEnt.physics=savedPhysics;
+					
+					status=READY;
+				}
+				
 			}
 			return 0;
 		}
 	});
-	new Button("save",6,6).setAction(new Callable<Integer>() {
+	new Button("normal entity",6,6).setAction(new Callable<Integer>() {
+		public Integer call() {
+			if(state==EDITMODE&status==READY) {
+				try {
+					int id=Integer.parseInt(JOptionPane.showInputDialog("entity id"));
+					curID=id;
+					Entity ent = FunctionUtils.genEntityById(id, new Object[0]);
+					if(ent==null) throw new Exception("Entity can't be null");
+					Editor.status=Editor.NORMAL;
+					savedPhysics=ent.physics;
+					ent.physics=false;
+					curEnt=ent;
+					ClientState.lWorld.join(ent, 0, 2);
+				} catch(Exception e) {
+					JOptionPane.showMessageDialog(null, "The entity does not exist for this id, or it required additional arguments");
+				}
+			}
+			return 0;
+		}
+	});
+	new Button("save",9,6).setAction(new Callable<Integer>() {
 		public Integer call() {
 			if(state==EDITMODE&status==READY) {
 				try {
@@ -292,6 +347,14 @@ static {
 				JSONArray normalEnts = new JSONArray();
 				data.put("entities", normalEnts);
 				
+				for(int i=0;i<normalids.size();i++) {
+					JSONObject ent = new JSONObject();
+					normalEnts.add(ent);
+					ent.put("x", normx.get(i)+"f");
+					ent.put("y", normy.get(i)+"f");
+					ent.put("id", normalids.get(i)+"");
+				}
+				
 				bw = new BufferedWriter(new FileWriter(mapData));
 				bw.write(data.toJSONString());
 				bw.flush();
@@ -306,6 +369,11 @@ static {
 }
 
 	public static void render(Shader s, Matrix4f matrix) {
+		
+		if(status==NORMAL) {
+			curEnt.x=savedx;
+			curEnt.y=savedy;
+		}
 		
 		//render debug collisions
 		

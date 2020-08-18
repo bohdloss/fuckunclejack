@@ -42,7 +42,7 @@ protected static Matrix4f translate=new Matrix4f();
 		scale.identity().scale(Game.scaleAmount*20, Game.scaleAmount*14, 1);
 		for(int i=0;i<3;i++) {
 			
-			float movFactor = (-c.getX()/(Game.scaleAmount*20))/2f;
+			float movFactor = (-c.getX()/(Game.scaleAmount*20));
 			float yCoord = ((-c.getY()+400)/(Game.scaleAmount*14));
 			
 			translate.identity().translate((i-1)+movFactor, yCoord, 0);

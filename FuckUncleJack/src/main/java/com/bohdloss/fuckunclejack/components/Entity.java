@@ -9,7 +9,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import com.bohdloss.fuckunclejack.components.entities.Player;
-import com.bohdloss.fuckunclejack.components.entities.Table;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Assets;
@@ -514,6 +513,10 @@ public int getUID() {
 
 public void setUID(int uid) {
 	this.uid=uid;
+}
+
+public Object[] getData() {
+	return null;
 }
 
 }

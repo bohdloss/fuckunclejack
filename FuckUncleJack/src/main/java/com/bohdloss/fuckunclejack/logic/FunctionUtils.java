@@ -89,7 +89,7 @@ public class FunctionUtils {
 		case 2:
 			return new DesertHouse();
 		case 3:
-			return new Table((boolean)data[0], (byte)data[1]);
+			return new Prop((String)data[0], (String)data[1], (float)data[2], (float)data[3], (boolean)data[4], (boolean)data[4]);
 		}
 		return null;
 	}

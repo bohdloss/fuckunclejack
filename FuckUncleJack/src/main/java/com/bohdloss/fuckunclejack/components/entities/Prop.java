@@ -6,6 +6,10 @@ import com.bohdloss.fuckunclejack.render.CMath;
 
 public class Prop extends Entity {
 
+//cache
+private Object[] data=new Object[6];	
+//
+	
 	public Prop(String model, String texture, float width, float height, boolean collision, boolean physics) {
 		super(model, texture, 1);
 		this.width=width;
@@ -35,7 +39,17 @@ public class Prop extends Entity {
 
 	@Override
 	public int getId() {
-		return 4;
+		return 3;
 	}
 
+	public Object[] getData() {
+		data[0]=model;
+		data[1]=texture;
+		data[2]=width;
+		data[3]=height;
+		data[4]=collision;
+		data[5]=physics;
+		return data;
+	}
+	
 }

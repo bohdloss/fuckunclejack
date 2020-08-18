@@ -22,7 +22,7 @@ protected Item item;
 
 //GC
 private Matrix4f res=new Matrix4f();
-
+private Object[] data=new Object[2];
 private Model itemmodel;
 //END
 
@@ -84,6 +84,12 @@ private Model itemmodel;
 	@Override
 	public int getId() {
 		return 1;
+	}
+	
+	public Object[] getData() {
+		data[0]=item.getId();
+		data[1]=item.getAmount();
+		return data;
 	}
 	
 }

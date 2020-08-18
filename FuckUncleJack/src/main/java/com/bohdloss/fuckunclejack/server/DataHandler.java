@@ -12,7 +12,6 @@ import com.bohdloss.fuckunclejack.components.entities.DesertHouse;
 import com.bohdloss.fuckunclejack.components.entities.House;
 import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.components.entities.Player;
-import com.bohdloss.fuckunclejack.components.entities.Table;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.render.CMath;
 

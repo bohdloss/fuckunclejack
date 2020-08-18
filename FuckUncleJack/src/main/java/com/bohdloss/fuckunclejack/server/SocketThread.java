@@ -197,11 +197,15 @@ public void fillObject() {
 					ItemDrop d = (ItemDrop) v;
 					buf.putInt(d.getItem().getId());
 					buf.putInt(d.getItem().getAmount());
-				break;
+					break;
 				case 3:
-					Table t = (Table) v;
-					buf.put(t.collision?(byte)1:(byte)0);
-					buf.put(t.variant);
+					Prop p = (Prop) v;
+					writeString(buf, p.model);
+					writeString(buf, p.texture);
+					buf.putFloat(p.width);
+					buf.putFloat(p.height);
+					buf.put(p.collision?(byte)1:(byte)0);
+					buf.put(p.physics?(byte)1:(byte)0);
 				break;
 				}
 				

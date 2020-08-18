@@ -164,10 +164,13 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					data[1]=buf.getInt();
 					break;
 					case 3:
-					case 4:
-					data = new Object[2];
-					data[0]=(boolean)(buf.get()==(byte)1);
-					data[1]=buf.get();
+					data = new Object[6];
+					data[0]=(String)readString(buf);
+					data[1]=(String)readString(buf);
+					data[2]=(float)buf.getFloat();
+					data[3]=(float)buf.getFloat();
+					data[4]=(boolean)(buf.get()==(byte)1);
+					data[5]=(boolean)(buf.get()==(byte)1);
 					break;
 					}
 					
