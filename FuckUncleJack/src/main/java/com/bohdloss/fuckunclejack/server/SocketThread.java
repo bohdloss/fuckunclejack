@@ -192,22 +192,9 @@ public void fillObject() {
 				buf.putFloat(v.getVelocity().y);
 				buf.putInt(v.getId());
 				
-				switch(v.getId()) {
-				case 1:
-					ItemDrop d = (ItemDrop) v;
-					buf.putInt(d.getItem().getId());
-					buf.putInt(d.getItem().getAmount());
-					break;
-				case 3:
-					Prop p = (Prop) v;
-					writeString(buf, p.model);
-					writeString(buf, p.texture);
-					buf.putFloat(p.width);
-					buf.putFloat(p.height);
-					buf.put(p.collision?(byte)1:(byte)0);
-					buf.put(p.physics?(byte)1:(byte)0);
-				break;
-				}
+				Object[] data = v.getData();
+				
+				if(data!=null) putEntityData(buf, data);
 				
 			});
 			

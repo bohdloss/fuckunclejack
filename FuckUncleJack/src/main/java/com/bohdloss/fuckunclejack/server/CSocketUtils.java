@@ -78,6 +78,22 @@ public class CSocketUtils {
 		return new String(b);
 	}
 	
+	public static void putEntityData(ByteBuffer buf, Object[] data) {
+		for(int i=0;i<data.length;i++) {
+			if(data[i] instanceof Integer) {
+				buf.putInt((int)data[i]);
+			} else if(data[i] instanceof Float) {
+				buf.putFloat((float)data[i]);
+			} else if(data[i] instanceof Boolean) {
+				buf.put((boolean)data[i]?(byte)1:(byte)0);
+			} else if(data[i] instanceof String) {
+				writeString(buf, (String)data[i]);
+			} else if(data[i] instanceof Byte) {
+				buf.put((byte)data[i]);
+			}
+		}
+	}
+	
 	public static void writeString(ByteBuffer buf, String write) {
 		buf.putInt(write.length());
 		buf.put(write.getBytes());

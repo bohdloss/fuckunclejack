@@ -1,5 +1,6 @@
 package com.bohdloss.fuckunclejack.logic;
 
+import java.nio.ByteBuffer;
 import java.util.Random;
 
 import com.bohdloss.fuckunclejack.components.Block;
@@ -15,6 +16,8 @@ import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.server.Server;
 
+import static com.bohdloss.fuckunclejack.server.CSocketUtils.*;
+
 public class FunctionUtils {
 
 	public static ItemDrop genItemEntity(Item item) {
@@ -28,7 +31,7 @@ public class FunctionUtils {
 
 	public static Block genBlockById(int id, World world, int x, int y) {
 		int chunk = CMath.fastFloor(((double)x/16d));
-		Chunk c = world.chunks.get(chunk);
+		Chunk c = world.getChunk(chunk, false);
 		return genBlockByIdChunk(id, c, x-(c.getOffsetx()*16), y);
 	}
 
@@ -89,9 +92,31 @@ public class FunctionUtils {
 		case 2:
 			return new DesertHouse();
 		case 3:
-			return new Prop((String)data[0], (String)data[1], (float)data[2], (float)data[3], (boolean)data[4], (boolean)data[4]);
+			return new Prop((float)data[0], (float)data[1], (String)data[2], (float)data[3], (float)data[4], (boolean)data[5], (boolean)data[6]);
 		}
 		return null;
+	}
+	
+	public static Object[] genDataById(ByteBuffer buf, int id) {
+		Object[] data=null;
+		switch(id) {
+		case 1:
+			data=new Object[2];
+			data[0]=buf.getInt();
+			data[1]=buf.getInt();
+			break;
+		case 3:
+			data=new Object[7];
+			data[0]=buf.getFloat();
+			data[1]=buf.getFloat();
+			data[2]=readString(buf);
+			data[3]=buf.getFloat();
+			data[4]=buf.getFloat();
+			data[5]=(boolean)(buf.get()==(byte)1);
+			data[6]=(boolean)(buf.get()==(byte)1);
+			break;
+		}
+		return data;
 	}
 	
 	public static void travel(Player p, World w, int x, int y) {

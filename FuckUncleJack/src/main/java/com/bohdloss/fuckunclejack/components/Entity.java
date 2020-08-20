@@ -48,11 +48,11 @@ private int uid;
 
 public boolean flight;
 
-//better GC
-private Vector2f vel=new Vector2f(0,0);
+//cache
+protected Vector2f vel=new Vector2f(0,0);
 
-private Matrix4f res=new Matrix4f();
-private Vector2f airCheck=new Vector2f(0, -0.01f);
+protected static Matrix4f res=new Matrix4f();
+protected static Vector2f airCheck=new Vector2f(0, -0.01f);
 
 private Vector2f exec=new Vector2f();
 

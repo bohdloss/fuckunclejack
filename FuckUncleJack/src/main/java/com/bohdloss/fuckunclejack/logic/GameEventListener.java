@@ -12,7 +12,6 @@ public interface GameEventListener {
 	abstract void onPlayerJoin(PlayerJoinEvent e);
 	abstract void onPlayerLeave(PlayerLeaveEvent e);
 	abstract void onInvItemAdded(AddInvItemEvent e);
-	abstract void onInvItemMoved(ItemMovedEvent e);
 	abstract void onEnterHouse(EnterHouseEvent e);
 	
 }

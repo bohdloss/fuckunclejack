@@ -16,7 +16,6 @@ import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
-import com.bohdloss.fuckunclejack.logic.events.ItemMovedEvent;
 import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.CMath;
 
@@ -30,7 +29,7 @@ public class Listener implements KeyListen {
 		glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
 		    @Override public void invoke (long win, double dx, double dy) {
 		    	if(state==GAME) {
-		    		lPlayer.getInventory().selected=(int)CMath.limit(sel()-(int)dy, 27, 35);
+		    		lPlayer.getInventory().selected=(int)CMath.limit(sel()-(int)dy, 0, 8);
 		    		//Game.scaleAmount+=(int)dy;
 		    	} else if(state==EDITMODE) {
 		    		Editor.scroll+=dy;
@@ -68,9 +67,6 @@ public class Listener implements KeyListen {
 		case GLFW_KEY_T:
 			lPlayer.x=32000;
 			lPlayer.y=100;
-			break;
-		case GLFW_KEY_E:
-			hud.toggleInventory();
 			break;
 		case GLFW_KEY_F:
 			if(nearHouse!=null) nearHouse.enterHouse(lPlayer);
@@ -116,34 +112,6 @@ public class Listener implements KeyListen {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-			
-			if(hud.isInvOpen()) {
-				
-				// [M1] Actions within inventory GUI in case it is open
-				
-				if(CMath.inrange(hud.invdisplay.hovIndex, 0f, 35f)) {
-						if(!grabbing) {
-							Item i = lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].getContent();
-							if(i!=null) {
-							grabbing=true;
-							grabSlot=Game.hud.invdisplay.hovIndex;
-							grabbed=lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].getContent();
-							lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].setContent(null);
-							}
-						} else {
-							Item i = lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].getContent();
-							if(i==null) {
-								grabbing=false;
-								lPlayer.getInventory().slots[Game.hud.invdisplay.hovIndex].setContent(grabbed);
-								grabbed=null;
-								EventHandler.invItemMoved(true, new ItemMovedEvent(lPlayer, GameEvent.userInput, grabSlot, Game.hud.invdisplay.hovIndex));
-							}
-						}
-				}
-				
-				//
-				
-			} else {
 				
 				// [M1] Actions within the game world
 				
@@ -152,27 +120,15 @@ public class Listener implements KeyListen {
 				lWorld.destroyBlock(GameEvent.handDestroy, lPlayer, (int)blockx, (int) blocky, false, true);
 			
 				//
-			
-			}
+				
 		} else if(code==GLFW_MOUSE_BUTTON_2) {
-			if(hud.isInvOpen()) {
-				
-				// [M2] Actions withing inventory GUI in case it is open
-				
-				
-				
-				//
-				
-			} else {
-				
+			
 				// [M2] Actions withing the game world
 				
 				Item i = lPlayer.getInventory().slots[sel()].getContent();
 				if(i!=null) i.onRightClickBegin((int)blockx, (int)blocky, null);
 			
 				//
-				
-			}
 		}
 	}
 

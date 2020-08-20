@@ -23,10 +23,6 @@ public static Player lPlayer;
 
 public static final double drawDistance=20*20;
 
-public static Item grabbed;
-public static boolean grabbing=false;
-public static int grabSlot;
-
 public static House nearHouse;
 public static boolean nearHouseB=false;
 public static House lastHouse=null;

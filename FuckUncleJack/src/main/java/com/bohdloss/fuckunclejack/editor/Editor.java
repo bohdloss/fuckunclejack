@@ -48,23 +48,13 @@ public static Texture usedtxt;
 public static float xscale=1;
 public static float yscale=1;
 public static boolean vertical=false;
-public static List<BufferedImage> txts = new ArrayList<BufferedImage>();
-public static List<String> txtname = new ArrayList<String>();
-public static List<String> savedModel = new ArrayList<String>();
-public static List<String> jsonModel = new ArrayList<String>();
-public static List<Float> savedScalex = new ArrayList<Float>();
-public static List<Float> savedScaley = new ArrayList<Float>();
-public static List<Float> widths = new ArrayList<Float>();
-public static List<Float> heights = new ArrayList<Float>();
-public static List<Float> xs = new ArrayList<Float>();
-public static List<Float> ys = new ArrayList<Float>();
-public static List<Boolean> collision = new ArrayList<Boolean>();
-public static List<Boolean> physics = new ArrayList<Boolean>();
+public static List<CustomEnt> customs = new ArrayList<CustomEnt>();
 
 public static List<Integer> normalids = new ArrayList<Integer>();
 public static List<Float> normx = new ArrayList<Float>();
 public static List<Float> normy = new ArrayList<Float>();
 
+public static CustomEnt custEnt;
 public static int curID;
 public static Entity curEnt;
 public static boolean savedPhysics;
@@ -94,8 +84,10 @@ static {
 	new Button("new entity",-9,6).setAction(new Callable<Integer>() {
 		public Integer call() {
 			if(state==EDITMODE&status==READY) {
-				collision.add(JOptionPane.showInputDialog("true/false has collision").equals("true"));
-				physics.add(JOptionPane.showInputDialog("true/false has physics").equals("true"));
+				custEnt = new CustomEnt();
+				customs.add(custEnt);
+				custEnt.collision=JOptionPane.showInputDialog("true/false has collision").equals("true");
+				custEnt.physics=JOptionPane.showInputDialog("true/false has physics").equals("true");
 				Editor.status=Editor.CHOOSE;
 			}
 			return 0;
@@ -123,62 +115,9 @@ static {
 	new Button("finish model",-3,6).setAction(new Callable<Integer>() {
 		public Integer call() {
 			if(state==EDITMODE&status==MODEL) {
-				JSONObject save = new JSONObject();
 				
-				JSONArray vertices = new JSONArray();
-				JSONArray tex_coords = new JSONArray();
-				JSONArray indices = new JSONArray();
-				
-				save.put("vertices", vertices);
-				save.put("tex_coords", tex_coords);
-				save.put("indices", indices);
-				
-				vertices.add((-0.5f*xscale)+"f");
-				vertices.add((0.5f*yscale)+"f");
-				vertices.add("0f");
-				
-				vertices.add((0.5f*xscale)+"f");
-				vertices.add((0.5f*yscale)+"f");
-				vertices.add("0f");
-				
-				vertices.add((0.5f*xscale)+"f");
-				vertices.add((-0.5f*yscale)+"f");
-				vertices.add("0f");
-				
-				vertices.add((-0.5f*xscale)+"f");
-				vertices.add((-0.5f*yscale)+"f");
-				vertices.add("0f");
-				
-				tex_coords.add("0f");
-				tex_coords.add("0f");
-				
-				tex_coords.add("1f");
-				tex_coords.add("0f");
-				
-				tex_coords.add("1f");
-				tex_coords.add("1f");
-				
-				tex_coords.add("0f");
-				tex_coords.add("1f");
-				
-				indices.add("0");
-				indices.add("1");
-				indices.add("2");
-				
-				indices.add("2");
-				indices.add("3");
-				indices.add("0");
-				
-				String output = save.toJSONString();
-				
-				String name = JOptionPane.showInputDialog("model name");
-				
-				jsonModel.add(output);
-				savedModel.add(name);
-				savedScalex.add(xscale);
-				savedScaley.add(yscale);
-				Game.createModel=output;
-				Game.createModelName=name;
+				custEnt.xscale=xscale;
+				custEnt.yscale=yscale;
 				
 				status=COLLISION;
 			}
@@ -189,8 +128,8 @@ static {
 		public Integer call() {
 			if(state==EDITMODE&status==COLLISION) {
 				
-				widths.add(xscale);
-				heights.add(yscale);
+				custEnt.width=xscale;
+				custEnt.height=yscale;
 				
 				status=TRANSLATE;
 			}
@@ -204,8 +143,8 @@ static {
 				Texture t = Assets.textures.get(name);
 				if(t!=null) {
 					usedtxt=t;
-					txts.add(usedtxt.getImg());
-					txtname.add(name);
+					custEnt.texture=name;
+					custEnt.txt=usedtxt.getImg();
 					status=MODEL;
 				} else {
 					JOptionPane.showMessageDialog(null, "invalid name");
@@ -220,18 +159,20 @@ static {
 				
 				if(status==TRANSLATE) {
 				
-				xs.add(savedx);
-				ys.add(savedy);
+				custEnt.x=savedx;
+				custEnt.y=savedy;
 				
-				String txt=txtname.get(currentIndex);
-				String modelname=savedModel.get(currentIndex);
-				float sw = widths.get(currentIndex);
-				float sh = heights.get(currentIndex);
+				float xscale=custEnt.xscale;
+				float yscale=custEnt.yscale;
 				
-				float sx = xs.get(currentIndex);
-				float sy = ys.get(currentIndex);
+				String txt=custEnt.texture;
+				float sw = custEnt.width;
+				float sh = custEnt.height;
 				
-				Prop p = new Prop(modelname, txt, sw, sh, collision.get(currentIndex), physics.get(currentIndex));
+				float sx = custEnt.x;
+				float sy = custEnt.y;
+				
+				Prop p = new Prop(xscale, yscale, txt, sw, sh, custEnt.collision, custEnt.physics);
 				ClientState.lWorld.join(p, sx, sy);
 				
 				savedx=0;
@@ -291,57 +232,14 @@ static {
 				chooser.showSaveDialog(null);
 				File folder = chooser.getSelectedFile().getParentFile();
 				
-				File textures = new File(folder.getPath()+"/textures");
-				textures.mkdir();
-				
-				String txtjavacode="";
-				
-				for(int i=0;i<txts.size();i++) {
-					ImageIO.write(txts.get(i), "png", new File(textures.getPath()+"/"+txtname.get(i)+".png"));
-					txtjavacode+="textures.put(\""+txtname.get(i)+"\", new Texture(\"/data/textures/props/"+txtname.get(i)+".png\");\n";
-				}
-				File codetxt = new File(textures.getPath()+"/java.txt");
-				BufferedWriter bw = new BufferedWriter(new FileWriter(codetxt));
-				bw.write(txtjavacode);
-				bw.flush();
-				bw.close();
-				
-				//models
-				
-				File models = new File(folder.getPath()+"/models");
-				models.mkdir();
-				
-				String modeljavacode="";
-				
-				for(int i=0;i<jsonModel.size();i++) {
-					BufferedWriter bww = new BufferedWriter(new FileWriter(new File(models.getPath()+"/"+savedModel.get(i)+".json")));
-					bww.write(jsonModel.get(i));
-					bww.flush();
-					bww.close();
-					modeljavacode+="models.put(\""+savedModel.get(i)+"\", ModelLoader.load(\"/data/models/"+savedModel.get(i)+".json\");\n";
-				}
-				codetxt = new File(models.getPath()+"/java.txt");
-				bw = new BufferedWriter(new FileWriter(codetxt));
-				bw.write(modeljavacode);
-				bw.flush();
-				bw.close();
-				
 				File mapData = new File(folder.getPath()+"/"+chooser.getSelectedFile().getName()+".json");
 				
 				JSONObject data = new JSONObject();
 				JSONArray customEnts = new JSONArray();
 				data.put("custom", customEnts);
-				for(int i=0;i<collision.size();i++) {
-					JSONObject obj = new JSONObject();
+				for(int i=0;i<customs.size();i++) {
+					JSONObject obj = customs.get(i).getData();
 					customEnts.add(obj);
-					obj.put("model", savedModel.get(i));
-					obj.put("texture", txtname.get(i));
-					obj.put("x", xs.get(i)+"f");
-					obj.put("y", ys.get(i)+"f");
-					obj.put("width", widths.get(i)+"f");
-					obj.put("height", heights.get(i)+"f");
-					obj.put("collision", collision.get(i)+"");
-					obj.put("physics", physics.get(i)+"");
 				}
 				
 				JSONArray normalEnts = new JSONArray();
@@ -355,7 +253,7 @@ static {
 					ent.put("id", normalids.get(i)+"");
 				}
 				
-				bw = new BufferedWriter(new FileWriter(mapData));
+				BufferedWriter bw = new BufferedWriter(new FileWriter(mapData));
 				bw.write(data.toJSONString());
 				bw.flush();
 				bw.close();
@@ -384,7 +282,7 @@ static {
 			if(status==MODEL) {
 				translation.identity().translate(savedx, savedy, 0).scale(xscale, yscale, 1);
 			} else {
-				translation.identity().translate(savedx, savedy, 0).scale(savedScalex.get(currentIndex), savedScaley.get(currentIndex), 1);
+				translation.identity().translate(savedx, savedy, 0).scale(custEnt.xscale, custEnt.yscale, 1);
 			}
 			res=res.mul(translation, res);
 			s.setUniform("projection", res);

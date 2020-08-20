@@ -51,9 +51,6 @@ public static boolean isMouseButtonDown(int code) {
 
 public void gameUpdate() {
 	baseUpdate();
-	if(hud.isInvOpen()) {
-		return;
-	}
 	
 	hoverCalc(scaleAmount);
 	

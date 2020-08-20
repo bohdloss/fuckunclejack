@@ -15,8 +15,6 @@ public abstract class BlockItem extends Item{
 	public BlockItem(int amount, String texture) {
 		super(0, 0, amount, texture);
 	}
-
-	
 	
 	public Block generateInstance(int x, int y, World w) {
 		return FunctionUtils.genBlockById(getId(), w, x, y);

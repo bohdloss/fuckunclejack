@@ -28,15 +28,10 @@ import com.bohdloss.fuckunclejack.render.Texture;
 import com.bohdloss.fuckunclejack.client.ChunkRequest;
 
 public class HUD {
-private Inventory inventory;
-
 public Bar health;
 public Bar armour;
-public InvDisplay invdisplay;
 public Hotbar hotbar;
 public InteractionDisplay interact;
-
-private boolean invopen;
 
 //cache
 public static Point2f mpoint;
@@ -64,17 +59,8 @@ static {
 	public HUD() {
 		health=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_health"), -10.5f, -4f, 20, 20);
 		armour=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_armour"), -10.5f, -6f, 100, 25);
-		invdisplay=new InvDisplay();
 		hotbar=new Hotbar();
 		interact = new InteractionDisplay();
-	}
-	
-	public void toggleInventory() {
-		invopen=!invopen;
-	}
-	
-	public boolean isInvOpen() {
-		return invopen;
 	}
 	
 	public void render(Shader s, Matrix4f matrix) {
@@ -83,15 +69,7 @@ static {
 		health.current=lPlayer.getHealth();
 		health.render(s, matrix);
 		armour.render(s, matrix);
-		if(invopen) {
-			invdisplay.render(s, matrix);
-		} else {
-			hotbar.render(s, matrix);
-		}
-		if(grabbed!=null) {
-			
-			grabbed.render(s, matrix, mpoint.x, mpoint.y);
-		}
+		hotbar.render(s, matrix);
 		interact.render(s, matrix);
 		
 		

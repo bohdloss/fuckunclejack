@@ -37,7 +37,7 @@ public static final byte changeDim=(byte)9;
 
 public static final byte leave=(byte)10;
 
-//MOVE INV ITEM
+//NO IDEA
 
 public static final byte userInput=(byte)11;
 
@@ -101,7 +101,6 @@ public static final byte ItemPickupEvent=(byte)5;
 public static final byte PlayerJoinEvent=(byte)6;
 public static final byte PlayerLeaveEvent=(byte)7;
 public static final byte AddInvItemEvent=(byte)8;
-public static final byte ItemMovedEvent=(byte)9;
 public static final byte EnterHouseEvent=(byte)10;
 
 }

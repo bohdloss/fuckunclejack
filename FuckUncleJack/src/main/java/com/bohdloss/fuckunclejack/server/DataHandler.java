@@ -60,7 +60,7 @@ public class DataHandler {
 				float vely=buf.getFloat();
 				p.setVelocity(velx, vely);
 				
-				p.getInventory().selected=(int)CMath.limit(buf.getInt(), 27, 35);
+				p.getInventory().selected=(int)CMath.limit(buf.getInt(), 0, 8);
 				
 			break;
 			case EVENT:
@@ -119,14 +119,6 @@ public class DataHandler {
 							input.sendInventory=true;
 						}
 						
-					break;
-					case ItemMovedEvent:
-						Player e_IME_ISSUER = input.player;
-						int e_IME_origin=buf.getInt();
-						int e_IME_dest=buf.getInt();
-						Item e_IME_get = e_IME_ISSUER.getInventory().slots[e_IME_origin].getContent();
-						e_IME_ISSUER.getInventory().slots[e_IME_origin].setContent(e_IME_ISSUER.getInventory().slots[e_IME_dest].getContent());
-						e_IME_ISSUER.getInventory().slots[e_IME_dest].setContent(e_IME_get);
 					break;
 					case EnterHouseEvent:
 						try {

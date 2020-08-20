@@ -155,24 +155,7 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					
 					int ENT_ID = buf.getInt();
 					
-					Object[] data=new Object[0];
-					
-					switch(ENT_ID) {
-					case 1:
-					data = new Object[2];
-					data[0]=buf.getInt();
-					data[1]=buf.getInt();
-					break;
-					case 3:
-					data = new Object[6];
-					data[0]=(String)readString(buf);
-					data[1]=(String)readString(buf);
-					data[2]=(float)buf.getFloat();
-					data[3]=(float)buf.getFloat();
-					data[4]=(boolean)(buf.get()==(byte)1);
-					data[5]=(boolean)(buf.get()==(byte)1);
-					break;
-					}
+					Object[] data=genDataById(buf, ENT_ID);
 					
 					if(lWorld.entities.get(ENT_UID)==null) {
 						Entity ENT_create = genEntityById(ENT_ID, data);

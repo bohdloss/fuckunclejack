@@ -83,6 +83,8 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 		
 		} catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+			auth=false;
 		}
 		}
 	}

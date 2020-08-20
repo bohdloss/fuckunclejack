@@ -87,8 +87,8 @@ private Model itemmodel;
 	}
 	
 	public Object[] getData() {
-		data[0]=item.getId();
-		data[1]=item.getAmount();
+		data[0]=(int)item.getId();
+		data[1]=(int)item.getAmount();
 		return data;
 	}
 	

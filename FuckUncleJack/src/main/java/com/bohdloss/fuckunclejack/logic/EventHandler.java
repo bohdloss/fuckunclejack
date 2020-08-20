@@ -15,7 +15,6 @@ import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
 import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
-import com.bohdloss.fuckunclejack.logic.events.ItemMovedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemPickupEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerLeaveEvent;
@@ -212,23 +211,6 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 						t.sendInventory=true;
 					}
 				});
-			}
-		}
-		
-		return event;
-	}
-	
-	public static ItemMovedEvent invItemMoved(boolean send, ItemMovedEvent event) {
-		logic.onInvItemMoved(event);
-		try {
-			listeners.forEach(i -> i.onInvItemMoved(event));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		if(send&!event.isCancelled()) {
-			if(GameState.isClient.getValue()) {
-				Client.events.add(event);
 			}
 		}
 		

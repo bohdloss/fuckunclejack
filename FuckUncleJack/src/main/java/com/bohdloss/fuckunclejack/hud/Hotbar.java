@@ -38,11 +38,11 @@ public void render(Shader s, Matrix4f matrix) {
 		
 		boolean selected=false;
 		
-		if(ClientState.sel()==x+27) {
+		if(ClientState.sel()==x) {
 			selected=true;
 		}
 		
-		lPlayer.getInventory().slots[x+27].render(s, matrix, calcx, -6f, selected);
+		lPlayer.getInventory().slots[x].render(s, matrix, calcx, -6f, selected);
 		
 	}
 }

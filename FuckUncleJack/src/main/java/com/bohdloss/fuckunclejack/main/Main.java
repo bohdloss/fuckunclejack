@@ -17,6 +17,7 @@ public static String ip=true?"localhost":"95.111.250.134";
 public static String name=null;
 
 	public static void main(String[] args) {
+		
 		boolean set=false;
 		
 		if(args.length>=1) {

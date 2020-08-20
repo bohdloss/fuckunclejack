@@ -16,7 +16,6 @@ import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
 import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
-import com.bohdloss.fuckunclejack.logic.events.ItemMovedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemPickupEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerLeaveEvent;
@@ -259,20 +258,6 @@ private CRectanglef ebounds;
 		break;
 		}
 		
-	}
-
-	@Override
-	public void onInvItemMoved(ItemMovedEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
-		switch(e.getCause()) {
-		default: e.cancel("nocause");
-		case userInput:
-			
-		break;
-		}
 	}
 
 	@Override
