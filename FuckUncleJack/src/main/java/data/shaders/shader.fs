@@ -7,8 +7,11 @@ varying vec2 redbool;
 
 void main() {
 	if(redbool.x==1) {
-		gl_FragColor = texture2D(sampler, tex_coords)+vec4(1,0,0,0.5);
+		vec4 txt = texture2D(sampler, tex_coords);
+		txt.x+=0.5;
+		gl_FragColor=txt;
 	} else {
-		gl_FragColor = texture2D(sampler, tex_coords);
+		vec4 txt = texture2D(sampler, tex_coords);
+		gl_FragColor=txt;
 	}
 }
