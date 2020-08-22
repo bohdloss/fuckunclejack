@@ -11,6 +11,7 @@ import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.blocks.*;
 import com.bohdloss.fuckunclejack.components.entities.*;
 import com.bohdloss.fuckunclejack.generator.generators.*;
+import com.bohdloss.fuckunclejack.components.items.WinnerswordItem;
 import com.bohdloss.fuckunclejack.components.items.blocks.*;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
 import com.bohdloss.fuckunclejack.render.CMath;
@@ -79,6 +80,8 @@ public class FunctionUtils {
 			return new SandstoneBlockItem(amount);
 		case 8:
 			return new CactusBlockItem(amount);
+		case 9:
+			return new WinnerswordItem();
 		}
 		return null;
 	}

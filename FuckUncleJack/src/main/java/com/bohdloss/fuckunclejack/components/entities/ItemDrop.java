@@ -32,17 +32,24 @@ private Model itemmodel;
 		itemmodel=Assets.models.get("item");
 		width=0.8f;
 		height=0.8f;
+		invulnerable=true;
 		updateBounds();
 	}
 
 	@Override
 	public void render(Shader s, Matrix4f input) {
+		s.setUniform("red", red);
+		
 		res = input.translate(x, y, 0, res);
 		s.setUniform("projection", res);
 		BlockTexture t = Assets.blocks.get(item.getTexture());
 		if(t==null) return;
 		t.txt[19].bind(0);
 		itemmodel.render();
+		
+		s.setUniform("red", false);
+		
+		renderHitboxes(s, input);
 	}
 	
 	@Override

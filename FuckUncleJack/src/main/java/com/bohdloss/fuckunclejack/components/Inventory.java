@@ -48,7 +48,7 @@ public void addItem(Item in, boolean ignoreCheck) {
 				
 				int total = cur.getContent().getAmount()+in.getAmount();
 				
-				if(total<=Item.max) {
+				if(total<=in.getMax()) {
 					
 					//Acceptable, add the item
 					
@@ -63,12 +63,12 @@ public void addItem(Item in, boolean ignoreCheck) {
 					//Not acceptable, increment the amount
 					//as much as possible, then recursively call this function
 					
-					int toRemove = (Item.max-cur.getContent().getAmount());
+					int toRemove = (in.getMax()-cur.getContent().getAmount());
 					
 					if(toRemove==0) continue;
 					
 					in.setAmount(in.getAmount()-toRemove);
-					cur.getContent().setAmount(Item.max);
+					cur.getContent().setAmount(in.getMax());
 					
 					addItem(in, ignoreCheck);
 					

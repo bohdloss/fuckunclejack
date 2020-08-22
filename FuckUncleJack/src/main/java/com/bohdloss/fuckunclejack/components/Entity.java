@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import com.bohdloss.fuckunclejack.components.entities.Player;
 import com.bohdloss.fuckunclejack.logic.ClientState;
+import com.bohdloss.fuckunclejack.logic.EventHandler;
+import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.logic.GameState;
+import com.bohdloss.fuckunclejack.logic.events.DamageEvent;
+import com.bohdloss.fuckunclejack.logic.events.HitEvent;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.CRectanglef;
@@ -18,8 +24,19 @@ import com.bohdloss.fuckunclejack.render.Shader;
 
 public abstract class Entity implements Tickable{
 	
+public static Timer timer = new Timer();
+	
+//client only
+public boolean red=false;
+//
+
+public static boolean debugHitboxes=false;
+	
 public static int randID=0;
 
+public boolean cooldown=false;
+public boolean bouncy=true;
+public boolean invulnerable=false;
 public float x;
 public float y;
 public float width;
@@ -417,10 +434,30 @@ if(velx<0) {
 }
 
 public void render(Shader s, Matrix4f input) {
+	s.setUniform("red", red);
 	res = input.translate(x, y, 0, res);
 	s.setUniform("projection", res);
 	Assets.textures.get(texture).bind(0);
 	Assets.models.get(model).render();
+	s.setUniform("red", false);
+	renderHitboxes(s, input);
+}
+
+public final void renderHitboxes(Shader s, Matrix4f input) {
+	if(debugHitboxes) {
+		res = input.translate(x, y, 0, res).scale(width, height, 1, res);
+		s.setUniform("projection", res);
+		Assets.textures.get("green").bind(0);
+		Assets.models.get("square").render();
+	}
+}
+
+public float stretchyY() {
+	return (float)CMath.remap(CMath.fastAbs(vely), 0, 0.5f, 0, 0.5f);
+}
+
+public float stretchyX() {
+	return (float)CMath.remap(CMath.fastAbs(vely), 0, 0.5f, 0, -0.5f);
 }
 
 @Override
@@ -517,6 +554,80 @@ public void setUID(int uid) {
 
 public Object[] getData() {
 	return null;
+}
+
+public boolean hit(Entity issuer) {
+	if(issuer.cooldown) return false;
+	
+	boolean ret=false;
+	
+		if(!EventHandler.hitEntity(GameState.isClient.getValue(), new HitEvent(issuer, this, GameEvent.hitEntity)).isCancelled()) {
+			ret=true;
+			if(!EventHandler.damagedEntity(!invulnerable, new DamageEvent(this, issuer, GameEvent.damagedByEntity)).isCancelled()) {
+				Item i = issuer.getInventory().slots[issuer.getInventory().selected].getContent();
+				ItemEventProperties prop = null;
+				if(i==null) {
+					prop = Item.defaultProperties();
+				} else {
+					prop=i.onLeftClickBegin(CMath.fastFloor(x), CMath.fastFloor(y), this);
+				}
+				if(!invulnerable) {
+					health-=prop.getDamage();
+					checkDeath();
+					
+					if(bouncy) {
+					
+						double distance = CMath.distance(issuer.getX(), issuer.getY(), x, y);
+						
+						double cx = (x-issuer.getX())/distance;
+						double cy = (y-issuer.getY())/distance;
+						
+						/*double atan = Math.atan2(cx, cy);
+						double toDeg = Math.toDegrees(atan);
+					
+						double xvel = Math.cos(toDeg)/2;
+						double yvel = Math.sin(toDeg)/2;
+						
+						velx=(float)xvel;
+						vely=(float)yvel;*/
+					
+						velx=(float)(cx/4d);
+						vely=(float)(cy/4d);
+					
+					}
+					
+					issuer.cooldown=true;
+					
+					TimerTask task = new TimerTask() {
+						@Override
+						public void run() {
+							issuer.cooldown=false;
+						}
+					};
+					timer.schedule(task, 1000);
+					
+				}
+			}
+		}
+
+	
+	return ret;
+}
+
+private void checkDeath() {
+	if(health<=0f&!invulnerable) die();
+}
+
+public void die() {
+	TimerTask task = new TimerTask() {
+		@Override
+		public void run() {
+			destroy();
+		}
+	};
+	invulnerable=true;
+	
+	timer.schedule(task, 500);
 }
 
 }

@@ -5,6 +5,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Entity;
@@ -13,6 +15,7 @@ import com.bohdloss.fuckunclejack.components.ItemSlot;
 import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.Player;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
+import com.bohdloss.fuckunclejack.logic.ClientState;
 
 import static com.bohdloss.fuckunclejack.logic.GameState.*;
 import static com.bohdloss.fuckunclejack.logic.GameEvent.*;
@@ -134,6 +137,26 @@ private static List<Integer> uids = new ArrayList<Integer>();
 						lWorld.placeBlock(cause, e_BPE_ISSUER, e_BPE_X, e_BPE_Y, genBlockById(e_BPE_ID, lWorld, e_BPE_X, e_BPE_Y), e_BPE_BG, false);
 						
 					break;
+					case DamageEvent:
+						
+						int e_DE_VICTIM=buf.getInt();
+						int e_DE_ISSUER=buf.getInt();
+						
+						Entity e_DE_VICTIM_ENT = lWorld.getEntity(e_DE_VICTIM);
+						Entity e_DE_ISSUER_ENT = lWorld.getEntity(e_DE_ISSUER);
+						
+						if(e_DE_VICTIM_ENT!=null) {
+							e_DE_VICTIM_ENT.red=true;
+							TimerTask task = new TimerTask() {
+								@Override
+								public void run() {
+									e_DE_VICTIM_ENT.red=false;
+								}
+							};
+							Entity.timer.schedule(task, 500);
+						}
+						
+					break;
 					}
 					
 				}
@@ -213,6 +236,14 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					Item INV_ADD = genItemById(INV_ID, INV_AMOUNT);
 					INV_SLOT.setContent(INV_ADD);
 				}
+			break;
+			case STATS:
+				
+				ClientState.locked = buf.get()==(byte)1;
+				float STAT_HEALTH = buf.getFloat();
+				
+				lPlayer.setHealth(STAT_HEALTH);
+				
 			break;
 			}
 		}

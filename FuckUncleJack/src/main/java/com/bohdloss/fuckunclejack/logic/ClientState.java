@@ -34,6 +34,7 @@ public static int state=MENU;
 
 public static String IP;
 public static int PORT;
+public static boolean locked;
 
 public static void hover(int x, int y) {
 	hovx=x;

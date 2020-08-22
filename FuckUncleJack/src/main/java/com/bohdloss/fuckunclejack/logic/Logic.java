@@ -13,8 +13,10 @@ import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
+import com.bohdloss.fuckunclejack.logic.events.DamageEvent;
 import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
+import com.bohdloss.fuckunclejack.logic.events.HitEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemPickupEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
@@ -140,7 +142,7 @@ private CRectanglef ebounds;
 						 */
 						
 						int total = (slots[i].getContent().getAmount()+e.getItem().getAmount());
-						if(total>Item.max) {
+						if(total>e.getItem().getMax()) {
 							
 							/*	If the calculated total exceeds the
 							*	maximum for items, try to calculate the
@@ -148,7 +150,7 @@ private CRectanglef ebounds;
 							*	the entity
 							*/
 							
-							int toRemove=Item.max-slots[i].getContent().getAmount();
+							int toRemove=e.getItem().getMax()-slots[i].getContent().getAmount();
 							
 							if(toRemove>0) {
 							
@@ -279,6 +281,44 @@ private CRectanglef ebounds;
 		break;
 		}
 		
+	}
+
+	@Override
+	public void onEntityHit(HitEvent e) {
+		if(e.isServerOnly()&GameState.isClient.getValue()) {
+			e.cancel();
+			return;
+		}
+		switch(e.getCause()) {
+		default:
+			e.cancel("nocause");
+		case hitEntity:
+			double distance = CMath.distance(e.getIssuer().getX(), e.getIssuer().getY(), e.getTarget().getX(), e.getTarget().getY());
+			
+			if(distance>6) {
+				e.cancel();
+			}
+			
+		break;
+		}
+	}
+
+	@Override
+	public void onEntityDamaged(DamageEvent e) {
+		if(e.isServerOnly()&GameState.isClient.getValue()) {
+			e.cancel();
+			return;
+		}
+		switch(e.getCause()) {
+		default:
+			e.cancel("nocause");
+		case damagedByEntity:
+			
+		break;
+		case damagedItself:
+			
+		break;
+		}
 	}
 	
 }

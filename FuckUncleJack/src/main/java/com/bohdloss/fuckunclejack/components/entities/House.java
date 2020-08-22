@@ -20,11 +20,12 @@ import static com.bohdloss.fuckunclejack.logic.FunctionUtils.*;
 public abstract class House extends Entity{
 
 	public House(String model, String texture, int width, int height) {
-		super(model, texture, 1);
+		super(model, texture, 5);
 		this.width=width;
 		this.height=height;
 		updateBounds();
 		physics=true;
+		invulnerable=false; //set to true later
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public void render(Shader s, Matrix4f matrix, float x, float y, boolean selected
 	slot.render();
 	
 	if(content!=null) {
-		content.render(s, matrix, x, y);
+		content.render(s, matrix, x, y, true);
 	}
 	
 	if(selected) {

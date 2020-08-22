@@ -54,6 +54,8 @@ public void gameUpdate() {
 	
 	hoverCalc(scaleAmount);
 	
+	if(!ClientState.locked) {
+	
 	if(keys[GLFW_KEY_SPACE]) {
 		ClientState.lPlayer.jump();
 	}
@@ -78,11 +80,6 @@ public void gameUpdate() {
 		lPlayer.setActiveMov(false);
 	}
 	
-	
-	
-	if(keys[GLFW_KEY_SPACE]) {
-		ClientState.lPlayer.jump();
-	}
 	if(keys[GLFW_KEY_R]) {
 		ClientState.lPlayer.x=0;
 		ClientState.lPlayer.y=80f;
@@ -94,10 +91,7 @@ public void gameUpdate() {
 	} else {
 		ClientState.lPlayer.setRunning(false);
 	}
-	if(keys[GLFW_KEY_ENTER]) {
-		ClientState.lPlayer.physics=true;
-	} else {
-		ClientState.lPlayer.physics=true;
+	
 	}
 }
 

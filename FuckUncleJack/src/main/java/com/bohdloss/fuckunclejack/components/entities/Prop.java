@@ -33,6 +33,7 @@ static {
 		this.physics=physics;
 		this.xscale=xscale;
 		this.yscale=yscale;
+		invulnerable=true;
 		txt=Assets.textures.get(texture);
 		updateBounds();
 	}
@@ -73,10 +74,16 @@ static {
 	
 	@Override
 	public void render(Shader s, Matrix4f matrix) {
+		s.setUniform("red", red);
+		
 		res = matrix.translate(x, y, 0, res).scale(xscale, yscale, 1, res);
 		s.setUniform("projection", res);
 		txt.bind(0);
 		square.render();
+		
+		s.setUniform("red", false);
+		
+		renderHitboxes(s, matrix);
 	}
 	
 }

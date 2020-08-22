@@ -45,6 +45,15 @@ public static final byte userInput=(byte)11;
 
 public static final byte enterHouse=(byte)12;
 
+//HIT ENTITY
+
+public static final byte hitEntity=(byte)13;
+
+//DAMAGE ENTITY
+
+public static final byte damagedByEntity=(byte)14;
+public static final byte damagedItself=(byte)15;
+
 protected Object issuer;
 protected boolean serveronly;
 protected boolean cancelled=false;
@@ -102,5 +111,7 @@ public static final byte PlayerJoinEvent=(byte)6;
 public static final byte PlayerLeaveEvent=(byte)7;
 public static final byte AddInvItemEvent=(byte)8;
 public static final byte EnterHouseEvent=(byte)10;
+public static final byte HitEvent=(byte)11;
+public static final byte DamageEvent=(byte)12;
 
 }

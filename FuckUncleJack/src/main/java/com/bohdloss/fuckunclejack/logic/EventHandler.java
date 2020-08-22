@@ -3,6 +3,7 @@ package com.bohdloss.fuckunclejack.logic;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.TimerTask;
 
 import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Block;
@@ -12,8 +13,10 @@ import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
+import com.bohdloss.fuckunclejack.logic.events.DamageEvent;
 import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
+import com.bohdloss.fuckunclejack.logic.events.HitEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemPickupEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
@@ -234,4 +237,51 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 		return event;
 	}
 	
+	public static HitEvent hitEntity(boolean send, HitEvent event) {
+		logic.onEntityHit(event);
+		try {
+			listeners.forEach(i -> i.onEntityHit(event));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(send&!event.isCancelled()) {
+			if(GameState.isClient.getValue()) {
+				Client.events.add(event);
+			}
+		}
+		
+		return event;
+	}
+	
+	public static DamageEvent damagedEntity(boolean send, DamageEvent event) {
+		logic.onEntityDamaged(event);
+		try {
+			listeners.forEach(i -> i.onEntityDamaged(event));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(send&!event.isCancelled()) {
+			if(!GameState.isClient.getValue()) {
+				Server.threads.forEach(v->{
+					if(v.player.getWorld().equals(event.getIssuer().getWorld())) {
+						v.events.add(event);
+						if(v.UPID==event.getVictim().getUID()) {
+							v.sendOwnPosition=true;
+							TimerTask task = new TimerTask() {
+								@Override
+								public void run() {
+									v.sendOwnPosition=false;
+								}
+							};
+							Entity.timer.schedule(task, 500);
+						}
+					}
+				});
+			}
+		}
+		
+		return event;
+	}
 }

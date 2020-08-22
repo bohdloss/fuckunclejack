@@ -24,8 +24,6 @@ protected int amount;
 protected boolean usable=true;
 protected boolean available;
 protected String texture;
-
-public static final int max=100;
 	
 public ItemSlot owner;
 
@@ -57,13 +55,17 @@ static {
 public Item(int uses, int used, int amount, String texture) {
 	this.uses=uses;
 	this.used=used;
-	this.amount=amount;
+	this.amount=(int)CMath.limit(amount, 1, getMax());
 	this.texture=texture;
 	if(amount>0) available=true;
 }
 
-public ItemEventProperties defaultProperties() {
+public ItemEventProperties properties() {
 	return new ItemEventProperties(this).setDamage(damage).setBreakspeed(breakspeed);
+}
+
+public static ItemEventProperties defaultProperties() {
+	return new ItemEventProperties(null).setDamage(1).setBreakspeed(0);
 }
 
 abstract public ItemEventProperties onRightClickBegin(int x, int y, Entity entity);
@@ -81,7 +83,7 @@ public void repair(int amount) {
 }
 
 public void decrease(int x) {
-	if(x>0) amount=(int)CMath.limit(amount-x, 0, max);
+	if(x>0) amount=(int)CMath.limit(amount-x, 0, getMax());
 	if(amount==0) {
 		available=false;
 		totalDestroy();
@@ -93,7 +95,7 @@ private void totalDestroy() {
 }
 
 public void increase(int x) {
-	if(x>0) amount=(int)CMath.limit(amount+x, 0, max);
+	if(x>0) amount=(int)CMath.limit(amount+x, 0, getMax());
 	if(amount>0) available=true;
 }
 
@@ -115,7 +117,7 @@ public String getTexture() {
 	return texture;
 }
 
-public void render(Shader s, Matrix4f matrix, float x, float y) {
+public void render(Shader s, Matrix4f matrix, float x, float y, boolean showInfo) {
 	translate.identity().translate(x, y, 0f);
 	res = matrix.mul(translate, res);
 	s.setUniform("projection", res);
@@ -135,21 +137,27 @@ public void render(Shader s, Matrix4f matrix, float x, float y) {
 		if(found) {
 		itemm.render();
 		}
-		char[] chars = (""+amount).toCharArray();
-		smallrectt.bind(0);
-		float calcx=x;
-		if(chars.length==1) {
-			smallrect.render();
-		} else if(chars.length==2) {
-			rect.render();
-			calcx-=0.125f;
-		} else {
-			bigrect.render();
-			calcx-=0.25f;
-		}
+		if(showInfo) {
+			char[] chars = (""+amount).toCharArray();
+			smallrectt.bind(0);
+			float calcx=x;
+			if(chars.length==1) {
+				smallrect.render();
+			} else if(chars.length==2) {
+				rect.render();
+				calcx-=0.125f;
+			} else {
+				bigrect.render();
+				calcx-=0.25f;
+			}
 		
-		FontManager.renderString(calcx, y, sheet, gui, matrix, slot, ""+amount);
+			FontManager.renderString(calcx, y, sheet, gui, matrix, slot, ""+amount);
+		}
 		s.bind();
+}
+
+public int getMax() {
+	return 100;
 }
 
 public abstract int getId();

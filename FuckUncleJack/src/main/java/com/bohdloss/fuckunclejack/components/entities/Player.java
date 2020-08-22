@@ -20,8 +20,6 @@ import com.bohdloss.fuckunclejack.render.Shader;
 public class Player extends Entity{
 	
 private String name;
-private Inventory crafting;
-private Inventory armour;
 
 public AnimationSet character;
 public Animation anim;
@@ -29,7 +27,6 @@ public Animation anim;
 private static Matrix4f translation=new Matrix4f();
 private static Matrix4f res=new Matrix4f();
 private static Shader gui;
-private static Shader game;
 private static Model model;
 
 //Animation related
@@ -43,7 +40,6 @@ private int direction=1;
 		if(GameState.isClient.getValue()) {
 		
 		gui=Assets.shaders.get("gui");
-		game=Assets.shaders.get("shader");
 		model=Assets.models.get("player_model");
 		
 		character = Assets.animationSets.get("dad");
@@ -56,8 +52,6 @@ private int direction=1;
 		height=1.8f;
 		inventory=new Inventory(this, 9);
 		inventory.selected=0;
-		crafting=new Inventory(this, 10);
-		armour=new Inventory(this, 4);
 		updateBounds();
 	}
 	
@@ -125,28 +119,38 @@ private int direction=1;
 	
 	@Override
 	public void render(Shader s, Matrix4f matrix) {
-		translation.identity().translate(x, y, 0).scale(direction,1,1);
+		float strety = stretchyY();
+		
+		//calc scale
+		
+		float xscale = 1+stretchyX();
+		float yscale = strety+1;
+		
+		translation.identity().translate(x, y+strety/2f, 0).scale(direction*xscale*anim.getScale().x,yscale*anim.getScale().y,1);
 		res=matrix.mul(translation, res);
 		gui.bind();
+		gui.setUniform("red", red);
 		gui.setUniform("projection", res);
 		anim.bind();
 		model.render();
 		if(this!=ClientState.lPlayer) {
 		FontManager.renderString(x-(FontManager.strWidth(name)/2f), y+1.25f, Assets.sheets.get("font"), gui, matrix, Assets.models.get("item"), name);
 		}
-		game.bind();
+		gui.setUniform("red", false);
+		s.bind();
+		s.setUniform("red", red);
+		
+		if(inventory.slots[inventory.selected].getContent()!=null) {
+			inventory.slots[inventory.selected].getContent().render(s, matrix.mul(translation, res), direction*anim.getHandPosition().x, anim.getHandPosition().y, false);
+		}
+		
+		s.setUniform("red", false);
+		
+		renderHitboxes(s, matrix);
 	}
 	
 	public String getName() {
 		return name;
-	}
-	
-	public Inventory getCrafting() {
-		return crafting;
-	}
-
-	public Inventory getArmour() {
-		return armour;
 	}
 
 	@Override

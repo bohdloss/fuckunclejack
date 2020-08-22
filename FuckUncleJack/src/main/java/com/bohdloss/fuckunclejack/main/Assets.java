@@ -131,6 +131,10 @@ public class Assets {
 		textures.put("table0", new Texture("/data/textures/entities/props/table0.png"));
 		textures.put("table1", new Texture("/data/textures/entities/props/table1.png"));
 		
+		//Item textures
+		
+		textures.put("winnersword", new Texture("/data/textures/items/weapons/winnersword.png"));
+		
 		loadBlocks();
 	}
 	
@@ -150,14 +154,14 @@ public class Assets {
 		System.out.println("Loading animations...");
 		
 		AnimationSet dad_default = new AnimationSet("dad");
-		dad_default.idle=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/idle.png"), 1), false);
-		dad_default.walking=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/walking.png"), 4), true);
-		dad_default.jumping=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/jump.png"), 2), false);
-		dad_default.falling=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/fall.png"), 1), false);
+		dad_default.idle=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/idle.png"), 1), false, "dad_default_idle");
+		dad_default.walking=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/walking.png"), 4), true, "dad_default_walking");
+		dad_default.jumping=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/jump.png"), 1), false, "dad_default_jump");
+		dad_default.falling=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/fall.png"), 1), false, "dad_default_fall");
 	
 		animationSets.put("dad", dad_default);
 		
-		animations.put("deserthouse", new Animation(new TileSheet(new Texture("/data/textures/entities/structures/deserthouse.png"), 29), true));
+		animations.put("deserthouse", new Animation(new TileSheet(new Texture("/data/textures/entities/structures/deserthouse.png"), 29), true, null));
 	
 	}
 	

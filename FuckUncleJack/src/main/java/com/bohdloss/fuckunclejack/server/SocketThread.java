@@ -24,6 +24,7 @@ public class SocketThread extends Thread {
 
 public Socket socket;
 public String ip;
+public boolean sendOwnPosition=false;
 public boolean auth=false;
 public boolean shouldStop=false;
 public int UPID;
@@ -143,10 +144,10 @@ public void fillObject() {
 		//put player data marker
 		buf.put(PLAYERDATA);
 		
-		int length=player.getWorld().player.size()-1;
+		int length=player.getWorld().player.size()-(sendOwnPosition?0:1);
 		buf.putInt(length);
 		player.getWorld().player.forEach((k,v)->{
-			if(!k.equals(UPID)) {
+			if((!k.equals(UPID))|sendOwnPosition) {
 				writeString(buf, v.getName());
 				buf.putInt(v.getUID());
 				buf.putFloat(v.getX());
@@ -242,6 +243,11 @@ public void fillObject() {
 				}
 			}
 		}
+		
+		buf.put(STATS);
+		
+		buf.put(sendOwnPosition?(byte)1:(byte)0);
+		buf.putFloat(player.getHealth());
 	}
 	putEnd(buf);
 }

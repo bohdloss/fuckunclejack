@@ -12,6 +12,7 @@ import com.bohdloss.fuckunclejack.components.entities.DesertHouse;
 import com.bohdloss.fuckunclejack.components.entities.House;
 import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
 import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.items.WinnerswordItem;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.render.CMath;
 
@@ -42,7 +43,8 @@ public class DataHandler {
 						System.out.println("Assigned uid "+player.getUID()+" to player "+player.getName());
 						dimensions.get("world").join(player, 0, 100);
 						players.put(player.getUID(), player);
-						
+						player.getInventory().addItem(new WinnerswordItem(), false);
+						input.sendInventory=true;
 						
 						input.auth=true;
 						input.writeAuth=true;
@@ -54,13 +56,22 @@ public class DataHandler {
 			case PLAYERDATA:
 				
 				Player p = input.player;
-				p.x=buf.getFloat();
-				p.y=buf.getFloat();
-				float velx=buf.getFloat();
-				float vely=buf.getFloat();
-				p.setVelocity(velx, vely);
+				float PX = buf.getFloat();
+				float PY = buf.getFloat();
+				float velx = buf.getFloat();
+				float vely = buf.getFloat();
 				
-				p.getInventory().selected=(int)CMath.limit(buf.getInt(), 0, 8);
+				int PSEL = buf.getInt();
+				
+				if(!input.sendOwnPosition) {
+				
+					p.setVelocity(velx, vely);
+					p.x=PX;
+					p.y=PY;
+				
+				}
+				
+				p.getInventory().selected=(int)CMath.limit(PSEL, 0, 8);
 				
 			break;
 			case EVENT:
@@ -83,7 +94,7 @@ public class DataHandler {
 						Player e_BDE_ISSUER = players.get(e_BDE_UID);
 						Inventory e_BDE_INV = e_BDE_ISSUER.getInventory();
 						Item e_BDE_I = e_BDE_INV.slots[e_BDE_INV.selected].getContent();
-						if(e_BDE_I!=null) e_BDE_I.onLeftClickBegin(e_BDE_X, e_BDE_Y, e_BDE_ISSUER);
+						if(e_BDE_I!=null) e_BDE_I.onLeftClickBegin(e_BDE_X, e_BDE_Y, null);
 						e_BDE_ISSUER.getWorld().destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, e_BDE_BG, true);
 						
 						
@@ -108,7 +119,7 @@ public class DataHandler {
 						Inventory e_BPE_INV = e_BPE_ISSUER.getInventory();
 						Item e_BPE_I = e_BPE_INV.slots[e_BPE_INV.selected].getContent();
 						if(e_BPE_I!=null) {
-							e_BPE_I.onRightClickBegin(e_BPE_X, e_BPE_Y, e_BPE_ISSUER);
+							e_BPE_I.onRightClickBegin(e_BPE_X, e_BPE_Y, null);
 						}
 						
 						
@@ -128,6 +139,18 @@ public class DataHandler {
 						House e_EHE_HOUSE = (House) e_EHE_ISSUER.getWorld().entities.get(e_EHE_UID);
 						
 						e_EHE_HOUSE.enterHouse(e_EHE_ISSUER);
+						
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+					break;
+					case HitEvent:
+						try {
+						Entity e_HE_ISSUER=input.player;
+						int e_HE_VICTIM_ID=buf.getInt();
+						Entity e_HE_VICTIM=e_HE_ISSUER.getWorld().getEntity(e_HE_VICTIM_ID);
+						
+						e_HE_VICTIM.hit(e_HE_ISSUER);
 						
 						} catch(Exception e) {
 							e.printStackTrace();
