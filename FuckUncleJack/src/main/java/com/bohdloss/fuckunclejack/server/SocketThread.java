@@ -187,6 +187,7 @@ public void fillObject() {
 				buf.putFloat(v.getY());
 				buf.putFloat(v.getVelocity().x);
 				buf.putFloat(v.getVelocity().y);
+				buf.putInt(v.getInventory().slots[v.getInventory().selected].getId());
 			}
 		}); 
 		

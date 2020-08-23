@@ -74,11 +74,15 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					float y = buf.getFloat();
 					float velx = buf.getFloat();
 					float vely = buf.getFloat();
+					int itemId = buf.getInt();
 					
 					Player toEdit = lWorld.player.get(curUid);
 					toEdit.x=x;
 					toEdit.y=y;
 					toEdit.setVelocity(velx, vely);
+					if(toEdit.getInventory().slots[0].getId()!=itemId) {
+						toEdit.getInventory().slots[0].setContent(genItemById(itemId, 1));
+					}
 				}
 				
 			break;

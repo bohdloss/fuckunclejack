@@ -63,6 +63,10 @@ public void setContent(Item content) {
 	}
 }
 
+public int getId() {
+	return content==null?-1:content.getId();
+}
+
 public void render(Shader s, Matrix4f matrix, float x, float y, boolean selected) {
 	translate.identity().translate(x, y, 0f);
 	res = matrix.mul(translate, res);
