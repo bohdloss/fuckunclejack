@@ -89,7 +89,7 @@ public void approve() {
 }
 
 public boolean isCancelled() {
-	return cancelled;
+	return cancelled|ClientState.hardLocked;
 }
 
 public boolean isServerOnly() {

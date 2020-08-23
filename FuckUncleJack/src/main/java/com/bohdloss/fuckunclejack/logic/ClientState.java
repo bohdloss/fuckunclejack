@@ -35,6 +35,8 @@ public static int state=MENU;
 public static String IP;
 public static int PORT;
 public static boolean locked;
+public static boolean hardLocked;
+public static boolean renderPlayer=true;
 
 public static void hover(int x, int y) {
 	hovx=x;
@@ -49,6 +51,12 @@ public static void connect(String ip, int port) {
 	IP=ip;
 	PORT=port;
 	state=GAME;
+}
+
+public static void disconnect() {
+	IP=null;
+	PORT=0;
+	state=MENU;
 }
 
 }

@@ -3,6 +3,7 @@ package com.bohdloss.fuckunclejack.components.items;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.ItemEventProperties;
+import com.bohdloss.fuckunclejack.logic.GameState;
 
 public class WinnerswordItem extends Item {
 

@@ -30,6 +30,7 @@ public static Timer timer = new Timer();
 public boolean red=false;
 //
 
+public boolean dying = false;
 public static boolean debugHitboxes=false;
 	
 public static int randID=0;
@@ -619,6 +620,7 @@ private void checkDeath() {
 }
 
 public void die() {
+	dying=true;
 	TimerTask task = new TimerTask() {
 		@Override
 		public void run() {

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,7 +24,7 @@ private static final long wait=250;
 protected float speed;
 protected int currentIndex=0;
 protected boolean looping;
-private List<Vector2f> hand;
+private List<Vector3f> hand;
 private List<Vector2f> scale;
 
 public Animation(TileSheet frames, boolean looping, String json) {
@@ -34,7 +35,7 @@ public Animation(TileSheet frames, boolean looping, String json) {
 	
 	if(json!=null) {
 	
-		hand = new ArrayList<Vector2f>();
+		hand = new ArrayList<Vector3f>();
 		scale = new ArrayList<Vector2f>();
 		
 		JSONObject info = parse(json);
@@ -52,9 +53,10 @@ public Animation(TileSheet frames, boolean looping, String json) {
 	
 		JSONArray xhand = (JSONArray) handj.get("x");
 		JSONArray yhand = (JSONArray) handj.get("y");
-	
+		JSONArray rothand = (JSONArray) handj.get("rot");
+		
 		for(int i=0;i<xhand.size();i++) {
-			hand.add(new Vector2f(Float.parseFloat((String)xhand.get(i)), Float.parseFloat((String)yhand.get(i))));
+			hand.add(new Vector3f(Float.parseFloat((String)xhand.get(i)), Float.parseFloat((String)yhand.get(i)), Float.parseFloat((String)rothand.get(i))));
 		}
 	
 	}
@@ -107,7 +109,7 @@ private void calcIndex() {
 	}
 }
 
-public Vector2f getHandPosition() {
+public Vector3f getHandPosition() {
 	if(hand==null) return null;
 	return hand.get(currentIndex);
 }

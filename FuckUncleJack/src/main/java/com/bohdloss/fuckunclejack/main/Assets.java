@@ -80,6 +80,7 @@ public class Assets {
 		models.put("inventory_bg", ModelLoader.load("/data/models/inventory_bg.json"));
 		models.put("inventory_slot", ModelLoader.load("/data/models/inventory_slot.json"));
 		models.put("item", ModelLoader.load("/data/models/item.json"));
+		models.put("smallitem", ModelLoader.load("/data/models/smallitem.json"));
 		models.put("hotbar", ModelLoader.load("/data/models/hotbar.json"));
 		models.put("smallrect", ModelLoader.load("/data/models/smallrect.json"));
 		models.put("rect", ModelLoader.load("/data/models/rect.json"));

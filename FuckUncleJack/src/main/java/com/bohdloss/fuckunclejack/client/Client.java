@@ -11,6 +11,7 @@ import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Main;
+import com.bohdloss.fuckunclejack.server.SocketThread;
 
 import static com.bohdloss.fuckunclejack.server.CSocketUtils.*;
 
@@ -27,6 +28,8 @@ public static boolean auth=false;
 public static String upid;
 
 public static boolean sendDebug=false;
+
+public static List<String> invalidMatches = new ArrayList<String>();
 
 //cache
 private static ByteBuffer buf = ByteBuffer.allocate(bufferSize);
@@ -54,8 +57,18 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 			
 			if(ClientState.state==ClientState.GAME) {
 			
-				Socket socket = new Socket(ClientState.IP, ClientState.PORT);
-		
+				try {
+				
+				socket = new Socket(ClientState.IP, ClientState.PORT);
+				
+				if(invalidMatches.contains(SocketThread.getIP(socket))) {
+					System.out.println("disconnecting");
+					socket.close();
+					ClientState.disconnect();
+					
+					
+				}
+				
 				while(!socket.isClosed()) {
 					
 					//try filling the buffer
@@ -76,7 +89,14 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 					sleep(GameState.replicationDelay);
 					
 				}
-		
+				
+				} catch(Exception e) {
+					e.printStackTrace();
+				} finally {
+					auth=false;
+					invalidMatches.add(SocketThread.getIP(socket));
+				}
+				
 			}
 		
 		sleep(100);
@@ -84,7 +104,7 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			auth=false;
+			
 		}
 		}
 	}

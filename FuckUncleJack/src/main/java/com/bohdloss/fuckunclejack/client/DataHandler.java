@@ -14,6 +14,7 @@ import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.ItemSlot;
 import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.items.blocks.StoneBlockItem;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 
@@ -53,12 +54,12 @@ private static List<Integer> uids = new ArrayList<Integer>();
 				
 				lWorld.join(lPlayer, 0, 100);
 				
-				System.out.println("login successful");
+				System.out.println("Login successful");
 				
 			break;
 			case PLAYERDATA:
 				int length = buf.getInt();
-				
+
 				for(int i=0;i<length;i++) {
 					String name=readString(buf);
 					int curUid=buf.getInt();
@@ -239,11 +240,16 @@ private static List<Integer> uids = new ArrayList<Integer>();
 			break;
 			case STATS:
 				
-				ClientState.locked = buf.get()==(byte)1;
+				locked = buf.get()==(byte)1;
 				float STAT_HEALTH = buf.getFloat();
 				
 				lPlayer.setHealth(STAT_HEALTH);
 				
+			break;
+			case DEAD:
+				locked=true;
+				renderPlayer=false;
+				hardLocked=true;
 			break;
 			}
 		}

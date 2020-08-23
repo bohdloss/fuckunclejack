@@ -1,21 +1,28 @@
 package com.bohdloss.fuckunclejack.components.entities;
 
+import java.util.TimerTask;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import com.bohdloss.fuckunclejack.components.Block;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Inventory;
+import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.render.Animation;
 import com.bohdloss.fuckunclejack.render.AnimationSet;
+import com.bohdloss.fuckunclejack.render.BlockTexture;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.FontManager;
 import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Shader;
+import com.bohdloss.fuckunclejack.render.Texture;
+import com.bohdloss.fuckunclejack.server.Server;
+import com.bohdloss.fuckunclejack.server.SocketThread;
 
 public class Player extends Entity{
 	
@@ -31,8 +38,15 @@ private static Model model;
 
 //Animation related
 
-private boolean activeMov=false;
 private int direction=1;
+
+private static Model item;
+private static Model smallItem;
+
+static {
+	item=Assets.models.get("item");
+	smallItem=Assets.models.get("smallitem");
+}
 
 	public Player(String name) {
 		super("player_model", "", 20f);
@@ -119,6 +133,7 @@ private int direction=1;
 	
 	@Override
 	public void render(Shader s, Matrix4f matrix) {
+		if(this==ClientState.lPlayer&!ClientState.renderPlayer) return;
 		float strety = stretchyY();
 		
 		//calc scale
@@ -126,8 +141,8 @@ private int direction=1;
 		float xscale = 1+stretchyX();
 		float yscale = strety+1;
 		
-		translation.identity().translate(x, y+strety/2f, 0).scale(direction*xscale*anim.getScale().x,yscale*anim.getScale().y,1);
-		res=matrix.mul(translation, res);
+		/*translation.identity().translate(x, y+strety/2f, 0).scale(xscale*anim.getScale().x,yscale*anim.getScale().y,1);
+		res=matrix.mul(translation.scale(direction, 1, 1, res), res);
 		gui.bind();
 		gui.setUniform("red", red);
 		gui.setUniform("projection", res);
@@ -141,10 +156,72 @@ private int direction=1;
 		s.setUniform("red", red);
 		
 		if(inventory.slots[inventory.selected].getContent()!=null) {
-			inventory.slots[inventory.selected].getContent().render(s, matrix.mul(translation, res), direction*anim.getHandPosition().x, anim.getHandPosition().y, false);
+			inventory.slots[inventory.selected].getContent().render(s, matrix.mul(translation.scale(direction, 1, 1).rotate(anim.getHandPosition().z, 0, 0, 1), res), anim.getHandPosition().x, anim.getHandPosition().y, false);
 		}
 		
-		s.setUniform("red", false);
+		s.setUniform("red", false);*/
+		
+		//Player model translation
+		//Calculation
+		translation.identity().translate(x, y+strety/2f, 0).scale(direction*xscale, yscale, 1);
+		//
+		gui.bind();
+		gui.setUniform("red", red);
+		gui.setUniform("projection", matrix.mul(translation, res));
+		anim.bind();
+		model.render();
+		gui.setUniform("red", false);
+		
+		if(!inventory.slots[inventory.selected].isEmpty()) {
+		
+			//Item translation
+			Item i = inventory.slots[inventory.selected].getContent();
+			
+			float itemx = anim.getHandPosition().x;
+			float itemy = anim.getHandPosition().y;
+			float itemrot = anim.getHandPosition().z;
+			
+			//Calculation
+			translation.translate(itemx, itemy, 0).rotate(itemrot, 0, 0, 1);
+			//
+			s.bind();
+			s.setUniform("red", red);
+			s.setUniform("projection", matrix.mul(translation, res));
+			
+			boolean found=false;
+			boolean smallmodel=false;
+			Texture t = Assets.textures.get(i.texture);
+			if(t!=null) {
+				t.bind(0);
+				found=true;
+			} else {
+				BlockTexture load = Assets.blocks.get(i.texture);
+				if(load!=null) {
+					t=load.txt[19];
+					smallmodel=true;
+					found=true;
+				}
+			}
+			
+			if(found) {
+				t.bind(0);
+				if(smallmodel) {
+					//Adjust to animation offset
+					
+					translation.translate(-0.1f, -0.1f, 0);
+					s.setUniform("projection", matrix.mul(translation, res));
+					
+					smallItem.render();
+				} else {
+					item.render();
+				}
+			}
+			
+			s.setUniform("red", false);
+			
+		}
+		
+		s.bind();
 		
 		renderHitboxes(s, matrix);
 	}
@@ -171,13 +248,37 @@ private int direction=1;
 		return blocks;
 	}
 	
-	public void setActiveMov(boolean in) {
-		activeMov=in;
-	}
-
 	@Override
 	public int getId() {
 		return 0;
+	}
+	
+private SocketThread thread;
+	
+	@Override
+	public void destroy() {
+		world.player.remove(getUID());
+		if(!GameState.isClient.getValue()) {
+			thread=null;
+			Server.threads.forEach(v->{
+				if(v.UPID==getUID()&thread==null) thread=v;
+			});
+			if(thread!=null) {
+				thread.leaveEvent();
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						thread.termination(false);
+					}
+				};
+				SocketThread.timer.schedule(task, 10000);
+			}
+		}
+		try {
+			finalize();
+		} catch(Throwable t) {
+			t.printStackTrace();
+		}
 	}
 	
 }

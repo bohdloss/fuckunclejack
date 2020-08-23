@@ -23,7 +23,7 @@ protected int amount;
 
 protected boolean usable=true;
 protected boolean available;
-protected String texture;
+public String texture;
 	
 public ItemSlot owner;
 

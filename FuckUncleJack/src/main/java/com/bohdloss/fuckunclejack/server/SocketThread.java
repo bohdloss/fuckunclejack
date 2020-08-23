@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 
 import com.bohdloss.fuckunclejack.client.ChunkRequest;
 import com.bohdloss.fuckunclejack.components.BlockLayer;
@@ -22,6 +23,8 @@ import static com.bohdloss.fuckunclejack.server.CSocketUtils.*;
 
 public class SocketThread extends Thread {
 
+public static Timer timer = new Timer();
+	
 public Socket socket;
 public String ip;
 public boolean sendOwnPosition=false;
@@ -41,6 +44,8 @@ public List<GameEvent> events = new ArrayList<GameEvent>();
 public List<GameEvent> swapBuf = new ArrayList<GameEvent>();
 
 //CACHE
+private boolean playerDead;
+
 private ByteBuffer buf = ByteBuffer.allocate(bufferSize);
 
 public ByteBuffer lengthBuf=ByteBuffer.allocate(4);
@@ -55,6 +60,12 @@ public List<Chunk> calcChunks = new ArrayList<Chunk>();
 
 public static final long timeoutTime=5000;
 public long lastReceivedTime=System.currentTimeMillis();
+
+public static String getIP(Socket s) {
+	String[] split = s.getRemoteSocketAddress().toString().split("/");
+	String[] split2 = split[split.length-1].split(":");
+	return split2[0];
+}
 
 public SocketThread(Socket socket) {
 	this.socket=socket;
@@ -97,20 +108,26 @@ public void run() {
 		//Write down the time it is done reading
 		lastReceivedTime=System.currentTimeMillis();
 		
-		DataHandler.handleBuffer(rec, this);
+		if(!playerDead) DataHandler.handleBuffer(rec, this);
 		
 /*		if(!auth) {
 			socket.close();
 			break;
 		} */
-		
+		playerDead=isDead();
 	}
 	} catch(Exception e) {
 		e.printStackTrace();
 	}
-	Server.threads.forEach(v->{
-		v.events.add(new PlayerLeaveEvent(player, GameEvent.leave));
-	});
+	termination(true);
+	
+}
+
+public void termination(boolean event) {
+	Server.matchBan.add(getIP(socket));
+	if(event) {
+		leaveEvent();
+	}
 	GameState.dimensions.forEach((k,v)->{
 		System.out.println(v.player.remove(UPID));
 		});
@@ -121,11 +138,27 @@ public void run() {
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
-	
+}
+
+public void leaveEvent() {
+	Server.threads.forEach(v->{
+		v.events.add(new PlayerLeaveEvent(player, GameEvent.leave));
+	});
+}
+
+private boolean found=false;
+
+public boolean isDead() {
+	found=false;
+	GameState.dimensions.forEach((k,v)->{
+		if(!found) {
+			if(v.player.containsKey(UPID)) found=true;
+		}
+	});
+	return !found;
 }
 
 public void fillObject() {
-	
 	swap();
 	
 	clearBuf(buf);
@@ -144,7 +177,7 @@ public void fillObject() {
 		//put player data marker
 		buf.put(PLAYERDATA);
 		
-		int length=player.getWorld().player.size()-(sendOwnPosition?0:1);
+		int length=player.getWorld().player.size()-(sendOwnPosition|playerDead?0:1);
 		buf.putInt(length);
 		player.getWorld().player.forEach((k,v)->{
 			if((!k.equals(UPID))|sendOwnPosition) {
@@ -248,6 +281,8 @@ public void fillObject() {
 		
 		buf.put(sendOwnPosition?(byte)1:(byte)0);
 		buf.putFloat(player.getHealth());
+		
+		if(playerDead) buf.put(DEAD);
 	}
 	putEnd(buf);
 }

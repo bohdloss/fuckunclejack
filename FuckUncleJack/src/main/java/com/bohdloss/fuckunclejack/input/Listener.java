@@ -11,6 +11,7 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Item;
+import com.bohdloss.fuckunclejack.components.items.blocks.StoneBlockItem;
 import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.hud.Button;
 import com.bohdloss.fuckunclejack.hud.HUD;
@@ -88,6 +89,9 @@ public class Listener implements KeyListen {
 			}
 			
 			break;
+		case GLFW_KEY_I:
+			lPlayer.getInventory().addItem(new StoneBlockItem(100), true);
+			break;
 		}
 	}
 
@@ -149,9 +153,7 @@ public class Listener implements KeyListen {
 				}
 				
 				if(!foundEntityHit) {
-				
-					Item i = lPlayer.getInventory().slots[sel()].getContent();
-					if(i!=null) i.onLeftClickBegin((int)blockx, (int)blocky, null);
+					
 					lWorld.destroyBlock(GameEvent.handDestroy, lPlayer, (int)blockx, (int) blocky, false, true);
 			
 				}

@@ -74,11 +74,6 @@ public void gameUpdate() {
 	if(keys[GLFW_KEY_S]) {
 		ClientState.lPlayer.moveVertical(-1);
 	}
-	if(moved) {
-		lPlayer.setActiveMov(true);
-	} else {
-		lPlayer.setActiveMov(false);
-	}
 	
 	if(keys[GLFW_KEY_R]) {
 		ClientState.lPlayer.x=0;
@@ -151,7 +146,7 @@ public void baseUpdate() {
 		camera.setY(Game.scaleAmount*ClientState.lPlayer.y);
 	}
 	nearHouseB=false;
-	ClientState.lWorld.tick();
+	if(lWorld!=null) ClientState.lWorld.tick();
 	if(nearHouseB==true) {
 		nearHouse=lastHouse;
 	} else {

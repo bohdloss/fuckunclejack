@@ -138,7 +138,11 @@ public class DataHandler {
 						int e_EHE_UID = buf.getInt();
 						House e_EHE_HOUSE = (House) e_EHE_ISSUER.getWorld().entities.get(e_EHE_UID);
 						
+						if(!e_EHE_HOUSE.dying) {
+						
 						e_EHE_HOUSE.enterHouse(e_EHE_ISSUER);
+						
+						}
 						
 						} catch(Exception e) {
 							e.printStackTrace();
