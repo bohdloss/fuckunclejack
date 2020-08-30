@@ -7,6 +7,10 @@ import org.joml.Vector3f;
 
 public class Camera {
 //smooth camera movement
+	//should camera be smooth?
+	
+	public boolean smooth=true;
+	
 	public float xlerpdest;
 	public float ylerpdest;
 
@@ -50,6 +54,17 @@ public class Camera {
 		return position.y;
 	}
 	
+	public void forcePosition(float x, float y) {
+		position.x=x;
+		position.y=y;
+		savedx=x;
+		savedy=y;
+		savedlerpx=x;
+		savedlerpy=y;
+		noGClerpx=x;
+		noGClerpy=y;
+	}
+	
 	public void setX(float x) {
 		xlerpdest=x;
 	}
@@ -73,23 +88,25 @@ public class Camera {
 	}
 	
 	public Matrix4f projection() {
-		if(System.currentTimeMillis()>=checkTime+checkInterval) {
-			checkTime=System.currentTimeMillis();
-			savedx=position.x;
-			savedy=position.y;
-			savedlerpx=xlerpdest;
-			savedlerpy=ylerpdest;
-			lerping=true;
-		}
-		if(lerping) {
-			reverse=CMath.reverseLerp(System.currentTimeMillis(), checkTime, checkTime+lerpTime);
-			noGClerpx=(float)CMath.lerp(reverse, savedx, savedlerpx);
-			noGClerpy=(float)CMath.lerp(reverse, savedy, savedlerpy);
-			position.x=noGClerpx;
-			position.y=noGClerpy;
-			if(shake) {
-				position.x+=(new Random().nextFloat()-0.5f)*intensity;
-				position.y+=(new Random().nextFloat()-0.5f)*intensity;
+		if(smooth) {
+			if(System.currentTimeMillis()>=checkTime+checkInterval) {
+				checkTime=System.currentTimeMillis();
+				savedx=position.x;
+				savedy=position.y;
+				savedlerpx=xlerpdest;
+				savedlerpy=ylerpdest;
+				lerping=true;
+			}
+			if(lerping) {
+				reverse=CMath.reverseLerp(System.currentTimeMillis(), checkTime, checkTime+lerpTime);
+				noGClerpx=(float)CMath.lerp(reverse, savedx, savedlerpx);
+				noGClerpy=(float)CMath.lerp(reverse, savedy, savedlerpy);
+				position.x=noGClerpx;
+				position.y=noGClerpy;
+				if(shake) {
+					position.x+=(new Random().nextFloat()-0.5f)*intensity;
+					position.y+=(new Random().nextFloat()-0.5f)*intensity;
+				}
 			}
 		}
 		

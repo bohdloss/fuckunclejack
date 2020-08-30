@@ -20,7 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.bohdloss.fuckunclejack.components.Entity;
-import com.bohdloss.fuckunclejack.components.entities.Prop;
+import com.bohdloss.fuckunclejack.components.entities.PropEntity;
 import com.bohdloss.fuckunclejack.hud.Button;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
@@ -172,7 +172,7 @@ static {
 				float sx = custEnt.x;
 				float sy = custEnt.y;
 				
-				Prop p = new Prop(xscale, yscale, txt, sw, sh, custEnt.collision, custEnt.physics);
+				PropEntity p = new PropEntity(xscale, yscale, txt, sw, sh, custEnt.collision, custEnt.physics);
 				ClientState.lWorld.join(p, sx, sy);
 				
 				savedx=0;

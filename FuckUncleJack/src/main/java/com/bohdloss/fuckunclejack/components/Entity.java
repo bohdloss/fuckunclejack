@@ -10,7 +10,7 @@ import java.util.TimerTask;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
@@ -44,6 +44,8 @@ public float width;
 public float height;
 public boolean physics=true;
 public boolean collision=false;
+public boolean ignoreCollision=false;
+public boolean forcePhysics=false;
 public String texture;
 public String model;
 
@@ -76,8 +78,8 @@ private Vector2f exec=new Vector2f();
 
 private boolean intersect;
 private int chunkIndex;
-private List<Block> collisions = new ArrayList<Block>();
-private List<Entity> entCollisions = new ArrayList<Entity>();
+protected List<Block> collisions = new ArrayList<Block>();
+protected List<Entity> entCollisions = new ArrayList<Entity>();
 //end
 
 public Entity(String model, String texture, float maxhealth) {
@@ -89,27 +91,10 @@ public Entity(String model, String texture, float maxhealth) {
 	this.health=maxhealth;
 	bounds=new CRectanglef(0,0,1f,1f);
 	setUID(genUID());
+	inventory=new Inventory(this, 1);
 }
 
 public static int genUID() {
-	/*
-	Random r = new Random();
-	String res="";
-	for(int i=0;i<20;i++) {
-		if(r.nextBoolean()) {
-			res=res+r.nextInt(10);
-		} else {
-			char c = alphabet[r.nextInt(alphabet.length)];
-			if(r.nextBoolean()) {
-				c=Character.toUpperCase(c);
-			} else {
-				c=Character.toLowerCase(c);
-			}
-			res=res+c;
-		}
-	}
-	return res;
-	*/
 	return randID++;
 }
 
@@ -129,7 +114,28 @@ public void join(World world, float x, float y) {
 	updateBounds();
 }
 
-protected abstract Block[] getSurroundings();
+protected Block[] getSurroundings() {
+	int pseudoW = ((int)width+5);
+	int pseudoH = ((int)height+5);
+	
+	Block[] blocks = new Block[pseudoW*pseudoH];
+	int bx = CMath.fastFloor(x);
+	int by = CMath.fastFloor(y);
+	int ii=0;
+	
+	int subW = (int)((float)pseudoW/2f);
+	int subH = (int)((float)pseudoH/2f);
+	
+	for(int i=-subW;i<pseudoW-subW;i++) {
+		for(int j=-subH;j<pseudoH-subH;j++) {
+			try {
+			blocks[ii]=world.getBlock(bx+i, by+j);
+			} catch(Exception e) {}
+			ii++;
+		}
+	}
+	return blocks;
+}
 
 public boolean move(Vector2f vec, boolean move) {
 	if(world==null) return false;
@@ -158,6 +164,14 @@ public boolean move(Vector2f vec, boolean move) {
 	}
 	try {
 		world.entities.forEach((k,v)->{
+			if(v!=this) {
+				if(Collision.collideEnt(this, v, vec)) {
+					intersect=true;
+					entCollisions.add(v);
+				}
+			}
+		});
+		world.player.forEach((k,v)->{
 			if(v!=this) {
 				if(Collision.collideEnt(this, v, vec)) {
 					intersect=true;
@@ -314,7 +328,11 @@ public boolean move(Vector2f vec, boolean move) {
 		execPos(exec);
 		
 		if(rx) velx=0;
-		if(ry) vely=0;
+		if(ry) {
+			//if(!checkFallDamage()) {
+				vely=0;
+			//}
+		}
 		
 		//END OF THE HORROR SERIES
 	} 
@@ -397,7 +415,13 @@ private void chunkTest() {
 
 public void tick() {
 	chunkTest();
-	if(physics) physics();
+	if(physics|forcePhysics) physics();
+}
+
+public boolean checkFallDamage() {
+	if(invulnerable|vely>0.2f) return false;
+	float damage = (float)CMath.remap(vely, 0, -0.5f, 0, 1.5f);
+	return damageSelf(damage);
 }
 
 public void physics() {
@@ -557,8 +581,39 @@ public Object[] getData() {
 	return null;
 }
 
+public boolean damageSelf(float damage) {
+	if(invulnerable|damage<=0) return false;
+	boolean ret=false;
+	if(!EventHandler.damagedEntity(!invulnerable, new DamageEvent(this, null, GameEvent.damagedItself)).isCancelled()) {
+		ret=true;	
+		health-=damage;
+		checkDeath();
+			
+		if(bouncy) {
+				
+			Random r = new Random();
+			
+			velx=(float)(r.nextFloat()/4d);
+			vely=0.2f;
+			
+		}
+			
+		boolean savedVulnerable = invulnerable;
+		invulnerable=true;
+		
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				invulnerable=savedVulnerable;
+			}
+		};
+		timer.schedule(task, 1000);
+	}
+	return ret;
+}
+
 public boolean hit(Entity issuer) {
-	if(issuer.cooldown) return false;
+	if(issuer.cooldown|invulnerable) return false;
 	
 	boolean ret=false;
 	
@@ -582,27 +637,21 @@ public boolean hit(Entity issuer) {
 						
 						double cx = (x-issuer.getX())/distance;
 						double cy = (y-issuer.getY())/distance;
-						
-						/*double atan = Math.atan2(cx, cy);
-						double toDeg = Math.toDegrees(atan);
-					
-						double xvel = Math.cos(toDeg)/2;
-						double yvel = Math.sin(toDeg)/2;
-						
-						velx=(float)xvel;
-						vely=(float)yvel;*/
 					
 						velx=(float)(cx/4d);
-						vely=(float)(cy/4d);
+						vely=CMath.limitMin((float)(cy/2d), 0.2f);
 					
 					}
 					
 					issuer.cooldown=true;
+					boolean savedVulnerable = invulnerable;
+					invulnerable=true;
 					
 					TimerTask task = new TimerTask() {
 						@Override
 						public void run() {
 							issuer.cooldown=false;
+							invulnerable=savedVulnerable;
 						}
 					};
 					timer.schedule(task, 1000);

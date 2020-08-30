@@ -1,4 +1,4 @@
-activeProfiles=
+activeProfiles=lwjgl-natives-linux-amd64, lwjgl-natives-linux-aarch64, lwjgl-natives-linux-arm, lwjgl-natives-linux-arm32, lwjgl-natives-macos-amd64, lwjgl-natives-windows-amd64, lwjgl-natives-windows-x86
 eclipse.preferences.version=1
 resolveWorkspaceProjects=true
 version=1

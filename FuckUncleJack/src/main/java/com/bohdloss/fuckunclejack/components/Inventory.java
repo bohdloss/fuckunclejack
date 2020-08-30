@@ -28,6 +28,10 @@ public void list() {
 }
 
 
+public Item getSelectedItem() {
+	return slots[selected].getContent();
+}
+
 public void addItem(Item in, boolean ignoreCheck) {
 	
 	//lets test if we can add an item to the inventory

@@ -14,13 +14,12 @@ private Entity damageCause;
 		super(victim, cause, true);
 		this.damageCause=damageCause;
 		
-		buf=ByteBuffer.allocate(10);
+		buf=ByteBuffer.allocate(6);
 		
 		buf.put(DamageEvent);
 		buf.put(cause);
 		
 		buf.putInt(victim.getUID());
-		buf.putInt(damageCause.getUID());
 		
 	}
 	

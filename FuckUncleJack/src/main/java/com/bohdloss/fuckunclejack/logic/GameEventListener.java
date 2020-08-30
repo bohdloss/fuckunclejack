@@ -15,5 +15,7 @@ public interface GameEventListener {
 	abstract void onEnterHouse(EnterHouseEvent e);
 	abstract void onEntityHit(HitEvent e);
 	abstract void onEntityDamaged(DamageEvent e);
+	abstract void onStartCharging(StartChargingEvent e);
+	abstract void onStopCharging(StopChargingEvent e);
 	
 }

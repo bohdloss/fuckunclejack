@@ -15,6 +15,7 @@ public class AirBlock extends Block {
 		hasCollision=false;
 		replaceable=true;
 		opaque=true;
+		setUnbreakable();
 	}
 
 	@Override

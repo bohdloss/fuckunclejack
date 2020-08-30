@@ -9,7 +9,7 @@ import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.ItemSlot;
 import com.bohdloss.fuckunclejack.components.blocks.AirBlock;
 import com.bohdloss.fuckunclejack.components.blocks.StoneBlock;
-import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
+import com.bohdloss.fuckunclejack.components.entities.ItemDropEntity;
 import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
@@ -21,6 +21,8 @@ import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemPickupEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
 import com.bohdloss.fuckunclejack.logic.events.PlayerLeaveEvent;
+import com.bohdloss.fuckunclejack.logic.events.StartChargingEvent;
+import com.bohdloss.fuckunclejack.logic.events.StopChargingEvent;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.CRectanglef;
 import static com.bohdloss.fuckunclejack.logic.GameEvent.*;
@@ -42,10 +44,6 @@ private CRectanglef ebounds;
 	
 	@Override
 	public void onBlockPlaced(BlockPlacedEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 			default: e.cancel("nocause");
 			case invPlace:
@@ -68,10 +66,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onBlockDestroyed(BlockDestroyedEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 			
 		default: e.cancel("nocause");
@@ -96,10 +90,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onItemPickedup(ItemPickupEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default: e.cancel("nocause");
 		case groundPick:
@@ -186,10 +176,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onItemDropped(ItemDroppedEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default: e.cancel("nocause");
 		case blockDrop:
@@ -204,13 +190,12 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onEntitySpawned(EntitySpawnedEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default: e.cancel("nocause");
 		case dropSpawn:
+			
+		break;
+		case tickSpawn:
 			
 		break;
 		}
@@ -218,10 +203,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default: e.cancel("nocause");
 		case join:
@@ -235,10 +216,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onPlayerLeave(PlayerLeaveEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default: e.cancel("nocause");
 		case leave:
@@ -249,10 +226,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onInvItemAdded(AddInvItemEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default: e.cancel("nocause");
 		case userInput:
@@ -264,10 +237,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onEnterHouse(EnterHouseEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default: e.cancel("nocause");
 		case enterHouse:
@@ -285,10 +254,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onEntityHit(HitEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default:
 			e.cancel("nocause");
@@ -305,10 +270,6 @@ private CRectanglef ebounds;
 
 	@Override
 	public void onEntityDamaged(DamageEvent e) {
-		if(e.isServerOnly()&GameState.isClient.getValue()) {
-			e.cancel();
-			return;
-		}
 		switch(e.getCause()) {
 		default:
 			e.cancel("nocause");
@@ -316,6 +277,28 @@ private CRectanglef ebounds;
 			
 		break;
 		case damagedItself:
+			
+		break;
+		}
+	}
+
+	@Override
+	public void onStartCharging(StartChargingEvent e) {
+		switch(e.getCause()) {
+		default:
+			e.cancel("nocause");
+		case chargeItem:
+			
+		break;
+		}
+	}
+
+	@Override
+	public void onStopCharging(StopChargingEvent e) {
+		switch(e.getCause()) {
+		default:
+			e.cancel("nocause");
+		case stopChargeItem:
 			
 		break;
 		}

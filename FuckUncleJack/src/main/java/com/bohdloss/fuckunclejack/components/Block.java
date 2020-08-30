@@ -3,7 +3,7 @@ package com.bohdloss.fuckunclejack.components;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
+import com.bohdloss.fuckunclejack.components.entities.ItemDropEntity;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.FunctionUtils;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
@@ -12,6 +12,7 @@ import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.render.BlockTexture;
+import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.CRectanglef;
 import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Shader;
@@ -58,12 +59,8 @@ public Block(Chunk chunk, int chunkx, int y, String texture) {
 
 
 public void render(Shader s, Matrix4f input, int index) {
-	txt.txt[index].bind(0);
+	txt.txt[(int)CMath.limit(background?index-5:index, 0, 19)].bind(0);
 	model.render();
-	if(background) {
-	bg.bind(0);
-	model.render();
-	}
 }
 
 public CRectanglef getBounds() {
@@ -144,7 +141,7 @@ public void dropItems() {
 	
 		if(!cancelled) {
 			
-			ItemDrop drop = FunctionUtils.genItemEntity(items[i]);
+			ItemDropEntity drop = FunctionUtils.genItemEntity(items[i]);
 			
 			drop.x=worldx;
 			drop.y=y;

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.json.simple.JSONObject;
 
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.server.CSocketUtils;
 
@@ -12,7 +12,7 @@ public class PlayerLeaveEvent extends GameEvent {
 
 public ByteBuffer buf;
 	
-	public PlayerLeaveEvent(Player issuer, byte cause) {
+	public PlayerLeaveEvent(PlayerEntity issuer, byte cause) {
 		super(issuer, cause, true);
 		
 		buf=ByteBuffer.allocate(6);
@@ -22,8 +22,8 @@ public ByteBuffer buf;
 	}
 
 	@Override
-	public Player getIssuer() {
-		return (Player)issuer;
+	public PlayerEntity getIssuer() {
+		return (PlayerEntity)issuer;
 	}
 
 	@Override

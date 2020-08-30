@@ -11,7 +11,6 @@ import com.bohdloss.fuckunclejack.render.AnimationSet;
 import com.bohdloss.fuckunclejack.render.BlockTexture;
 import com.bohdloss.fuckunclejack.render.FontManager;
 import com.bohdloss.fuckunclejack.render.Model;
-import com.bohdloss.fuckunclejack.render.ModelLoader;
 import com.bohdloss.fuckunclejack.render.Shader;
 import com.bohdloss.fuckunclejack.render.Texture;
 import com.bohdloss.fuckunclejack.render.TileSheet;
@@ -94,8 +93,8 @@ public class Assets {
 	private static void loadShaders() throws Exception{
 		System.out.println("Loading shaders...");
 		
-		shaders.put("shader", new Shader("/data/shaders/shader"));
-		shaders.put("gui", new Shader("/data/shaders/gui"));
+		shaders.put("shader", new Shader("/data/shaders/shader.vs", "/data/shaders/fragment.fs"));
+		shaders.put("gui", new Shader("/data/shaders/gui.vs", "/data/shaders/fragment.fs"));
 	}
 	
 	private static void loadTextures() throws Exception{
@@ -134,7 +133,12 @@ public class Assets {
 		
 		//Item textures
 		
-		textures.put("winnersword", new Texture("/data/textures/items/weapons/winnersword.png"));
+		textures.put("winnersworditem", new Texture("/data/textures/items/weapons/winnersword.png"));
+		textures.put("arrowitem", new Texture("/data/textures/items/ammo/arrow.png"));
+		textures.put("bowitem", new Texture("/data/textures/items/weapons/bow.png"));
+		
+		//Projectiles
+		textures.put("arrow", new Texture("/data/textures/entities/projectiles/arrow.png"));
 		
 		loadBlocks();
 	}
@@ -159,7 +163,8 @@ public class Assets {
 		dad_default.walking=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/walking.png"), 4), true, "dad_default_walking");
 		dad_default.jumping=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/jump.png"), 1), false, "dad_default_jump");
 		dad_default.falling=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/fall.png"), 1), false, "dad_default_fall");
-	
+		dad_default.damage=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/damage.png"), 1), false, "dad_default_damage");
+		
 		animationSets.put("dad", dad_default);
 		
 		animations.put("deserthouse", new Animation(new TileSheet(new Texture("/data/textures/entities/structures/deserthouse.png"), 29), true, null));

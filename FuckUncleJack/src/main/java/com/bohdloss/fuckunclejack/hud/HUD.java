@@ -35,6 +35,7 @@ public InteractionDisplay interact;
 
 //cache
 public static Point2f mpoint;
+public static Point2f gamepoint;
 static Model square;
 static Matrix4f res=new Matrix4f();
 static Matrix4f translate=new Matrix4f();
@@ -65,6 +66,7 @@ static {
 	
 	public void render(Shader s, Matrix4f matrix) {
 		mpoint=CMath.mGLCoord(Game.guiScale);
+		gamepoint=CMath.mGLCoord(Game.scaleAmount);
 		
 		health.current=lPlayer.getHealth();
 		health.render(s, matrix);

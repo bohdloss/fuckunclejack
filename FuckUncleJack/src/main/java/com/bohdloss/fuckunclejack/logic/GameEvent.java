@@ -27,32 +27,41 @@ public static final byte invDrop=(byte)6;
 //ENTITY SPAWN
 
 public static final byte dropSpawn=(byte)7;
+public static final byte tickSpawn=(byte)8;
 
 //PLAYER JOIN
 
-public static final byte join=(byte)8;
-public static final byte changeDim=(byte)9;
+public static final byte join=(byte)9;
+public static final byte changeDim=(byte)10;
 
 //PLAYER LEAVE
 
-public static final byte leave=(byte)10;
+public static final byte leave=(byte)11;
 
 //NO IDEA
 
-public static final byte userInput=(byte)11;
+public static final byte userInput=(byte)12;
 
 //ENTER HOUSE
 
-public static final byte enterHouse=(byte)12;
+public static final byte enterHouse=(byte)13;
 
 //HIT ENTITY
 
-public static final byte hitEntity=(byte)13;
+public static final byte hitEntity=(byte)14;
 
 //DAMAGE ENTITY
 
-public static final byte damagedByEntity=(byte)14;
-public static final byte damagedItself=(byte)15;
+public static final byte damagedByEntity=(byte)15;
+public static final byte damagedItself=(byte)16;
+
+//START CHARGING ITEM
+
+public static final byte chargeItem=(byte)17;
+
+//RELEASE ITEM CHARGE
+
+public static final byte stopChargeItem=(byte)18;
 
 protected Object issuer;
 protected boolean serveronly;
@@ -89,7 +98,7 @@ public void approve() {
 }
 
 public boolean isCancelled() {
-	return cancelled|ClientState.hardLocked;
+	return cancelled|ClientState.hardLocked|(isServerOnly()&GameState.isClient.getValue());
 }
 
 public boolean isServerOnly() {
@@ -113,5 +122,7 @@ public static final byte AddInvItemEvent=(byte)8;
 public static final byte EnterHouseEvent=(byte)10;
 public static final byte HitEvent=(byte)11;
 public static final byte DamageEvent=(byte)12;
+public static final byte StartChargingEvent=(byte)13;
+public static final byte StopChargingEvent=(byte)14;
 
 }

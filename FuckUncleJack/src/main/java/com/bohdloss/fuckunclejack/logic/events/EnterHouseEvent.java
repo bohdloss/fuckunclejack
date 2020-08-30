@@ -2,17 +2,17 @@ package com.bohdloss.fuckunclejack.logic.events;
 
 import java.nio.ByteBuffer;
 
-import com.bohdloss.fuckunclejack.components.entities.House;
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.HouseEntity;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 
 public class EnterHouseEvent extends GameEvent {
 
 private ByteBuffer buf;
 
-private House target;
+private HouseEntity target;
 	
-	public EnterHouseEvent(Player issuer, byte cause, House target) {
+	public EnterHouseEvent(PlayerEntity issuer, byte cause, HouseEntity target) {
 		super(issuer, cause, false);
 		
 		this.target=target;
@@ -27,11 +27,11 @@ private House target;
 	}
 
 	@Override
-	public Player getIssuer() {
-		return (Player)issuer;
+	public PlayerEntity getIssuer() {
+		return (PlayerEntity)issuer;
 	}
 	
-	public House getTarget() {
+	public HouseEntity getTarget() {
 		return target;
 	}
 	

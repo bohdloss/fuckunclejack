@@ -11,7 +11,7 @@ import com.bohdloss.fuckunclejack.render.Shader;
 import com.bohdloss.fuckunclejack.render.Texture;
 import com.bohdloss.fuckunclejack.render.TileSheet;
 
-public abstract class Item {
+public abstract class Item implements Tickable{
 
 protected int uses;
 protected int used;
@@ -109,6 +109,22 @@ public int getAmount() {
 	return amount;
 }
 
+public int getUsed() {
+	return used;
+}
+
+public int getUses() {
+	return uses;
+}
+
+public void setUsed(int used) {
+	this.used=used;
+}
+
+public void setUses(int uses) {
+	this.uses=uses;
+}
+
 public void setAmount(int amount) {
 	this.amount=amount;
 }
@@ -135,9 +151,11 @@ public void render(Shader s, Matrix4f matrix, float x, float y, boolean showInfo
 			}
 		}
 		if(found) {
+		s.setUniform("gray", grayFactor());
 		itemm.render();
+		s.setUniform("gray", 0f);
 		}
-		if(showInfo) {
+		if(showInfo&amount>1) {
 			char[] chars = (""+amount).toCharArray();
 			smallrectt.bind(0);
 			float calcx=x;
@@ -158,6 +176,10 @@ public void render(Shader s, Matrix4f matrix, float x, float y, boolean showInfo
 
 public int getMax() {
 	return 100;
+}
+
+public float grayFactor() {
+	return (uses==0&used==0)?0f:((float)used/(float)uses);
 }
 
 public abstract int getId();

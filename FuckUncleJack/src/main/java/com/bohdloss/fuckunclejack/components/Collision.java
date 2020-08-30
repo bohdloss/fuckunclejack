@@ -18,7 +18,7 @@ public class Collision {
 	}
 	
 	public static boolean collideEnt(Entity p, Entity b, Vector2f dest) {
-		if(p.collision|b.collision) {
+		if((p.collision|b.collision)&!(p.ignoreCollision|b.ignoreCollision)) {
 		
 		last.setFrame(p.getBounds().x+dest.x, p.getBounds().y+dest.y, p.getBounds().width, p.getBounds().height);
 		

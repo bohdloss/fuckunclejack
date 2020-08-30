@@ -11,7 +11,7 @@ import org.joml.Matrix4f;
 
 import com.bohdloss.fuckunclejack.client.ChunkRequest;
 import com.bohdloss.fuckunclejack.client.Client;
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.generator.WorldGenerator;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameState;
@@ -25,7 +25,7 @@ public abstract class World implements Tickable{
 
 public HashMap<Integer, Chunk> chunks = new HashMap<Integer, Chunk>();
 public HashMap<Integer, Entity> entities = new HashMap<Integer, Entity>();
-public HashMap<Integer, Player> player = new HashMap<Integer, Player>();
+public HashMap<Integer, PlayerEntity> player = new HashMap<Integer, PlayerEntity>();
 protected long seed;
 protected WorldGenerator generator;
 protected static Matrix4f res = new Matrix4f().scale(2);
@@ -127,9 +127,9 @@ static {
 	}
 	
 	public void join(Entity e, float x, float y) {
-		if(e instanceof Player) {
+		if(e instanceof PlayerEntity) {
 			if(!player.containsKey(e.getUID())) {
-				Player p = (Player)e;
+				PlayerEntity p = (PlayerEntity)e;
 				player.put(e.getUID(), p);
 				e.join(this, x, y);
 				if(!GameState.isClient.getValue()) {
@@ -153,6 +153,7 @@ static {
 	}
 	
 	public void render(Shader s, Matrix4f matrix) {
+		BlockLayer.grayf+=0.05f;
 		renderBackground(s, matrix);
 		try {
 			entities.forEach((k,v)->{

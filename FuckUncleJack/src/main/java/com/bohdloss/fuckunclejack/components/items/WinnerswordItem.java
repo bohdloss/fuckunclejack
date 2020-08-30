@@ -8,7 +8,7 @@ import com.bohdloss.fuckunclejack.logic.GameState;
 public class WinnerswordItem extends Item {
 
 	public WinnerswordItem() {
-		super(25, 0, 1, "winnersword");
+		super(25, 0, 1, "winnersworditem");
 		this.damage=30;
 	}
 
@@ -44,6 +44,11 @@ public class WinnerswordItem extends Item {
 	@Override
 	public int getMax() {
 		return 1;
+	}
+
+	@Override
+	public void tick() {
+		
 	}
 	
 }

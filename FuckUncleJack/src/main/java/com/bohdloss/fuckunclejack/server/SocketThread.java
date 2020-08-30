@@ -32,7 +32,7 @@ public boolean auth=false;
 public boolean shouldStop=false;
 public int UPID;
 public boolean writeAuth=false;
-public Player player;
+public PlayerEntity player;
 
 //in case inventory is edited
 public boolean sendInventory=false;
@@ -271,9 +271,11 @@ public void fillObject() {
 				if(s.getContent()==null) {
 					buf.putInt(-1);
 					buf.putInt(0);
+					buf.putInt(0);
 				} else {
 					buf.putInt(s.getContent().getId());
 					buf.putInt(s.getContent().getAmount());
+					buf.putInt(s.getContent().getUsed());
 				}
 			}
 		}

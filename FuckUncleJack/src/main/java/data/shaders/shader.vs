@@ -5,11 +5,17 @@ attribute vec2 textures;
 
 varying vec2 tex_coords;
 varying vec2 redbool;
+varying vec4 grayscale;
+varying vec2 lightlevel;
 
 uniform mat4 projection;
 uniform int red;
+uniform float gray;
+uniform float light=-1;
 
 void main() {
+	lightlevel=vec2(light, 0);
+	grayscale=vec4(gray, gray, gray, 1);
 	redbool=vec2(red, 0);
 	tex_coords = textures;
 	gl_Position = projection * vec4(vertices, 1);

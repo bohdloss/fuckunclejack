@@ -1,26 +1,12 @@
 package com.bohdloss.fuckunclejack.logic;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.TimerTask;
 
 import com.bohdloss.fuckunclejack.client.Client;
-import com.bohdloss.fuckunclejack.components.Block;
 import com.bohdloss.fuckunclejack.components.Entity;
-import com.bohdloss.fuckunclejack.components.Item;
-import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
-import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
-import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
-import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
-import com.bohdloss.fuckunclejack.logic.events.DamageEvent;
-import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
-import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
-import com.bohdloss.fuckunclejack.logic.events.HitEvent;
-import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
-import com.bohdloss.fuckunclejack.logic.events.ItemPickupEvent;
-import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
-import com.bohdloss.fuckunclejack.logic.events.PlayerLeaveEvent;
+import com.bohdloss.fuckunclejack.logic.events.*;
 import com.bohdloss.fuckunclejack.server.Server;
 
 public class EventHandler {
@@ -277,6 +263,52 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 							};
 							Entity.timer.schedule(task, 500);
 						}
+					}
+				});
+			}
+		}
+		
+		return event;
+	}
+	
+	public static StartChargingEvent chargeStarted(boolean send, StartChargingEvent event) {
+		logic.onStartCharging(event);
+		try {
+			listeners.forEach(i -> i.onStartCharging(event));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(send&!event.isCancelled()) {
+			if(GameState.isClient.getValue()) {
+				Client.events.add(event);
+			} else {
+				Server.threads.forEach(v->{
+					if(v.UPID!=event.getIssuer().getUID()) {
+						v.events.add(event);
+					}
+				});
+			}
+		}
+		
+		return event;
+	}
+	
+	public static StopChargingEvent chargeStopped(boolean send, StopChargingEvent event) {
+		logic.onStopCharging(event);
+		try {
+			listeners.forEach(i -> i.onStopCharging(event));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(send&!event.isCancelled()) {
+			if(GameState.isClient.getValue()) {
+				Client.events.add(event);
+			} else {
+				Server.threads.forEach(v->{
+					if(v.UPID!=event.getIssuer().getUID()) {
+						v.events.add(event);
 					}
 				});
 			}

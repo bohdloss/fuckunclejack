@@ -2,8 +2,8 @@ package com.bohdloss.fuckunclejack.logic;
 
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.World;
-import com.bohdloss.fuckunclejack.components.entities.House;
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.HouseEntity;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.editor.Editor;
 
 public class ClientState {
@@ -19,13 +19,13 @@ public static Editor editor;
 //
 
 public static World lWorld;
-public static Player lPlayer;
+public static PlayerEntity lPlayer;
 
 public static final double drawDistance=20*20;
 
-public static House nearHouse;
+public static HouseEntity nearHouse;
 public static boolean nearHouseB=false;
-public static House lastHouse=null;
+public static HouseEntity lastHouse=null;
 
 public static int hovx;
 public static int hovy;

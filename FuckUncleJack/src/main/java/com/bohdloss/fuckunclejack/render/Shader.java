@@ -20,18 +20,18 @@ private int vs;
 private int uniformlocation;
 private FloatBuffer floatbuffer=BufferUtils.createFloatBuffer(16);
 
-public Shader(String location) throws Exception{
+public Shader(String locationvs, String locationfs) throws Exception{
 	program = glCreateProgram();
 	
 	vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, read(location+".vs"));
+	glShaderSource(vs, read(locationvs));
 	glCompileShader(vs);
 	if(glGetShaderi(GL_COMPILE_STATUS, vs)!=0) {
 		throw new Exception(""+glGetShaderInfoLog(vs));
 	}
 	
 	fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, read(location+".fs"));
+	glShaderSource(fs, read(locationfs));
 	glCompileShader(fs);
 	if(glGetShaderi(GL_COMPILE_STATUS, fs)!=0) {
 		throw new Exception(""+glGetShaderInfoLog(fs));

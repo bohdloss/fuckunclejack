@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.World;
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.server.CSocketUtils;
 
@@ -16,7 +16,7 @@ public World dimension;
 	
 private ByteBuffer buf;
 
-	public PlayerJoinEvent(Player issuer, byte cause, World dimension) {
+	public PlayerJoinEvent(PlayerEntity issuer, byte cause, World dimension) {
 		super(issuer, cause, true);
 		this.dimension=dimension;
 		
@@ -32,8 +32,8 @@ private ByteBuffer buf;
 	}
 
 	@Override
-	public Player getIssuer() {
-		return (Player)issuer;
+	public PlayerEntity getIssuer() {
+		return (PlayerEntity)issuer;
 	}
 
 	public World getDimension() {

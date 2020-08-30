@@ -3,7 +3,7 @@ package com.bohdloss.fuckunclejack.components.blocks;
 import com.bohdloss.fuckunclejack.components.Block;
 import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Item;
-import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
+import com.bohdloss.fuckunclejack.components.entities.ItemDropEntity;
 import com.bohdloss.fuckunclejack.components.items.blocks.BedrockBlockItem;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.FunctionUtils;

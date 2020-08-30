@@ -11,6 +11,7 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Item;
+import com.bohdloss.fuckunclejack.components.items.BowItem;
 import com.bohdloss.fuckunclejack.components.items.blocks.StoneBlockItem;
 import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.hud.Button;
@@ -21,6 +22,7 @@ import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.CRectanglef;
+import com.bohdloss.fuckunclejack.render.Point2f;
 
 public class Listener implements KeyListen {
 	
@@ -33,7 +35,17 @@ public class Listener implements KeyListen {
 		glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
 		    @Override public void invoke (long win, double dx, double dy) {
 		    	if(state==GAME) {
-		    		lPlayer.getInventory().selected=(int)CMath.limit(sel()-(int)dy, 0, 8);
+		    		
+		    		int selected = (int)CMath.limit(sel()-(int)dy, 0, 8);
+		    		
+		    		if(lPlayer.getInventory().selected!=selected) {
+		    			Item item = lPlayer.getInventory().getSelectedItem();
+		    			if(item!=null) {
+		    				item.onRightClickEnd(CMath.fastFloor(lPlayer.x), CMath.fastFloor(lPlayer.y), null);
+		    			}
+		    		}
+		    		
+		    		lPlayer.getInventory().selected=selected;
 		    		//Game.scaleAmount+=(int)dy;
 		    	} else if(state==EDITMODE) {
 		    		Editor.scroll+=dy;
@@ -80,6 +92,8 @@ public class Listener implements KeyListen {
 			break;
 		case GLFW_KEY_L:
 			lPlayer.flight=!lPlayer.flight;
+			lPlayer.physics=!lPlayer.physics;
+			lPlayer.forcePhysics=!lPlayer.forcePhysics;
 			break;
 		case GLFW_KEY_O:
 			if(state==GAME) {
@@ -103,7 +117,7 @@ public class Listener implements KeyListen {
 		if(!foundEntityHit) {
 			CRectanglef entframe = v.getBounds();
 			frame.setFrame(entframe.x-(Game.camera.getX()/Game.scaleAmount), entframe.y-(Game.camera.getY()/Game.scaleAmount), entframe.width, entframe.height);
-			if(frame.pIntersects(HUD.mpoint)) {
+			if(frame.pIntersects(HUD.gamepoint)) {
 				if(v.hit(lPlayer)) {
 					foundEntityHit=true;
 				
@@ -155,7 +169,8 @@ public class Listener implements KeyListen {
 				if(!foundEntityHit) {
 					
 					lWorld.destroyBlock(GameEvent.handDestroy, lPlayer, (int)blockx, (int) blocky, false, true);
-			
+					Item i = lPlayer.getInventory().slots[sel()].getContent();
+					if(i!=null) i.onLeftClickBegin((int)blockx, (int)blocky, null);
 				}
 				
 				//

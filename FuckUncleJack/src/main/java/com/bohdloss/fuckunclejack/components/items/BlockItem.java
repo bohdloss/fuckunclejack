@@ -49,4 +49,9 @@ public abstract class BlockItem extends Item{
 		return properties();
 	}
 
+	@Override
+	public void tick() {
+		
+	}
+	
 }

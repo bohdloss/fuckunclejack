@@ -11,7 +11,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 
 import com.bohdloss.fuckunclejack.components.World;
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.hud.HUD;
@@ -19,12 +19,12 @@ import com.bohdloss.fuckunclejack.input.InputManager;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.render.Camera;
 import com.bohdloss.fuckunclejack.render.FontManager;
-import com.bohdloss.fuckunclejack.render.ModelLoader;
 import com.bohdloss.fuckunclejack.render.Shader;
 import com.bohdloss.fuckunclejack.render.Texture;
 import com.bohdloss.fuckunclejack.server.Server;
 
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
+import static com.bohdloss.fuckunclejack.main.Game.camera;
 
 import javax.swing.JOptionPane;
 
@@ -58,7 +58,7 @@ public static Shader shader;
 	public void begin() {
 		setup();
 
-		lPlayer=new Player(Main.name);
+		lPlayer=new PlayerEntity(Main.name);
 		lWorld=new OverworldWorld("world");
 		ClientState.connect(Main.ip, Server.port);
 		
@@ -71,9 +71,11 @@ public static Shader shader;
 	
 	public void setup() {
 		//Essential setup
+		System.out.println("Hacking into the mainframe...");
+		
+		//LibraryUtils.prepareLWJGL();
 		
 		System.out.println("Initializing GLFW...");
-		
 				if(!glfwInit()) {
 					JOptionPane.showMessageDialog(null, "LWJGL failed to initialize!\nReport this error!");
 					System.exit(1);
@@ -186,7 +188,6 @@ public static Shader shader;
 	
 	public void renderGame() {
 		if(lWorld!=null&lPlayer!=null) {
-			
 			target=scale;
 			shader.bind();
 			lWorld.render(shader, camera.projection().mul(target, tempres));

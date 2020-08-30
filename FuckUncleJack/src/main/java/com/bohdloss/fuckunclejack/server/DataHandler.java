@@ -8,10 +8,12 @@ import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Inventory;
 import com.bohdloss.fuckunclejack.components.Item;
-import com.bohdloss.fuckunclejack.components.entities.DesertHouse;
-import com.bohdloss.fuckunclejack.components.entities.House;
-import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.ProjectileEntity;
+import com.bohdloss.fuckunclejack.components.entities.DesertHouseEntity;
+import com.bohdloss.fuckunclejack.components.entities.HouseEntity;
+import com.bohdloss.fuckunclejack.components.entities.ItemDropEntity;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
+import com.bohdloss.fuckunclejack.components.items.BowItem;
 import com.bohdloss.fuckunclejack.components.items.WinnerswordItem;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.render.CMath;
@@ -39,11 +41,11 @@ public class DataHandler {
 					
 					//TODO
 					if(Authenticator.authenticate(matchcode)) {
-						Player player = new Player(name);
+						PlayerEntity player = new PlayerEntity(name);
 						System.out.println("Assigned uid "+player.getUID()+" to player "+player.getName());
 						dimensions.get("world").join(player, 0, 100);
 						players.put(player.getUID(), player);
-						player.getInventory().addItem(new WinnerswordItem(), false);
+						player.getInventory().addItem(new BowItem(), false);
 						input.sendInventory=true;
 						
 						input.auth=true;
@@ -55,7 +57,7 @@ public class DataHandler {
 			break;
 			case PLAYERDATA:
 				
-				Player p = input.player;
+				PlayerEntity p = input.player;
 				float PX = buf.getFloat();
 				float PY = buf.getFloat();
 				float velx = buf.getFloat();
@@ -71,7 +73,15 @@ public class DataHandler {
 				
 				}
 				
-				p.getInventory().selected=(int)CMath.limit(PSEL, 0, 8);
+				int PSELLIMIT = (int)CMath.limit(PSEL, 0, 8);
+				
+				if(p.getInventory().selected!=PSELLIMIT) {
+					Item PITEMSEL = p.getInventory().getSelectedItem();
+					if(PITEMSEL!=null) {
+						PITEMSEL.onRightClickEnd(CMath.fastFloor(p.x), CMath.fastFloor(p.y), null);
+					}
+				}
+				p.getInventory().selected=PSELLIMIT;
 				
 			break;
 			case EVENT:
@@ -91,12 +101,12 @@ public class DataHandler {
 						
 						try {
 						
-						Player e_BDE_ISSUER = players.get(e_BDE_UID);
+						PlayerEntity e_BDE_ISSUER = players.get(e_BDE_UID);
 						Inventory e_BDE_INV = e_BDE_ISSUER.getInventory();
 						Item e_BDE_I = e_BDE_INV.slots[e_BDE_INV.selected].getContent();
-						if(e_BDE_I!=null) e_BDE_I.onLeftClickBegin(e_BDE_X, e_BDE_Y, null);
-						e_BDE_ISSUER.getWorld().destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, e_BDE_BG, true);
 						
+						boolean e_BDE_DONE = e_BDE_ISSUER.getWorld().destroyBlock(cause, e_BDE_ISSUER, e_BDE_X, e_BDE_Y, e_BDE_BG, true);
+						if(e_BDE_I!=null&e_BDE_DONE) e_BDE_I.onLeftClickBegin(e_BDE_X, e_BDE_Y, null);
 						
 						
 						}catch(Exception e) {
@@ -115,7 +125,7 @@ public class DataHandler {
 						
 						try {
 						
-						Player e_BPE_ISSUER = players.get(e_BPE_UID);
+						PlayerEntity e_BPE_ISSUER = players.get(e_BPE_UID);
 						Inventory e_BPE_INV = e_BPE_ISSUER.getInventory();
 						Item e_BPE_I = e_BPE_INV.slots[e_BPE_INV.selected].getContent();
 						if(e_BPE_I!=null) {
@@ -133,10 +143,10 @@ public class DataHandler {
 					break;
 					case EnterHouseEvent:
 						try {
-						Player e_EHE_ISSUER=input.player;
+						PlayerEntity e_EHE_ISSUER=input.player;
 						buf.getInt();
 						int e_EHE_UID = buf.getInt();
-						House e_EHE_HOUSE = (House) e_EHE_ISSUER.getWorld().entities.get(e_EHE_UID);
+						HouseEntity e_EHE_HOUSE = (HouseEntity) e_EHE_ISSUER.getWorld().entities.get(e_EHE_UID);
 						
 						if(!e_EHE_HOUSE.dying) {
 						
@@ -158,6 +168,28 @@ public class DataHandler {
 						
 						} catch(Exception e) {
 							e.printStackTrace();
+						} finally {
+							input.sendInventory=true;
+						}
+					break;
+					case StartChargingEvent:
+						buf.getInt();
+						
+						PlayerEntity e_SCE_ISSUER = input.player;
+						Inventory e_SCE_INV = e_SCE_ISSUER.getInventory();
+						Item e_SCE_I = e_SCE_INV.slots[e_SCE_INV.selected].getContent();
+						if(e_SCE_I!=null) {
+							e_SCE_I.onRightClickBegin(CMath.fastFloor(e_SCE_ISSUER.x), CMath.fastFloor(e_SCE_ISSUER.y), null);
+						}
+					break;
+					case StopChargingEvent:
+						buf.getInt();
+						
+						PlayerEntity e_SSCE_ISSUER = input.player;
+						Inventory e_SSCE_INV = e_SSCE_ISSUER.getInventory();
+						Item e_SSCE_I = e_SSCE_INV.slots[e_SSCE_INV.selected].getContent();
+						if(e_SSCE_I!=null) {
+							e_SSCE_I.onRightClickEnd(CMath.fastFloor(e_SSCE_ISSUER.x), CMath.fastFloor(e_SSCE_ISSUER.y), null);
 						}
 					break;
 					}
@@ -180,7 +212,10 @@ public class DataHandler {
 			break;
 			case DEBUG:
 				//input.player.getWorld().join(new Table(false, (byte)1), input.player.getX(), input.player.getY()+20);
-				input.player.getWorld().join(new DesertHouse(), input.player.getX(), input.player.getY()+20);;
+				//input.player.getWorld().join(new DesertHouse(), input.player.getX(), input.player.getY()+20);
+				ProjectileEntity spawning = new ProjectileEntity("arrow", input.player);
+				spawning.setVelocity(0.2f, 0.2f);
+				input.player.getWorld().join(spawning, input.player.getX(), input.player.getY()+5);
 				System.out.println("spawned");
 			break;
 			}

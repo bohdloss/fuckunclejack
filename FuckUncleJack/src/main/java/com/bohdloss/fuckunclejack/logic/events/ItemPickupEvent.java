@@ -7,17 +7,17 @@ import org.json.simple.JSONObject;
 import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Inventory;
 import com.bohdloss.fuckunclejack.components.Item;
-import com.bohdloss.fuckunclejack.components.entities.ItemDrop;
+import com.bohdloss.fuckunclejack.components.entities.ItemDropEntity;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.server.CSocketUtils;
 
 public class ItemPickupEvent extends GameEvent {
 
-protected ItemDrop drop;
+protected ItemDropEntity drop;
 	
 private ByteBuffer buf;
 
-	public ItemPickupEvent(byte cause, Entity issuer, ItemDrop item) {
+	public ItemPickupEvent(byte cause, Entity issuer, ItemDropEntity item) {
 		super(issuer, cause, true);
 		drop=item;
 		
@@ -33,7 +33,7 @@ private ByteBuffer buf;
 		return (Entity)issuer;
 	}
 	
-	public ItemDrop getEntity() {
+	public ItemDropEntity getEntity() {
 		return drop;
 	}
 	

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.bohdloss.fuckunclejack.components.Chunk;
 import com.bohdloss.fuckunclejack.components.blocks.*;
-import com.bohdloss.fuckunclejack.components.entities.DesertHouse;
+import com.bohdloss.fuckunclejack.components.entities.DesertHouseEntity;
 
 public class Desert extends ColumnGenerator{
 	
@@ -67,7 +67,7 @@ public class Desert extends ColumnGenerator{
 
 	@Override
 	public void genStructure(OpenSimplexNoise noise, Chunk c) {
-		DesertHouse h = new DesertHouse();
+		DesertHouseEntity h = new DesertHouseEntity();
 		c.getWorld().join(h, 7+c.getOffsetx()*16, height(noise, 7, c)+4.5f);
 	}
 

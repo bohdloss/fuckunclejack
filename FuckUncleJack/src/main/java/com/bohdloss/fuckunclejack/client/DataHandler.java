@@ -13,7 +13,7 @@ import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.ItemSlot;
 import com.bohdloss.fuckunclejack.components.World;
-import com.bohdloss.fuckunclejack.components.entities.Player;
+import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.components.items.blocks.StoneBlockItem;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.logic.ClientState;
@@ -27,7 +27,8 @@ import static com.bohdloss.fuckunclejack.logic.FunctionUtils.*;
 public class DataHandler {
 	
 private static List<Integer> uids = new ArrayList<Integer>();
-	
+private static Object[] data=null;
+
 	public static void print(byte[] b) {
 		for(int i=0;i<b.length;i++) {
 			System.out.print((b[i]&0xff)+".");
@@ -65,7 +66,7 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					int curUid=buf.getInt();
 					
 					if(!lWorld.player.containsKey(curUid)) {
-						Player p = new Player(name);
+						PlayerEntity p = new PlayerEntity(name);
 						p.setUID(curUid);
 						lWorld.join(p, 0, 0);
 					}
@@ -76,7 +77,7 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					float vely = buf.getFloat();
 					int itemId = buf.getInt();
 					
-					Player toEdit = lWorld.player.get(curUid);
+					PlayerEntity toEdit = lWorld.player.get(curUid);
 					toEdit.x=x;
 					toEdit.y=y;
 					toEdit.setVelocity(velx, vely);
@@ -138,17 +139,15 @@ private static List<Integer> uids = new ArrayList<Integer>();
 						boolean e_BPE_BG = buf.get()==(byte)1;
 						int e_BPE_ID = buf.getInt();
 						
-						Player e_BPE_ISSUER = lWorld.player.get(e_BPE_UID);
+						PlayerEntity e_BPE_ISSUER = lWorld.player.get(e_BPE_UID);
 						lWorld.placeBlock(cause, e_BPE_ISSUER, e_BPE_X, e_BPE_Y, genBlockById(e_BPE_ID, lWorld, e_BPE_X, e_BPE_Y), e_BPE_BG, false);
 						
 					break;
 					case DamageEvent:
 						
 						int e_DE_VICTIM=buf.getInt();
-						int e_DE_ISSUER=buf.getInt();
 						
 						Entity e_DE_VICTIM_ENT = lWorld.getEntity(e_DE_VICTIM);
-						Entity e_DE_ISSUER_ENT = lWorld.getEntity(e_DE_ISSUER);
 						
 						if(e_DE_VICTIM_ENT!=null) {
 							e_DE_VICTIM_ENT.red=true;
@@ -183,7 +182,7 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					
 					int ENT_ID = buf.getInt();
 					
-					Object[] data=genDataById(buf, ENT_ID);
+					data=genDataById(buf, ENT_ID, data);
 					
 					if(lWorld.entities.get(ENT_UID)==null) {
 						Entity ENT_create = genEntityById(ENT_ID, data);
@@ -198,12 +197,16 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					ENT_edit.setVelocity(ENT_VELX, ENT_VELY);
 					
 				}
+				try {
 				Object[] val=lWorld.entities.entrySet().toArray();
 				for(int i=0;i<val.length;i++) {
-					Entry<Integer, Entity> cur = (Entry<Integer, Entity>) val[i];
+					@SuppressWarnings("unchecked")Entry<Integer, Entity> cur = (Entry<Integer, Entity>) val[i];
 					if(state==GAME) {
 						if(!uids.contains(cur.getKey())) lWorld.entities.remove(cur.getKey());
 					}
+				}
+				} catch(Exception e) {
+					e.printStackTrace();
 				}
 				
 			break;
@@ -238,8 +241,12 @@ private static List<Integer> uids = new ArrayList<Integer>();
 					ItemSlot INV_SLOT = lPlayer.getInventory().slots[i];
 					int INV_ID = buf.getInt();
 					int INV_AMOUNT = buf.getInt();
+					int INV_USED = buf.getInt();
 					Item INV_ADD = genItemById(INV_ID, INV_AMOUNT);
 					INV_SLOT.setContent(INV_ADD);
+					if(INV_ADD!=null) {
+						INV_ADD.setUsed(INV_USED);
+					}
 				}
 			break;
 			case STATS:

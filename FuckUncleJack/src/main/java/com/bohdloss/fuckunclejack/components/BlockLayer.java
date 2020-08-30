@@ -1,9 +1,6 @@
 package com.bohdloss.fuckunclejack.components;
 
-import static com.bohdloss.fuckunclejack.render.CMath.fastFloor;
-import static com.bohdloss.fuckunclejack.render.CMath.lerp;
-import static com.bohdloss.fuckunclejack.render.CMath.limit;
-import static com.bohdloss.fuckunclejack.render.CMath.reverseLerp;
+import static com.bohdloss.fuckunclejack.render.CMath.*;
 
 import java.util.Random;
 
@@ -33,6 +30,8 @@ private Model model;
 private Matrix4f res=new Matrix4f();
 //end
 
+public static float grayf=0;
+
 public BlockLayer(Block background, Block top) {
 	this.background=background;
 	this.background.setBackground(true);
@@ -48,14 +47,16 @@ public BlockLayer(Block background, Block top) {
 }
 	
 public void render(Shader s, Matrix4f matrix) {
-				
+	//float sin = (float)CMath.remap(Math.sin(grayf), -1, 1, 0, 1);
+	
 	res = matrix.translate(worldx, y, 0f, res);
 	s.setUniform("projection", res);
-	
+	//s.setUniform("gray", sin);
 	if(top.opaque) {
 		background.render(s, matrix, chunk.lightmap.values[x][y]);
 	}
 	top.render(s, matrix, chunk.lightmap.values[x][y]);
+	//s.setUniform("gray", 0f);
 	if(ClientState.hovx==worldx&ClientState.hovy==y) {
 		hovered.bind(0);
 		model.render();

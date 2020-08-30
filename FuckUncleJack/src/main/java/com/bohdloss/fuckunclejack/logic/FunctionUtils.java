@@ -11,6 +11,7 @@ import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.blocks.*;
 import com.bohdloss.fuckunclejack.components.entities.*;
 import com.bohdloss.fuckunclejack.generator.generators.*;
+import com.bohdloss.fuckunclejack.components.items.BowItem;
 import com.bohdloss.fuckunclejack.components.items.WinnerswordItem;
 import com.bohdloss.fuckunclejack.components.items.blocks.*;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
@@ -21,8 +22,8 @@ import static com.bohdloss.fuckunclejack.server.CSocketUtils.*;
 
 public class FunctionUtils {
 
-	public static ItemDrop genItemEntity(Item item) {
-		ItemDrop drop = new ItemDrop(item);
+	public static ItemDropEntity genItemEntity(Item item) {
+		ItemDropEntity drop = new ItemDropEntity(item);
 		Random r = new Random();
 		float velx=(r.nextFloat()-0.5f)/2f;
 		float vely=(r.nextFloat()/2f)+0.1f;
@@ -33,6 +34,7 @@ public class FunctionUtils {
 	public static Block genBlockById(int id, World world, int x, int y) {
 		int chunk = CMath.fastFloor(((double)x/16d));
 		Chunk c = world.getChunk(chunk, false);
+		if(c==null) return null;
 		return genBlockByIdChunk(id, c, x-(c.getOffsetx()*16), y);
 	}
 
@@ -82,6 +84,8 @@ public class FunctionUtils {
 			return new CactusBlockItem(amount);
 		case 9:
 			return new WinnerswordItem();
+		case 10:
+			return new BowItem();
 		}
 		return null;
 	}
@@ -91,38 +95,51 @@ public class FunctionUtils {
 		case 1:
 			int id = (int) data[0];
 			int amount = (int) data[1];
-			return new ItemDrop(genItemById(id, amount));
+			return new ItemDropEntity(genItemById(id, amount));
 		case 2:
-			return new DesertHouse();
+			return new DesertHouseEntity();
 		case 3:
-			return new Prop((float)data[0], (float)data[1], (String)data[2], (float)data[3], (float)data[4], (boolean)data[5], (boolean)data[6]);
+			return new PropEntity((float)data[0], (float)data[1], (String)data[2], (float)data[3], (float)data[4], (boolean)data[5], (boolean)data[6]);
+		case 4:
+			return new ProjectileEntity((String)data[0], null);
+		case 5:
+			return new StaticProjectileEntity((String)data[0], (float)data[1]);
 		}
 		return null;
 	}
 	
-	public static Object[] genDataById(ByteBuffer buf, int id) {
-		Object[] data=null;
+	public static Object[] genDataById(ByteBuffer buf, int id, Object[] databuffer) {
+		databuffer=null;
 		switch(id) {
 		case 1:
-			data=new Object[2];
-			data[0]=buf.getInt();
-			data[1]=buf.getInt();
+			databuffer=new Object[2];
+			databuffer[0]=buf.getInt();
+			databuffer[1]=buf.getInt();
 			break;
 		case 3:
-			data=new Object[7];
-			data[0]=buf.getFloat();
-			data[1]=buf.getFloat();
-			data[2]=readString(buf);
-			data[3]=buf.getFloat();
-			data[4]=buf.getFloat();
-			data[5]=(boolean)(buf.get()==(byte)1);
-			data[6]=(boolean)(buf.get()==(byte)1);
+			databuffer=new Object[7];
+			databuffer[0]=buf.getFloat();
+			databuffer[1]=buf.getFloat();
+			databuffer[2]=readString(buf);
+			databuffer[3]=buf.getFloat();
+			databuffer[4]=buf.getFloat();
+			databuffer[5]=(boolean)(buf.get()==(byte)1);
+			databuffer[6]=(boolean)(buf.get()==(byte)1);
+			break;
+		case 4:
+			databuffer=new Object[1];
+			databuffer[0]=readString(buf);
+			break;
+		case 5:
+			databuffer=new Object[2];
+			databuffer[0]=readString(buf);
+			databuffer[1]=buf.getFloat();
 			break;
 		}
-		return data;
+		return databuffer;
 	}
 	
-	public static void travel(Player p, World w, int x, int y) {
+	public static void travel(PlayerEntity p, World w, int x, int y) {
 		if(GameState.isClient.getValue()) return;
 		
 		p.getWorld().player.remove(p.getUID());
