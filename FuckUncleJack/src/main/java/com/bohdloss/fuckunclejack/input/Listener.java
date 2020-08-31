@@ -41,7 +41,11 @@ public class Listener implements KeyListen {
 		    		if(lPlayer.getInventory().selected!=selected) {
 		    			Item item = lPlayer.getInventory().getSelectedItem();
 		    			if(item!=null) {
-		    				item.onRightClickEnd(CMath.fastFloor(lPlayer.x), CMath.fastFloor(lPlayer.y), null);
+		    				if(BowItem.class.isAssignableFrom(item.getClass())) {
+		    					item.onRightClickEnd(HUD.mpoint.x, HUD.mpoint.y, null);
+		    				}else {
+		    					item.onRightClickEnd(hovx, hovy, null);
+		    				}
 		    			}
 		    		}
 		    		
@@ -211,7 +215,14 @@ public class Listener implements KeyListen {
 			if(i!=null) i.onLeftClickEnd((int)blockx, (int)blocky, null);
 		} else if(code==GLFW_MOUSE_BUTTON_2) {
 			Item i = lPlayer.getInventory().slots[sel()].getContent();
-			if(i!=null) i.onRightClickEnd((int)blockx, (int)blocky, null);
+			
+			if(i!=null) {
+				if(BowItem.class.isAssignableFrom(i.getClass())) {
+					i.onRightClickEnd(HUD.mpoint.x, HUD.mpoint.y, null);
+				}else {
+					i.onRightClickEnd(hovx, hovy, null);
+				}
+			}
 		}
 	}
 	

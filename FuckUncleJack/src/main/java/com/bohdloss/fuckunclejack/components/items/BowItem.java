@@ -11,56 +11,46 @@ import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
 import com.bohdloss.fuckunclejack.logic.events.StartChargingEvent;
 import com.bohdloss.fuckunclejack.logic.events.StopChargingEvent;
 import com.bohdloss.fuckunclejack.render.CMath;
+import com.bohdloss.fuckunclejack.render.Point2f;
 
 public class BowItem extends Item {
 
 public boolean charging;
 public float chargePercent;
-	
+
 	public BowItem() {
 		super(25, 0, 1, "bowitem");
 	}
 
 	@Override
-	public ItemEventProperties onRightClickBegin(int x, int y, Entity entity) {
+	public ItemEventProperties onRightClickBegin(float x, float y, Entity entity) {
 		if(!charging) {
-			if(!EventHandler.chargeStarted(true, new StartChargingEvent(owner.owner.owner, GameEvent.chargeItem)).isCancelled()) {
+			if(!EventHandler.chargeStarted(true, new StartChargingEvent(owner.owner.owner, GameEvent.chargeItem, x, y)).isCancelled()) {
 				charging=true;
 				chargePercent=0;
 			}
 		}
-		return properties();
+		return super.onRightClickBegin(x, y, entity);
 	}
 
 	@Override
-	public ItemEventProperties onRightClickEnd(int x, int y, Entity entity) {
+	public ItemEventProperties onRightClickEnd(float x, float y, Entity entity) {
 		Entity entOwn = owner.owner.owner;
 		if(charging) {
-			if(!EventHandler.chargeStopped(true, new StopChargingEvent(entOwn, GameEvent.stopChargeItem)).isCancelled()) {
+			if(!EventHandler.chargeStopped(true, new StopChargingEvent(entOwn, GameEvent.stopChargeItem, x, y)).isCancelled()) {
 				charging=false;
 				if(chargePercent>0.4f) {
 					ProjectileEntity arrow = new ProjectileEntity("arrow", entOwn);
-					float force = (0.5f)*chargePercent;
-					arrow.setVelocity(force, force);
+					float force = calculateForce();
+					float angle = CMath.oppositeTo(x, y);
+					arrow.setVelocity((float)Math.cos(angle)*force, (float)Math.sin(angle)*force);
 					if(!EventHandler.entitySpawned(false, new EntitySpawnedEvent(GameEvent.tickSpawn, arrow, new Object[0])).isCancelled()) {
 						entOwn.getWorld().join(arrow, entOwn.x, entOwn.y);
 					}
 				}
 			}
 		}
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onLeftClickBegin(int x, int y, Entity entity) {
-		
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onLeftClickEnd(int x, int y, Entity entity) {
-		
-		return properties();
+		return super.onRightClickEnd(x, y, entity);
 	}
 
 	@Override
@@ -78,6 +68,10 @@ public float chargePercent;
 		if(charging&chargePercent<1) {
 			chargePercent=CMath.limit(chargePercent+0.03f, 0, 1);
 		}
+	}
+
+	public float calculateForce() {
+		return chargePercent;
 	}
 	
 }

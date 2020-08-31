@@ -13,30 +13,6 @@ public class WinnerswordItem extends Item {
 	}
 
 	@Override
-	public ItemEventProperties onRightClickBegin(int x, int y, Entity entity) {
-		
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onRightClickEnd(int x, int y, Entity entity) {
-		
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onLeftClickBegin(int x, int y, Entity entity) {
-		use(1);
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onLeftClickEnd(int x, int y, Entity entity) {
-		
-		return properties();
-	}
-
-	@Override
 	public int getId() {
 		return 9;
 	}

@@ -109,6 +109,7 @@ public class Assets {
 		textures.put("bar_health", new Texture("/data/textures/hud/bar_health.png"));
 		textures.put("bar_armour", new Texture("/data/textures/hud/bar_armour.png"));
 		textures.put("green", new Texture("/data/textures/hud/green.png"));
+		textures.put("greenarrow", new Texture("/data/textures/hud/greenarrow.png"));
 		textures.put("inventory_bg", new Texture("/data/textures/hud/inventory_bg.png"));
 		textures.put("slot_bg", new Texture("/data/textures/hud/slot_bg.png"));
 		textures.put("slot_bg_hovered", new Texture("/data/textures/hud/slot_bg_hovered.png"));
@@ -125,6 +126,7 @@ public class Assets {
 		
 		textures.put("hovered_block", new Texture("/data/textures/blocks/assets/hovered.png"));
 		textures.put("background_block", new Texture("/data/textures/blocks/assets/background.png"));
+		textures.put("dot", new Texture("/data/textures/hud/dot.png"));
 		
 		//Props entities textures
 		

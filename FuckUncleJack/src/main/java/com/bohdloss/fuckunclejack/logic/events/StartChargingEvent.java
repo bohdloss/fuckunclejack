@@ -9,13 +9,15 @@ public class StartChargingEvent extends GameEvent {
 	
 public ByteBuffer buf;
 	
-	public StartChargingEvent(Entity issuer, byte cause) {
+	public StartChargingEvent(Entity issuer, byte cause, float argx, float argy) {
 		super(issuer, cause, false);
 		
-		buf=ByteBuffer.allocate(6);
+		buf=ByteBuffer.allocate(14);
 		buf.put(StartChargingEvent);
 		buf.put(cause);
 		buf.putInt(issuer.getUID());
+		buf.putFloat(argx);
+		buf.putFloat(argy);
 	}
 
 	@Override

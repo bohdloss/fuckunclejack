@@ -68,10 +68,22 @@ public static ItemEventProperties defaultProperties() {
 	return new ItemEventProperties(null).setDamage(1).setBreakspeed(0);
 }
 
-abstract public ItemEventProperties onRightClickBegin(int x, int y, Entity entity);
-abstract public ItemEventProperties onRightClickEnd(int x, int y, Entity entity);
-abstract public ItemEventProperties onLeftClickBegin(int x, int y, Entity entity);
-abstract public ItemEventProperties onLeftClickEnd(int x, int y, Entity entity);
+public ItemEventProperties onRightClickBegin(float x, float y, Entity entity) {
+	owner.owner.owner.itemRightBegin(this);
+	return properties();
+}
+public ItemEventProperties onRightClickEnd(float x, float y, Entity entity) {
+	owner.owner.owner.itemRightEnd(this);
+	return properties();
+}
+public ItemEventProperties onLeftClickBegin(float x, float y, Entity entity) {
+	owner.owner.owner.itemLeftBegin(this);
+	return properties();
+}
+public ItemEventProperties onLeftClickEnd(float x, float y, Entity entity) {
+	owner.owner.owner.itemLeftEnd(this);
+	return properties();
+}
 
 public void use(int amount) {
 	if(amount>0) used=(int)CMath.limit(used+amount, 0, uses);

@@ -33,7 +33,7 @@ public class ProjectileEntity extends Entity {
 	@Override
 	public void tick() {
 		super.tick();
-		angle=(float)Math.atan(vely/velx);
+		angle=CMath.lookAt(velx, vely);
 	}
 	
 	@Override

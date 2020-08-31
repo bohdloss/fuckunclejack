@@ -119,14 +119,7 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 		
 		if(auth) {
 		
-			//Put playerdata marker
-			buf.put(PLAYERDATA);
 			
-			buf.putFloat(lPlayer.x);
-			buf.putFloat(lPlayer.y);
-			buf.putFloat(lPlayer.getVelocity().x);
-			buf.putFloat(lPlayer.getVelocity().y);
-			buf.putInt(lPlayer.getInventory().selected);
 			
 			if(sendDebug) {
 				buf.put(DEBUG);
@@ -146,6 +139,15 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 					putEnd(buf);
 					return;
 				}
+			
+			//Put playerdata marker
+			buf.put(PLAYERDATA);
+			
+			buf.putFloat(lPlayer.x);
+			buf.putFloat(lPlayer.y);
+			buf.putFloat(lPlayer.getVelocity().x);
+			buf.putFloat(lPlayer.getVelocity().y);
+			buf.putInt(lPlayer.getInventory().selected);
 			
 			try {
 				processChunks();

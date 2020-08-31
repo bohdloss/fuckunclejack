@@ -9,13 +9,15 @@ public class StopChargingEvent extends GameEvent {
 	
 public ByteBuffer buf;
 	
-	public StopChargingEvent(Entity issuer, byte cause) {
+	public StopChargingEvent(Entity issuer, byte cause, float argx, float argy) {
 		super(issuer, cause, false);
 		
-		buf=ByteBuffer.allocate(6);
+		buf=ByteBuffer.allocate(14);
 		buf.put(StopChargingEvent);
 		buf.put(cause);
 		buf.putInt(issuer.getUID());
+		buf.putFloat(argx);
+		buf.putFloat(argy);
 	}
 
 	@Override

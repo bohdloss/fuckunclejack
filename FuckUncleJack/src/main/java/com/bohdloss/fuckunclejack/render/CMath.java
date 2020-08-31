@@ -7,7 +7,7 @@ import java.util.Random;
 
 import com.bohdloss.fuckunclejack.main.Game;
 
-public class CMath {
+public class CMath {	
 
 	public static double remap(double value, double min1, double max1, double min2, double max2) {
 		return lerp(reverseLerp(value, min1, max1), min2, max2);
@@ -120,6 +120,22 @@ public class CMath {
 		} else {
 			return random(r, iterations-1)&r.nextBoolean();
 		}
+	}
+	
+	public static float lookAt(Point2f point) {
+		return (float)Math.atan2(point.y, point.x);
+	}
+	
+	public static float oppositeTo(Point2f point) {
+		return (float)(lookAt(point)+Math.PI);
+	}
+	
+	public static float lookAt(float x, float y) {
+		return (float)Math.atan2(y, x);
+	}
+	
+	public static float oppositeTo(float x, float y) {
+		return (float)(lookAt(x, y)+Math.PI);
 	}
 	
 }

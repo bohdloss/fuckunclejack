@@ -11,6 +11,7 @@ import static com.bohdloss.fuckunclejack.main.Game.*;
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 
 import com.bohdloss.fuckunclejack.components.Item;
+import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Game;
@@ -153,7 +154,6 @@ public void baseUpdate() {
 		nearHouse=null;
 		
 	}
-	
 }
 
 }

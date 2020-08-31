@@ -175,21 +175,27 @@ public class DataHandler {
 					case StartChargingEvent:
 						buf.getInt();
 						
+						float e_STE_ARGX = buf.getFloat();
+						float e_STE_ARGY = buf.getFloat();
+						
 						PlayerEntity e_SCE_ISSUER = input.player;
 						Inventory e_SCE_INV = e_SCE_ISSUER.getInventory();
 						Item e_SCE_I = e_SCE_INV.slots[e_SCE_INV.selected].getContent();
 						if(e_SCE_I!=null) {
-							e_SCE_I.onRightClickBegin(CMath.fastFloor(e_SCE_ISSUER.x), CMath.fastFloor(e_SCE_ISSUER.y), null);
+							e_SCE_I.onRightClickBegin(e_STE_ARGX, e_STE_ARGY, null);
 						}
 					break;
 					case StopChargingEvent:
 						buf.getInt();
 						
+						float e_SSTE_ARGX = buf.getFloat();
+						float e_SSTE_ARGY = buf.getFloat();
+						
 						PlayerEntity e_SSCE_ISSUER = input.player;
 						Inventory e_SSCE_INV = e_SSCE_ISSUER.getInventory();
 						Item e_SSCE_I = e_SSCE_INV.slots[e_SSCE_INV.selected].getContent();
 						if(e_SSCE_I!=null) {
-							e_SSCE_I.onRightClickEnd(CMath.fastFloor(e_SSCE_ISSUER.x), CMath.fastFloor(e_SSCE_ISSUER.y), null);
+							e_SSCE_I.onRightClickEnd(e_SSTE_ARGX, e_SSTE_ARGY, null);
 						}
 					break;
 					}

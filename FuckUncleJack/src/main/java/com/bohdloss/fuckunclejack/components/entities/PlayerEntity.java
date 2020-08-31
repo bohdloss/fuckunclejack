@@ -10,6 +10,8 @@ import com.bohdloss.fuckunclejack.components.Entity;
 import com.bohdloss.fuckunclejack.components.Inventory;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.ItemSlot;
+import com.bohdloss.fuckunclejack.components.items.BowItem;
+import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameState;
@@ -46,10 +48,14 @@ private int direction=1;
 
 private static Model item;
 private static Model smallItem;
+private static Texture dot;
+
+protected boolean bowAimDots=false; //Should draw projectile path?
 
 static {
 	item=Assets.models.get("item");
 	smallItem=Assets.models.get("smallitem");
+	dot=Assets.textures.get("dot");
 }
 
 	public PlayerEntity(String name) {
@@ -174,6 +180,27 @@ static {
 	@Override
 	public void render(Shader s, Matrix4f matrix) {
 		if(this==ClientState.lPlayer&!ClientState.renderPlayer) return;
+		
+		//render aiming dots for bow-like items
+		
+		if(bowAimDots) {
+			float aimAngle = CMath.oppositeTo(HUD.mpoint);
+			float aimCos = (float)Math.cos(aimAngle);
+			float aimSin = (float)Math.sin(aimAngle);
+			for(int i=0;i<5;i++) {
+				float force = ((BowItem) inventory.getSelectedItem()).calculateForce();
+				float percent = (float)i/5;
+				
+				float transx = (float)CMath.lerp(percent, x, x+force*aimCos*3);
+				float transy = (float)CMath.lerp(percent, y, y+force*aimSin*3);
+				
+				translation.identity().translate(transx, transy, 0);
+				s.setUniform("projection", matrix.mul(translation, res));
+				dot.bind(0);
+				smallItem.render();
+			}
+		}
+		
 		float strety = stretchyY();
 		
 		//calc scale
@@ -286,6 +313,20 @@ private SocketThread thread;
 			finalize();
 		} catch(Throwable t) {
 			t.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void itemRightBegin(Item i) {
+		if(BowItem.class.isAssignableFrom(i.getClass())) {
+			bowAimDots=true;
+		}
+	}
+	
+	@Override
+	public void itemRightEnd(Item i) {
+		if(BowItem.class.isAssignableFrom(i.getClass())) {
+			bowAimDots=false;
 		}
 	}
 	

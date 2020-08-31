@@ -681,4 +681,20 @@ public void die() {
 	timer.schedule(task, 500);
 }
 
+public void itemLeftBegin(Item i) {
+	
+}
+
+public void itemRightBegin(Item i) {
+	
+}
+
+public void itemLeftEnd(Item i) {
+	
+}
+
+public void itemRightEnd(Item i) {
+	
+}
+
 }

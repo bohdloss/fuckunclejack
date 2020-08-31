@@ -21,32 +21,19 @@ public abstract class BlockItem extends Item{
 	}
 	
 	@Override
-	public ItemEventProperties onRightClickBegin(int x, int y, Entity entity) {
+	public ItemEventProperties onRightClickBegin(float x, float y, Entity entity) {
+		int floorx = CMath.fastFloor(x);
+		int floory = CMath.fastFloor(y);
 		Entity executor=owner.owner.owner;
-		Block b = executor.getWorld().getBlock(x, y);
+		Block b = executor.getWorld().getBlock(floorx, floory);
 		if(b==null) return properties();
 		if(available) {
-			boolean placed = executor.getWorld().placeBlock(GameEvent.invPlace, executor, x, y, generateInstance(x, y, executor.getWorld()), false, true);
+			boolean placed = executor.getWorld().placeBlock(GameEvent.invPlace, executor, floorx, floory, generateInstance(floorx, floory, executor.getWorld()), false, true);
 			if(placed) {
 			decrease(1);
 			}
 		}
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onRightClickEnd(int x, int y, Entity entity) {
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onLeftClickBegin(int x, int y, Entity entity) {
-		return properties();
-	}
-
-	@Override
-	public ItemEventProperties onLeftClickEnd(int x, int y, Entity entity) {
-		return properties();
+		return super.onRightClickBegin(x, y, entity);
 	}
 
 	@Override

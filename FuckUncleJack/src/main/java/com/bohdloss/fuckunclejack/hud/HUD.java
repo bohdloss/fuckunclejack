@@ -74,7 +74,6 @@ static {
 		hotbar.render(s, matrix);
 		interact.render(s, matrix);
 		
-		
 		/*
 		try {
 			i=0;
