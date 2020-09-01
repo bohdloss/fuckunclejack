@@ -11,14 +11,16 @@ import static com.bohdloss.fuckunclejack.main.Game.*;
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 
 import com.bohdloss.fuckunclejack.components.Item;
+import com.bohdloss.fuckunclejack.components.Tickable;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Game;
+import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.Point2f;
 
-public class InputManager extends Thread{
+public class InputManager extends Thread implements Tickable{
 
 public static boolean[] keys = new boolean[GLFW_KEY_LAST];
 public static boolean[] button = new boolean[GLFW_MOUSE_BUTTON_LAST];
@@ -51,9 +53,22 @@ public static boolean isMouseButtonDown(int code) {
 }
 
 public void gameUpdate() {
-	baseUpdate();
+	if(lPlayer==null|lWorld==null) return;
 	
 	hoverCalc(scaleAmount);
+	
+	if(ClientState.lPlayer!=null&camera!=null) {
+		camera.setX(Game.scaleAmount*ClientState.lPlayer.x);
+		camera.setY(Game.scaleAmount*ClientState.lPlayer.y);
+	}
+	nearHouseB=false;
+	if(lWorld!=null) ClientState.lWorld.tick();
+	if(nearHouseB==true) {
+		nearHouse=lastHouse;
+	} else {
+		nearHouse=null;
+		
+	}
 	
 	if(!ClientState.locked) {
 	
@@ -106,9 +121,7 @@ public void run() {
 	while(true) {
 		try {
 			long time = System.currentTimeMillis();
-			if(lWorld!=null&lPlayer!=null) {
-			gameUpdate();
-			}
+			tick();
 			delay(time+GameState.tickDelay);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -142,17 +155,28 @@ public void baseUpdate() {
 			if(!down) listener.onMouseButtonReleased(i);
 		}
 	}
-	if(ClientState.lPlayer!=null&camera!=null) {
-		camera.setX(Game.scaleAmount*ClientState.lPlayer.x);
-		camera.setY(Game.scaleAmount*ClientState.lPlayer.y);
+	
+}
+
+public void menuUpdate() {
+	if(MenuTab.active!=null) {
+		MenuTab.active.tick();
 	}
-	nearHouseB=false;
-	if(lWorld!=null) ClientState.lWorld.tick();
-	if(nearHouseB==true) {
-		nearHouse=lastHouse;
-	} else {
-		nearHouse=null;
-		
+}
+
+@Override
+public void tick() {
+	baseUpdate();
+	switch(state) {
+	case GAME:
+		gameUpdate();
+	break;
+	case EDITMODE:
+		gameUpdate();
+	break;
+	case MENU:
+		menuUpdate();
+	break;
 	}
 }
 

@@ -16,7 +16,7 @@ void main() {
 	}
 	
 	float sum = (txt.x)+(txt.y)+(txt.z);
-	float average = sum/3f;
+	float average = sum/3;
 	
 	vec4 interpolation = vec4(lerp(grayscale.x, txt.x, average), lerp(grayscale.y, txt.y, average), lerp(grayscale.z, txt.z, average), txt.w);
 	

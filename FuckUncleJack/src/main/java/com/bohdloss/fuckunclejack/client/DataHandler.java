@@ -167,6 +167,7 @@ private static Object[] data=null;
 				
 			break;
 			case ENTITIES:
+				try {
 				int ENT_length = buf.getInt();
 				
 				uids.clear();
@@ -208,7 +209,9 @@ private static Object[] data=null;
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-				
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			break;
 			case CHUNKS:
 				int CHUNKS_LENGTH=buf.getInt();

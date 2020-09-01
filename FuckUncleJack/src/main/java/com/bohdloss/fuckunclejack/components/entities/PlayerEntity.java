@@ -16,6 +16,7 @@ import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Assets;
+import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.Animation;
 import com.bohdloss.fuckunclejack.render.AnimationSet;
 import com.bohdloss.fuckunclejack.render.BlockTexture;

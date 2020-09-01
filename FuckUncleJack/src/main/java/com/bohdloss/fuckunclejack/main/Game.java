@@ -17,6 +17,7 @@ import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.input.InputManager;
 import com.bohdloss.fuckunclejack.logic.ClientState;
+import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.Camera;
 import com.bohdloss.fuckunclejack.render.FontManager;
 import com.bohdloss.fuckunclejack.render.Shader;
@@ -57,30 +58,27 @@ public static Shader shader;
 
 	public void begin() {
 		setup();
-
 		lPlayer=new PlayerEntity(Main.name);
 		lWorld=new OverworldWorld("world");
 		ClientState.connect(Main.ip, Server.port);
+		//ClientState.showMenu("main");
 		
 		hud=new HUD();
-		
 		input.start();
-		
 		renderLoop();
+	}
+	
+	public void loadLibrary() {
+		System.out.println("Initializing GLFW...");
+			if(!glfwInit()) {
+				JOptionPane.showMessageDialog(null, "LWJGL failed to initialize!\nReport this error!");
+				System.exit(1);
+			}
 	}
 	
 	public void setup() {
 		//Essential setup
-		System.out.println("Hacking into the mainframe...");
-		
-		//LibraryUtils.prepareLWJGL();
-		
-		System.out.println("Initializing GLFW...");
-				if(!glfwInit()) {
-					JOptionPane.showMessageDialog(null, "LWJGL failed to initialize!\nReport this error!");
-					System.exit(1);
-				}
-				//End
+				loadLibrary();
 				
 				System.out.println("Initializing window...");
 				
@@ -167,6 +165,9 @@ public static Shader shader;
 				renderGame();
 				renderEditor();
 			break;
+			case MENU:
+				renderTabs();
+			break;
 			}
 			
 			FontManager.renderString(-FontManager.strWidth(fps)/2, 7, Assets.sheets.get("font"), Assets.shaders.get("gui"), tempres, Assets.models.get("item"), fps);
@@ -201,6 +202,12 @@ public static Shader shader;
 	public void renderHud() {
 		guitarget=guiscale2;
 		hud.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
+	}
+	
+	public void renderTabs() {
+		if(MenuTab.active!=null) {
+			MenuTab.active.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
+		}
 	}
 	
 	public void fullscreen() {

@@ -26,15 +26,15 @@ public Shader(String locationvs, String locationfs) throws Exception{
 	vs = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vs, read(locationvs));
 	glCompileShader(vs);
-	if(glGetShaderi(GL_COMPILE_STATUS, vs)!=0) {
-		throw new Exception(""+glGetShaderInfoLog(vs));
+	if(glGetShaderi(vs, GL_COMPILE_STATUS)==GL_FALSE) {
+		throw new Exception("OpenGL error: "+glGetShaderInfoLog(vs));
 	}
 	
 	fs = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fs, read(locationfs));
 	glCompileShader(fs);
-	if(glGetShaderi(GL_COMPILE_STATUS, fs)!=0) {
-		throw new Exception(""+glGetShaderInfoLog(fs));
+	if(glGetShaderi(fs, GL_COMPILE_STATUS)==GL_FALSE) {
+		throw new Exception("OpenGL error: "+glGetShaderInfoLog(fs));
 	}
 	
 	glAttachShader(program, vs);
@@ -43,13 +43,13 @@ public Shader(String locationvs, String locationfs) throws Exception{
 	glBindAttribLocation(program, 0, "vertices");
 	glBindAttribLocation(program, 1, "textures");
 	glLinkProgram(program);
-	if(glGetProgrami(program, GL_LINK_STATUS)!=1) {
-		throw new Exception(""+glGetProgramInfoLog(program));
+	if(glGetProgrami(program, GL_LINK_STATUS)==GL_FALSE) {
+		throw new Exception("OpenGL error: "+glGetProgramInfoLog(program));
 	}
 	
 	glValidateProgram(program);
-	if(glGetProgrami(program, GL_VALIDATE_STATUS)!=1) {
-		throw new Exception(""+glGetProgramInfoLog(program));
+	if(glGetProgrami(program, GL_VALIDATE_STATUS)==GL_FALSE) {
+		throw new Exception("OpenGL error: "+glGetProgramInfoLog(program));
 	}
 }
 

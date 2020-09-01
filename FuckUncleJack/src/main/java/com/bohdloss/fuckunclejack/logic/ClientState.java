@@ -5,6 +5,7 @@ import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.HouseEntity;
 import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.editor.Editor;
+import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 
 public class ClientState {
 
@@ -56,6 +57,11 @@ public static void connect(String ip, int port) {
 public static void disconnect() {
 	IP=null;
 	PORT=0;
+	state=MENU;
+}
+
+public static void showMenu(String string) {
+	MenuTab.active=MenuTab.tabs.get(string);
 	state=MENU;
 }
 
