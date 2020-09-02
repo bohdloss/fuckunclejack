@@ -88,7 +88,7 @@ public class CMath {
 
 	public static Point2f toGLCoord(float x, float y, float scale) {
 			float visiblex, visibley, blockx, blocky;
-			Point pos;
+			Point2f pos;
 		
 			visiblex=(float)window.getWidth()/(float)scale;
 			visibley=(float)window.getHeight()/(float)scale;
@@ -110,7 +110,7 @@ public class CMath {
 	}
 	
 	public static Point2f mGLCoord(float scale) {
-		Point p = Game.window.getCursorPos();
+		Point2f p = Game.window.getCursorPos();
 		return toGLCoord(p.x, p.y, scale);
 	}
 	

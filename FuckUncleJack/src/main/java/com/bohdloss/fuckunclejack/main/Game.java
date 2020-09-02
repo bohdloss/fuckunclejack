@@ -10,7 +10,6 @@ import java.util.Random;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 
-import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
@@ -25,7 +24,6 @@ import com.bohdloss.fuckunclejack.render.Texture;
 import com.bohdloss.fuckunclejack.server.Server;
 
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
-import static com.bohdloss.fuckunclejack.main.Game.camera;
 
 import javax.swing.JOptionPane;
 
@@ -83,14 +81,20 @@ public static Shader shader;
 				System.out.println("Initializing window...");
 				
 				window=new Window();
-				int w = window.getWidth();
-				int h = window.getHeight();
 				
 				System.out.println("Initializing camera...");
 				
-				camera = new Camera(w,h);
+				camera = new Camera(window.getWidth(),window.getHeight());
 				
 				System.out.println("Creating context...");
+				
+				try {
+					Thread.sleep(5000);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				
+				System.out.println("Creating context (for real)...");
 				
 				GL.createCapabilities();
 				
@@ -109,7 +113,7 @@ public static Shader shader;
 				
 				System.out.println("Loading game assets...");
 				
-				Assets.load();
+				//Assets.load();
 				
 				System.out.println("Done!");
 	}
