@@ -100,6 +100,8 @@ public class Assets {
 	private static void loadTextures() throws Exception{
 		System.out.println("Loading textures...");
 		
+		textures.put("empty", new Texture("/data/textures/empty.png"));
+		
 		//Hud textures
 		
 		textures.put("hud_bg", new Texture("/data/textures/hud/bg.png"));
@@ -142,6 +144,12 @@ public class Assets {
 		//Projectiles
 		textures.put("arrow", new Texture("/data/textures/entities/projectiles/arrow.png"));
 		
+		//Menus
+		textures.put("mainbackground", new Texture("/data/textures/menus/background.png"));
+		textures.put("mainleft", new Texture("/data/textures/menus/left.png"));
+		textures.put("mainright", new Texture("/data/textures/menus/right.png"));
+		textures.put("maintitle", new Texture("/data/textures/menus/title.png"));
+		
 		loadBlocks();
 	}
 	
@@ -151,10 +159,7 @@ public class Assets {
 		sheets.put("buttons", new TileSheet(textures.get("hud_buttons"), 4));
 		sheets.put("font", FontManager.load(new Font("Arial", 1, 32), new Color(127,127,127,255)));
 	
-		sheets.put("dad_walking_sheet", new TileSheet(new Texture("/data/textures/entities/player/dad/walking.png"), 4));
-		sheets.put("dad_idle_sheet", new TileSheet(new Texture("/data/textures/entities/player/dad/idle.png"), 1));
-		sheets.put("dad_jump_sheet", new TileSheet(new Texture("/data/textures/entities/player/dad/jump.png"), 2));
-		sheets.put("dad_fall_sheet", new TileSheet(new Texture("/data/textures/entities/player/dad/fall.png"), 1));
+		sheets.put("menubuttons", new TileSheet(new Texture("/data/textures/menus/buttons/buttonsheet.png"), 27));
 	}
 	
 	private static void loadAnimations() throws Exception{

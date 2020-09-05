@@ -30,7 +30,7 @@ public Hotbar() {
 public void render(Shader s, Matrix4f matrix) {
 	translate.identity().translate(0, -6f, 0);
 	res=matrix.mul(translate, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	bgtxt.bind(0);
 	bg.render();
 	for(int x=0;x<9;x++) {

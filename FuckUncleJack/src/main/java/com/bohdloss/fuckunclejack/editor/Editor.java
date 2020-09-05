@@ -102,8 +102,8 @@ static {
 				try {
 					BufferedImage img = ImageIO.read(c.getSelectedFile());
 					String name = JOptionPane.showInputDialog("texture name: ");
-					Game.createTexture=img;
-					Game.createTextureName=name;
+					Texture txt = Texture.generate(img);
+					Assets.textures.put(name, txt);
 				} catch(Exception e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
@@ -285,7 +285,7 @@ static {
 				translation.identity().translate(savedx, savedy, 0).scale(custEnt.xscale, custEnt.yscale, 1);
 			}
 			res=res.mul(translation, res);
-			s.setUniform("projection", res);
+			s.setProjection(res);
 			square.render();
 		}
 		
@@ -295,7 +295,7 @@ static {
 			green.bind(0);
 			translation.identity().translate(savedx, savedy, 0).scale(xscale, yscale, 1);
 			res=res.mul(translation, res);
-			s.setUniform("projection", res);
+			s.setProjection(res);
 			square.render();
 		}
 		
@@ -322,7 +322,7 @@ static {
 		Assets.textures.forEach((k,v)->{
 			translation.identity().translate(-12, 4-i+scroll, 0);
 			res=matrix.mul(translation, res);
-			s.setUniform("projection", res);
+			s.setProjection(res);
 			
 			v.bind(0);
 			square.render();

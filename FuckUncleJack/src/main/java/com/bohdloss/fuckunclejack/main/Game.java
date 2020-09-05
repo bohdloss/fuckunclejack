@@ -4,10 +4,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.util.Random;
-
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
 
 import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
@@ -15,13 +13,11 @@ import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.input.InputManager;
-import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.Camera;
 import com.bohdloss.fuckunclejack.render.FontManager;
+import com.bohdloss.fuckunclejack.render.MainEvents;
 import com.bohdloss.fuckunclejack.render.Shader;
-import com.bohdloss.fuckunclejack.render.Texture;
-import com.bohdloss.fuckunclejack.server.Server;
 
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 
@@ -41,12 +37,6 @@ private int frames=0;
 private String fps="0 FPS";
 private long lastTime=0;
 
-public static boolean pendingToggle=false;
-public static BufferedImage createTexture=null;
-public static String createTextureName=null;
-public static String createModel;
-public static String createModelName;
-
 public static Matrix4f scale;
 public static Matrix4f target;
 public static Matrix4f guiscale2;
@@ -54,12 +44,12 @@ public static Matrix4f guitarget;
 public static Matrix4f tempres;
 public static Shader shader;
 
+public static boolean blocked=true;
+
+public static float fadeVal=0f;
+
 	public void begin() {
 		setup();
-		lPlayer=new PlayerEntity(Main.name);
-		lWorld=new OverworldWorld("world");
-		ClientState.connect(Main.ip, Server.port);
-		//ClientState.showMenu("main");
 		
 		hud=new HUD();
 		input.start();
@@ -88,16 +78,10 @@ public static Shader shader;
 				
 				System.out.println("Creating context...");
 				
-				try {
-					Thread.sleep(5000);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-				
-				System.out.println("Creating context (for real)...");
-				
 				GL.createCapabilities();
 				
+				//After creating context because otherwise it crashes on Linux
+				Main.name ="";// JOptionPane.showInputDialog("username");
 				
 				//Enable transparent textures
 				//Disable depth test
@@ -110,10 +94,11 @@ public static Shader shader;
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);
 				glDisable(GL_LIGHTING);
+				glfwSwapInterval(0);
 				
 				System.out.println("Loading game assets...");
 				
-				//Assets.load();
+				Assets.load();
 				
 				System.out.println("Done!");
 	}
@@ -133,73 +118,74 @@ public static Shader shader;
 		System.out.println("Rendering started");
 		
 		while(!window.shouldClose()) {
-			scale.identity().scale(scaleAmount);
-			guiscale2.identity().scale(guiScale);
-			if(pendingToggle) {
-				pendingToggle=false;
-				window.toggleFullscreen();
-			}
-			if(createTexture!=null&createTextureName!=null) {
-				Assets.textures.put(createTextureName, new Texture(createTexture));
-				createTexture=null;
-				createTextureName=null;
-			}
-			if(createModel!=null&createModelName!=null) {
-				try {
-				Assets.models.put(createModelName, ModelLoader.loadString(createModel));
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-				createModel=null;
-				createModelName=null;
-			}
-			
-			if(window.isDestroyed()) continue;
-			
-			glfwPollEvents();
-			
-			glClear(GL_COLOR_BUFFER_BIT);
-			
-			switch(state) {
-			case GAME:
-				renderGame();
-				renderHud();
-			break;
-			case EDITMODE:
-				renderGame();
-				renderEditor();
-			break;
-			case MENU:
-				renderTabs();
-			break;
-			}
-			
-			FontManager.renderString(-FontManager.strWidth(fps)/2, 7, Assets.sheets.get("font"), Assets.shaders.get("gui"), tempres, Assets.models.get("item"), fps);
-			
-			window.swap();
-			
-			if(System.currentTimeMillis()>=lastTime+1000) {
-				fps=frames+" FPS";
-				frames=0;
-				lastTime=System.currentTimeMillis();
-			}
-			
-			frames++;
+			loopEvents();
 		}
 		glfwTerminate();
 		System.out.println("shutting down");
 		System.exit(0);
 	}
 	
+	public void loopEvents() {
+		MainEvents.computeEvents();
+		
+		scale.identity().scale(scaleAmount);
+		guiscale2.identity().scale(guiScale);
+		
+		if(window.isDestroyed()) return;
+		
+		glfwPollEvents();
+		
+		if(blocked) return;
+		
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+		switch(state) {
+		case GAME:
+			renderGame();
+			renderHud();
+		break;
+		case EDITMODE:
+			renderGame();
+			renderEditor();
+		break;
+		case MENU:
+			renderTabs();
+		break;
+		}
+		
+		shader.bind();
+		shader.setProjection(tempres.identity().scale(2));
+		
+		shader.setUniform("opacity", fadeVal);
+		
+		Assets.textures.get("empty").bind(0);
+		Assets.models.get("square").render();
+		
+		shader.setUniform("opacity", -1f);
+		
+		FontManager.renderString(-FontManager.strWidth(fps)/2, 7, Assets.sheets.get("font"), Assets.shaders.get("gui"), camera.unTransformedProjection().mul(guitarget, tempres), Assets.models.get("item"), fps);
+		
+		window.swap();
+		
+		if(System.currentTimeMillis()>=lastTime+1000) {
+			fps=frames+" FPS";
+			frames=0;
+			lastTime=System.currentTimeMillis();
+		}
+		
+		frames++;
+	}
+	
 	public void renderGame() {
+		target=scale;
 		if(lWorld!=null&lPlayer!=null) {
-			target=scale;
 			shader.bind();
 			lWorld.render(shader, camera.projection().mul(target, tempres));
 		}
 	}
 	
 	public void renderEditor() {
+		guitarget=guiscale2;
 		Editor.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
 	}
 	
@@ -209,6 +195,8 @@ public static Shader shader;
 	}
 	
 	public void renderTabs() {
+		guitarget=guiscale2;
+		shader.bind();
 		if(MenuTab.active!=null) {
 			MenuTab.active.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
 		}

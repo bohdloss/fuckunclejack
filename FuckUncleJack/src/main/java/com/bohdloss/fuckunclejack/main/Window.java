@@ -95,12 +95,12 @@ public void createWindow(int width, int height) {
 	glfwSetWindowSizeLimits(window, width, height, width, height);
 	glfwSetWindowPos(window, (int)((d.getWidth()-width)/2), (int)((d.getHeight()-height)/2));
 	
-	/*GLFWImage icon = ImageLoader.load_image("/data/icon.png");
+	GLFWImage icon = ImageLoader.load_image("/data/icon.png");
 	GLFWImage iconSmall = ImageLoader.load_image("/data/icon_small.png");
 	GLFWImage.Buffer imagebf = GLFWImage.malloc(2);
     imagebf.put(0, icon);
     imagebf.put(1, iconSmall);
-    glfwSetWindowIcon(window, imagebf);*/
+    glfwSetWindowIcon(window, imagebf);
 	
 	glfwShowWindow(window);
 	glfwMakeContextCurrent(window);
@@ -146,8 +146,12 @@ public void swap() {
 	glfwSwapBuffers(window);
 }
 
-public boolean keyDown(int key) {
-	return glfwGetKey(window, key)==1;
+public boolean isKeyDown(int key) {
+	return glfwGetKey(window, key)==GLFW_TRUE;
+}
+
+public boolean isMouseButtonDown(int code) {
+	return glfwGetMouseButton(window, code)==GLFW_TRUE;
 }
 
 public long getWindow() {

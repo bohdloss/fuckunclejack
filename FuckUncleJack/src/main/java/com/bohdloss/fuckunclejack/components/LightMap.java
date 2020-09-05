@@ -38,9 +38,9 @@ public void calculate() {
 			float result=0;
 			for(int i=0;i<s.length;i++) {
 				Vector3i cur =(Vector3i)s[i];
-				double first = limit((float)distance(x+origin.getOffsetx()*16, y, cur.x, cur.y)/cur.z, 0, 1);
+				double first = clamp((float)distance(x+origin.getOffsetx()*16, y, cur.x, cur.y)/cur.z, 0, 1);
 				double second = lerp((-first)+1, 0, 20);
-				result=limit((float)(result+second), 0f, (float)19);
+				result=(float)clamp((float)(result+second), 0f, (float)19);
 			}
 			values[x][y]=fastFloor(result);
 			
@@ -73,7 +73,7 @@ private void calcSunlight() {
 				double calc=reverseLerp(y, lerpstart, lerpstart-5);
 				double calc2=lerp(calc, 19, 0);
 				//if(calc2!=0)System.out.println(y);
-				values[x][y]=(int)limit(fastFloor(calc2), 0, 19);
+				values[x][y]=(int)clamp(fastFloor(calc2), 0, 19);
 			}
 		}
 		

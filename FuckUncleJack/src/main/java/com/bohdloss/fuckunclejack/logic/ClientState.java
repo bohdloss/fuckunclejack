@@ -5,7 +5,10 @@ import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.HouseEntity;
 import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.editor.Editor;
+import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
+import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.menutabs.MenuTab;
+import com.bohdloss.fuckunclejack.render.CMath;
 
 public class ClientState {
 
@@ -33,15 +36,37 @@ public static int hovy;
 
 public static int state=MENU;
 
+public static boolean queueDisconnect=false;
 public static String IP;
 public static int PORT;
 public static boolean locked;
 public static boolean hardLocked;
 public static boolean renderPlayer=true;
 
+private static final long fadeAnim=500l;
+
+
 public static void hover(int x, int y) {
 	hovx=x;
 	hovy=y;
+}
+
+public static void fadeToBlack() {
+	long start = System.currentTimeMillis();
+	while(System.currentTimeMillis()<start+fadeAnim) {
+		long delta = System.currentTimeMillis()-start;
+		float percent = (float)delta/(float)fadeAnim;
+		Game.fadeVal=(float)CMath.lerp(percent, 0, 1);
+	}
+}
+
+public static void fadeFromBlack() {
+	long start = System.currentTimeMillis();
+	while(System.currentTimeMillis()<start+fadeAnim) {
+		long delta = System.currentTimeMillis()-start;
+		float percent = (float)delta/(float)fadeAnim;
+		Game.fadeVal=(float)CMath.lerp(percent, 1, 0);
+	}
 }
 
 public static int sel() {
@@ -49,6 +74,8 @@ public static int sel() {
 }
 
 public static void connect(String ip, int port) {
+	lWorld=new OverworldWorld("world");
+	lPlayer=new PlayerEntity("bohdloss");
 	IP=ip;
 	PORT=port;
 	state=GAME;
@@ -57,12 +84,14 @@ public static void connect(String ip, int port) {
 public static void disconnect() {
 	IP=null;
 	PORT=0;
-	state=MENU;
+	showMenu(true, true, "main");
+	lWorld=null;
+	lPlayer=null;
+	System.gc();
 }
 
-public static void showMenu(String string) {
-	MenuTab.active=MenuTab.tabs.get(string);
-	state=MENU;
+public static void showMenu(boolean start, boolean end, String string) {
+	MenuTab.bindTab(start, end, string);
 }
 
 }

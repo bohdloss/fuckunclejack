@@ -386,7 +386,7 @@ public void moveLateral(float direction) {
 	
 	float speedAmount = (running?runSpeed:speed)*(flight?2:1);
 	
-	velx=CMath.limit(velx+(direction*speedAmount)/7f, -speedAmount, speedAmount);
+	velx=(float)CMath.clamp(velx+(direction*speedAmount)/7f, -speedAmount, speedAmount);
 }
 
 public void moveVertical(float direction) {
@@ -394,7 +394,7 @@ public void moveVertical(float direction) {
 	
 	float speedAmount = (running?runSpeed:speed)*2;
 	
-	vely=CMath.limit(vely+(direction*speedAmount)/7f, -speedAmount, speedAmount);
+	vely=(float)CMath.clamp(vely+(direction*speedAmount)/7f, -speedAmount, speedAmount);
 }
 
 private void chunkTest() {
@@ -434,34 +434,34 @@ public void physics() {
 	if(!flight) {
 		if(inAir()) {
 			vely+=gravity.y;
-			vely=CMath.limitMin(vely, -0.5f);
+			vely=(float)CMath.clampMin(vely, -0.5f);
 		} else {
 			vely=0;
 		}
 	} else {
 		if(vely>0) {
 			vely-=0.01f;
-			vely=CMath.limitMin(vely, 0);
+			vely=(float)CMath.clampMin(vely, 0);
 		}
 		if(vely<0) {
 			vely+=0.01f;
-			vely=CMath.limitMax(vely, 0);
+			vely=(float)CMath.clampMax(vely, 0);
 		}
 	}
 if(velx>0) {
 	velx-=0.01f;
-	velx=CMath.limitMin(velx, 0);
+	velx=(float)CMath.clampMin(velx, 0);
 }
 if(velx<0) {
 	velx+=0.01f;
-	velx=CMath.limitMax(velx, 0);
+	velx=(float)CMath.clampMax(velx, 0);
 }
 }
 
 public void render(Shader s, Matrix4f input) {
 	s.setUniform("red", red);
 	res = input.translate(x, y, 0, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	Assets.textures.get(texture).bind(0);
 	Assets.models.get(model).render();
 	s.setUniform("red", false);
@@ -471,7 +471,7 @@ public void render(Shader s, Matrix4f input) {
 public final void renderHitboxes(Shader s, Matrix4f input) {
 	if(debugHitboxes) {
 		res = input.translate(x, y, 0, res).scale(width, height, 1, res);
-		s.setUniform("projection", res);
+		s.setProjection(res);
 		Assets.textures.get("green").bind(0);
 		Assets.models.get("square").render();
 	}
@@ -556,7 +556,7 @@ public float getHealth() {
 }
 
 public void setHealth(float health) {
-	this.health = CMath.limit(health, 0, maxhealth);
+	this.health = (float)CMath.clamp(health, 0, maxhealth);
 }
 
 public float getMaxhealth() {
@@ -639,7 +639,7 @@ public boolean hit(Entity issuer) {
 						double cy = (y-issuer.getY())/distance;
 					
 						velx=(float)(cx/4d);
-						vely=CMath.limitMin((float)(cy/2d), 0.2f);
+						vely=(float)CMath.clampMin(cy/2d, 0.2f);
 					
 					}
 					

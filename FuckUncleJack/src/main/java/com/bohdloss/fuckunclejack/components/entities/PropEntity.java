@@ -59,7 +59,7 @@ static {
 		s.setUniform("red", red);
 		
 		res = matrix.translate(x, y, 0, res).scale(xscale, yscale, 1, res);
-		s.setUniform("projection", res);
+		s.setProjection(res);
 		txt.bind(0);
 		square.render();
 		

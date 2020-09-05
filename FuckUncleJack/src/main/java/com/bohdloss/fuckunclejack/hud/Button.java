@@ -66,7 +66,7 @@ static {
 		bounds.setFrame(x-0.5f*scale, y-0.5f, scale, 1);
 		res=matrix.mul(translate, res);
 		gui.bind();
-		gui.setUniform("projection", res);
+		gui.setProjection(res);
 		
 		button.bindTile(gui, status);
 		square.render();

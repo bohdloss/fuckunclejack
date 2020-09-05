@@ -196,7 +196,7 @@ static {
 				float transy = (float)CMath.lerp(percent, y, y+force*aimSin*3);
 				
 				translation.identity().translate(transx, transy, 0);
-				s.setUniform("projection", matrix.mul(translation, res));
+				s.setProjection(matrix.mul(translation, res));
 				dot.bind(0);
 				smallItem.render();
 			}
@@ -215,7 +215,7 @@ static {
 		//
 		gui.bind();
 		gui.setUniform("red", red);
-		gui.setUniform("projection", matrix.mul(translation, res));
+		gui.setProjection(matrix.mul(translation, res));
 		anim.bind();
 		model.render();
 		gui.setUniform("red", false);
@@ -234,7 +234,7 @@ static {
 			//
 			s.bind();
 			s.setUniform("red", red);
-			s.setUniform("projection", matrix.mul(translation, res));
+			s.setProjection(matrix.mul(translation, res));
 			
 			boolean found=false;
 			boolean smallmodel=false;
@@ -258,7 +258,7 @@ static {
 					//Adjust to animation offset
 					
 					translation.translate(-0.1f, -0.1f, 0);
-					s.setUniform("projection", matrix.mul(translation, res));
+					s.setProjection(matrix.mul(translation, res));
 					
 					smallItem.render();
 				} else {

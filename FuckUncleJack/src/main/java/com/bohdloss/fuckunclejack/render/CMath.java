@@ -58,15 +58,15 @@ public class CMath {
 		return lx*lx+ly*ly;
 	}
 	
-	public static float limitMin(float in, float min) {
+	public static double clampMin(double in, double min) {
 		return in<min ? min : in;
 	}
 	
-	public static float limitMax(float in, float max) {
+	public static double clampMax(double in, double max) {
 		return in>max ? max : in;
 	}
 	
-	public static float limit(float in, float min, float max) {
+	public static double clamp(double in, double min, double max) {
 		if(max>in&in>min) return in;
 		if(in>=max) return max;
 		if(in<=min) return min;
@@ -94,8 +94,8 @@ public class CMath {
 			visibley=(float)window.getHeight()/(float)scale;
 			
 			pos = window.getCursorPos();
-			blockx=CMath.limit(pos.x, 0, window.getWidth());
-			blocky=CMath.limit(pos.y, 0, window.getHeight());
+			blockx=(float)CMath.clamp(pos.x, 0, window.getWidth());
+			blocky=(float)CMath.clamp(pos.y, 0, window.getHeight());
 			
 			blockx=(blockx/window.getWidth());
 			blocky=(blocky/window.getHeight());
@@ -136,6 +136,21 @@ public class CMath {
 	
 	public static float oppositeTo(float x, float y) {
 		return (float)(lookAt(x, y)+Math.PI);
+	}
+	
+	public static double lerpEaseIn(double in, double a, double b) {
+		double curve=clamp((in<0.2)?(2.777*Math.pow(in,2)):((1.111*in)-0.111),0,1);
+		return a+(b-a)*curve;
+	}
+	
+	public static double lerpEaseOut(double in, double a, double b) {
+		double curve=clamp((in>0.8)?((-2.777*Math.pow(in,2))+(5.555*in)-1.777):(1.111*in),0,1);
+		return a+(b-a)*curve;
+	}
+	
+	public static double lerpEaseBoth(double in, double a, double b) {
+		double curve=clamp((in<0.2)?(3.125*Math.pow(in,2)):((in>0.8)?(-3.125*Math.pow(in,2)+(6.25*in)-2.125):((1.25*in)-0.125)),0,1);
+		return a+(b-a)*curve;
 	}
 	
 }

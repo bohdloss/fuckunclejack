@@ -47,27 +47,27 @@ public class ProjectileEntity extends Entity {
 		if(!flight) {
 			if(inAir()) {
 				vely+=gravity.y;
-				vely=CMath.limitMin(vely, -0.5f);
+				vely=(float)CMath.clampMin(vely, -0.5f);
 			} else {
 				vely=0;
 			}
 		} else {
 			if(vely>0) {
 				vely-=0.01f;
-				vely=CMath.limitMin(vely, 0);
+				vely=(float)CMath.clampMin(vely, 0);
 			}
 			if(vely<0) {
 				vely+=0.01f;
-				vely=CMath.limitMax(vely, 0);
+				vely=(float)CMath.clampMax(vely, 0);
 			}
 		}
 	if(velx>0) {
 		velx-=0.01f;
-		velx=CMath.limitMin(velx, 0);
+		velx=(float)CMath.clampMin(velx, 0);
 	}
 	if(velx<0) {
 		velx+=0.01f;
-		velx=CMath.limitMax(velx, 0);
+		velx=(float)CMath.clampMax(velx, 0);
 	}
 	vel.x=0;
 	vel.y=0;
@@ -113,7 +113,7 @@ public class ProjectileEntity extends Entity {
 	public void render(Shader s, Matrix4f input) {
 		s.setUniform("red", red);
 		res = input.translate(x, y, 0, res).rotate(angle, 0, 0, 1, res);
-		s.setUniform("projection", res);
+		s.setProjection(res);
 		Assets.textures.get(texture).bind(0);
 		Assets.models.get(model).render();
 		s.setUniform("red", false);

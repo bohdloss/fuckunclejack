@@ -59,7 +59,7 @@ public Block(Chunk chunk, int chunkx, int y, String texture) {
 
 
 public void render(Shader s, Matrix4f input, int index) {
-	txt.txt[(int)CMath.limit(background?index-5:index, 0, 19)].bind(0);
+	txt.txt[(int)CMath.clamp(background?index-5:index, 0, 19)].bind(0);
 	model.render();
 }
 

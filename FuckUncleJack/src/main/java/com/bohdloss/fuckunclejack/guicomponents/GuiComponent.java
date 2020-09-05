@@ -16,11 +16,13 @@ public abstract class GuiComponent implements Tickable{
 public String text;
 public float x;
 public float y;
+public float rot;
 
 public static final int DISABLED=0;
-public static final int PRESSED=1;
-public static final int IDLE=2;
-public static final int HOVERED=3;
+
+public static final int IDLE=1;
+public static final int HOVERED=2;
+public static final int PRESSED=3;
 
 public int status=IDLE;
 
@@ -34,6 +36,7 @@ protected MenuTab owner;
 	
 	public GuiComponent(MenuTab owner) {
 		this.owner=owner;
+		owner.components.add(this);
 	}
 	
 	public MenuTab getOwner() {
@@ -62,6 +65,7 @@ protected MenuTab owner;
 	
 	@Override
 	public void tick() {
+		if(!visible|status==DISABLED) return;
 		bounds.setFrame(getX(), getY(), getWidth(), getHeight());
 		boolean intersects = bounds.pIntersects(MenuTab.mouse);
 		
@@ -69,7 +73,7 @@ protected MenuTab owner;
 		case DISABLED:
 			return;
 		case PRESSED:
-			if(!Game.window.keyDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
+			if(!Game.window.isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
 				if(intersects) {
 					reset();
 					executeAction();
@@ -84,10 +88,10 @@ protected MenuTab owner;
 			}
 		break;
 		case HOVERED:
-			if(Game.window.keyDown(GLFW.GLFW_MOUSE_BUTTON_1)&intersects) {
+			if(Game.window.isMouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
 				pressed();
 				status=PRESSED;
-			} else {
+			} else if(!intersects) {
 				status=IDLE;
 			}
 		break;

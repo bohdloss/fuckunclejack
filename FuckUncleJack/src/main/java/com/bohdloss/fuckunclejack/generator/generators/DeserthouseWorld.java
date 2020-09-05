@@ -47,7 +47,7 @@ protected static Matrix4f translate=new Matrix4f();
 			
 			translate.identity().translate((i-1)+movFactor, yCoord, 0);
 			res=c.unTransformedProjection().mul(scale, res).mul(translate, res);
-			s.setUniform("projection", res);
+			s.setProjection(res);
 			bg.bind(0);
 			square.render();
 		}

@@ -1,5 +1,8 @@
 package com.bohdloss.fuckunclejack.render;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
 import org.joml.Matrix4f;
 
 public class TileSheet {
@@ -10,6 +13,8 @@ private Matrix4f scale;
 private Matrix4f translation;
 private int amount;
 	
+private BufferedImage[] tiles;
+
 	public TileSheet(Texture texture, int amount) {
 		this.texture=texture;
 		this.amount=amount;
@@ -30,6 +35,28 @@ private int amount;
 	public void test(Shader s, float y) {
 		scale.translate(0, y, 0, translation);
 		s.setUniform("texModifier", translation);
+	}
+	
+	private void buildCache() {
+		tiles=new BufferedImage[amount];
+		BufferedImage img = texture.getImg();
+		
+		for(int i=0;i<amount;i++) {
+			tiles[i]=getPart(img, 0, CMath.fastFloor(((double)i*((double)img.getHeight()/(double)amount))), img.getWidth(), CMath.fastFloor((double)img.getHeight()/(double)amount));
+		}
+	}
+	
+	private static BufferedImage getPart(BufferedImage in, int startx, int starty, int width, int height) {
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = img.getGraphics();
+		g.drawImage(in, -startx, -starty, in.getWidth(), in.getHeight(), null);
+		
+		return img;
+	}
+	
+	public BufferedImage[] getTiles() {
+		if(tiles==null) buildCache();
+		return tiles;
 	}
 	
 	public int getAmount() {

@@ -50,7 +50,7 @@ public void render(Shader s, Matrix4f matrix) {
 	//float sin = (float)CMath.remap(Math.sin(grayf), -1, 1, 0, 1);
 	
 	res = matrix.translate(worldx, y, 0f, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	//s.setUniform("gray", sin);
 	if(top.opaque) {
 		background.render(s, matrix, chunk.lightmap.values[x][y]);

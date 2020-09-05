@@ -62,7 +62,7 @@ public void render(Shader s, Matrix4f matrix) {
 	
 	translate.identity().translate(vec.x-2.25f, vec.y, 0).scale(1.75f);
 	res = matrix.mul(translate, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	icon.bind(0);
 	Assets.models.get("square").render();
 	
@@ -72,16 +72,16 @@ public void render(Shader s, Matrix4f matrix) {
 	
 	translate.identity().translate(vec.x+1, vec.y, 0).scale(0.75f);
 	res = matrix.mul(translate, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	background.bind(0);
 	model.render();
 	
 	middle.bind(0);
-	percent=CMath.limit((current/max), 0, 1)*0.9025f;
+	percent=(float)CMath.clamp((current/max), 0, 1)*0.9025f;
 	scale.identity().scale(percent, 1, 1);
 	translate.identity().translate((0.25f+vec.x+1+((1f-percent)/2f)*-4f)*(1f/percent), vec.y, 0).scale(0.75f);
 	res = matrix.mul(scale, res).mul(translate, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	midmodel.render();
 }
 

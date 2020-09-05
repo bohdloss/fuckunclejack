@@ -64,7 +64,7 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 				if(invalidMatches.contains(SocketThread.getIP(socket))) {
 					System.out.println("disconnecting");
 					socket.close();
-					ClientState.disconnect();
+					ClientState.queueDisconnect=true;
 					
 					
 				}

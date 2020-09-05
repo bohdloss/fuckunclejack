@@ -43,7 +43,7 @@ private static Matrix4f res = new Matrix4f();
 		char[] chars = string.toCharArray();
 		for(int i=0;i<chars.length;i++) {
 			translation.identity().translate(x+i*(0.25f), y, 0);
-			shader.setUniform("projection", matrix.mul(translation, res));
+			shader.setProjection(matrix.mul(translation, res));
 			sheet.bindTile(shader, indexOf(chars[i]));
 			model.render();
 		}

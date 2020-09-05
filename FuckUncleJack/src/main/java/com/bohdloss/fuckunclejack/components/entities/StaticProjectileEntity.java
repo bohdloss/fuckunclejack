@@ -39,7 +39,7 @@ private Object[] data = new Object[2];
 	public void render(Shader s, Matrix4f input) {
 		s.setUniform("red", red);
 		res = input.translate(x, y, 0, res).rotate(rotation, 0, 0, 1, res);
-		s.setUniform("projection", res);
+		s.setProjection(res);
 		Assets.textures.get(texture).bind(0);
 		Assets.models.get(model).render();
 		s.setUniform("red", false);

@@ -2,6 +2,7 @@ package com.bohdloss.fuckunclejack.render;
 
 import static org.lwjgl.opengl.GL20.*;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
@@ -10,12 +11,19 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
+import com.bohdloss.fuckunclejack.main.ResourceLoader;
+
 public class Shader {
 
+public static final Color NO_COLOR=new Color(0,0,0,0);
+public static final Vector4f NO_VECTOR_COLOR=new Vector4f(-1,0,0,0);
+	
 private int program;
 private int fs;
 private int vs;
 	
+public static final String PROJECTION = "projection";
+
 //Variables to reduce time taken by GC
 private int uniformlocation;
 private FloatBuffer floatbuffer=BufferUtils.createFloatBuffer(16);
@@ -24,14 +32,14 @@ public Shader(String locationvs, String locationfs) throws Exception{
 	program = glCreateProgram();
 	
 	vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, read(locationvs));
+	glShaderSource(vs, ResourceLoader.loadText(locationvs));
 	glCompileShader(vs);
 	if(glGetShaderi(vs, GL_COMPILE_STATUS)==GL_FALSE) {
 		throw new Exception("OpenGL error: "+glGetShaderInfoLog(vs));
 	}
 	
 	fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, read(locationfs));
+	glShaderSource(fs, ResourceLoader.loadText(locationfs));
 	glCompileShader(fs);
 	if(glGetShaderi(fs, GL_COMPILE_STATUS)==GL_FALSE) {
 		throw new Exception("OpenGL error: "+glGetShaderInfoLog(fs));
@@ -93,21 +101,15 @@ public void setUniform(String name, boolean b) {
 	}
 }
 
-private String read(String location) {
-	try {
-		String res="";
-		String line="";
-		BufferedReader br = new BufferedReader(new InputStreamReader(Shader.class.getResourceAsStream(location)));
-		while((line=br.readLine())!=null) {
-			res=res+line+"\n";
-		}
-		res=res.trim();
-		br.close();
-		return res;
-	} catch(Exception e) {
-		e.printStackTrace();
+public void setUniform(String name, Color c) {
+	uniformlocation = glGetUniformLocation(program, name);
+	if(uniformlocation!=-1) {
+		glUniform4f(uniformlocation, c==NO_COLOR?-1:(float)c.getRed()/255f, (float)c.getGreen()/255f, (float)c.getBlue()/255f, (float)c.getAlpha()/255f);
 	}
-	return null;
+}
+
+public void setProjection(Matrix4f matrix) {
+	setUniform(PROJECTION, matrix);
 }
 
 

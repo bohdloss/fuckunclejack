@@ -66,7 +66,7 @@ public float chargePercent;
 	@Override
 	public void tick() {
 		if(charging&chargePercent<1) {
-			chargePercent=CMath.limit(chargePercent+0.03f, 0, 1);
+			chargePercent=(float)CMath.clamp(chargePercent+0.03f, 0, 1);
 		}
 	}
 

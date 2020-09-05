@@ -73,7 +73,7 @@ public class DataHandler {
 				
 				}
 				
-				int PSELLIMIT = (int)CMath.limit(PSEL, 0, 8);
+				int PSELLIMIT = (int)CMath.clamp(PSEL, 0, 8);
 				
 				if(p.getInventory().selected!=PSELLIMIT) {
 					Item PITEMSEL = p.getInventory().getSelectedItem();

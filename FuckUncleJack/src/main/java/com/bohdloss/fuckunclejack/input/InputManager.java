@@ -44,14 +44,6 @@ static {
 	}
 }
 
-public static boolean isKeyDown(int code) {
-	return glfwGetKey(Game.window.getWindow(), code)==1;
-}
-
-public static boolean isMouseButtonDown(int code) {
-	return glfwGetMouseButton(Game.window.getWindow(), code)==1;
-}
-
 public void gameUpdate() {
 	if(lPlayer==null|lWorld==null) return;
 	
@@ -61,6 +53,7 @@ public void gameUpdate() {
 		camera.setX(Game.scaleAmount*ClientState.lPlayer.x);
 		camera.setY(Game.scaleAmount*ClientState.lPlayer.y);
 	}
+	
 	nearHouseB=false;
 	if(lWorld!=null) ClientState.lWorld.tick();
 	if(nearHouseB==true) {
@@ -118,6 +111,9 @@ public void delay(long until) {
 
 public void run() {
 	listener.init();
+	MenuTab.init();
+	blocked=false;
+	ClientState.showMenu(false, true, "main");
 	while(true) {
 		try {
 			long time = System.currentTimeMillis();
@@ -140,7 +136,7 @@ public void hoverCalc(float scale) {
 
 public void baseUpdate() {
 	for(int i=0;i<keys.length;i++) {
-		boolean down = isKeyDown(i);
+		boolean down = Game.window.isKeyDown(i);
 		if(keys[i]!=down) {
 			keys[i]=down;
 			if(down) listener.onKeyPressed(i);
@@ -148,14 +144,17 @@ public void baseUpdate() {
 		}
 	}
 	for(int i=0;i<button.length;i++) {
-		boolean down = isMouseButtonDown(i);
+		boolean down = Game.window.isMouseButtonDown(i);
 		if(button[i]!=down) {
 			button[i]=down;
 			if(down) listener.onMouseButtonPressed(i);
 			if(!down) listener.onMouseButtonReleased(i);
 		}
 	}
-	
+	if(queueDisconnect) {
+		queueDisconnect=false;
+		disconnect();
+	}
 }
 
 public void menuUpdate() {

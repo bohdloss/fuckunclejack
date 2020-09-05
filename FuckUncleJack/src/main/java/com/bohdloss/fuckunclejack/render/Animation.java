@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.bohdloss.fuckunclejack.main.Assets;
+import com.bohdloss.fuckunclejack.main.ResourceLoader;
 
 public class Animation {
 
@@ -24,8 +25,8 @@ private static final long wait=250;
 protected float speed;
 protected int currentIndex=0;
 protected boolean looping;
-private List<Vector3f> hand;
-private List<Vector2f> scale;
+private Vector3f[] hand;
+private Vector2f[] scale;
 
 public Animation(TileSheet frames, boolean looping, String json) {
 	this.frames=frames;
@@ -33,12 +34,19 @@ public Animation(TileSheet frames, boolean looping, String json) {
 	speed=1f;
 	gui=Assets.shaders.get("gui");
 	
+	hand=new Vector3f[frames.getAmount()];
+	scale=new Vector2f[frames.getAmount()];
+	
+	for(int i=0;i<frames.getAmount();i++) {
+		hand[i]=new Vector3f();
+		scale[i]=new Vector2f();
+	}
+	
 	if(json!=null) {
 	
-		hand = new ArrayList<Vector3f>();
-		scale = new ArrayList<Vector2f>();
+		try {
 		
-		JSONObject info = parse(json);
+		JSONObject info = (JSONObject) ResourceLoader.loadJSON("/data/animations/"+json+".json");
 	
 		JSONObject scalej = (JSONObject) info.get("scale");
 	
@@ -46,7 +54,8 @@ public Animation(TileSheet frames, boolean looping, String json) {
 		JSONArray yscale = (JSONArray) scalej.get("y");
 		
 		for(int i=0;i<xscale.size();i++) {
-			scale.add(new Vector2f(Float.parseFloat((String)xscale.get(i)), Float.parseFloat((String)yscale.get(i))));
+			scale[i].x=Float.parseFloat((String)xscale.get(i));
+			scale[i].y=Float.parseFloat((String)yscale.get(i));
 		}
 	
 		JSONObject handj = (JSONObject) info.get("hand");
@@ -56,34 +65,17 @@ public Animation(TileSheet frames, boolean looping, String json) {
 		JSONArray rothand = (JSONArray) handj.get("rot");
 		
 		for(int i=0;i<xhand.size();i++) {
-			hand.add(new Vector3f(Float.parseFloat((String)xhand.get(i)), Float.parseFloat((String)yhand.get(i)), Float.parseFloat((String)rothand.get(i))));
+			hand[i].x=Float.parseFloat((String)xhand.get(i));
+			hand[i].y=Float.parseFloat((String)yhand.get(i));
+			hand[i].z=Float.parseFloat((String)rothand.get(i));
 		}
-	
+		} catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("Couldn't load additional animation data");
+		}
+		
 	}
 	
-}
-
-private JSONObject parse(String json) {
-	try {
-		JSONObject obj = new JSONObject();
-		
-		String res="";
-		String line="";
-		BufferedReader br = new BufferedReader(new InputStreamReader(Shader.class.getResourceAsStream("/data/animations/"+json+".json")));
-		while((line=br.readLine())!=null) {
-			res=res+line+"\n";
-		}
-		res=res.trim();
-		br.close();
-		
-		JSONParser parser = new JSONParser();
-		obj = (JSONObject) parser.parse(res);
-		return obj;
-		
-	} catch(Exception e) {
-		e.printStackTrace();
-	}
-	throw new IllegalStateException();
 }
 
 public void setSpeed(float speed) {
@@ -110,13 +102,11 @@ private void calcIndex() {
 }
 
 public Vector3f getHandPosition() {
-	if(hand==null) return null;
-	return hand.get(currentIndex);
+	return hand[(int)CMath.clamp(currentIndex, 0, frames.getAmount())];
 }
 
 public Vector2f getScale() {
-	if(scale==null) return null;
-	return scale.get(currentIndex);
+	return scale[(int)CMath.clamp(currentIndex, 0, frames.getAmount())];
 }
 
 public void bind() {

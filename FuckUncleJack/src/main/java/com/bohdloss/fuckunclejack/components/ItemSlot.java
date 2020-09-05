@@ -70,7 +70,7 @@ public int getId() {
 public void render(Shader s, Matrix4f matrix, float x, float y, boolean selected) {
 	translate.identity().translate(x, y, 0f);
 	res = matrix.mul(translate, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	slotbg.bind(0);
 	slot.render();
 	

@@ -14,7 +14,7 @@ public class ModelLoader {
 
 	public static Model load(String location) throws Exception {
 		Model res=null;
-		String file = read(location);
+		String file = ResourceLoader.loadText(location);
 		return loadString(file);
 	}
 	
@@ -44,23 +44,6 @@ public class ModelLoader {
 		res = new Model(vert, tex, ind);
 		
 		return res;
-	}
-	
-	private static String read(String location) {
-		try {
-			String res="";
-			String line="";
-			BufferedReader br = new BufferedReader(new InputStreamReader(Shader.class.getResourceAsStream(location)));
-			while((line=br.readLine())!=null) {
-				res=res+line+"\n";
-			}
-			res=res.trim();
-			br.close();
-			return res;
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 }

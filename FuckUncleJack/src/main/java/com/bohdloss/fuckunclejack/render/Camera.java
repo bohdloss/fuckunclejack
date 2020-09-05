@@ -1,6 +1,8 @@
 package com.bohdloss.fuckunclejack.render;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -27,22 +29,28 @@ public class Camera {
 	private float noGClerpx;
 	private float noGClerpy;
 	
-	public boolean shake=false;
-	public float intensity=5;
+	private boolean shake=false;
+	private long shakeStart=0;
+	private long shakeDuration=0;
+	private float lerpIntensity;
+	private float intensity=10;
 //end of lerp vars	
 	
-//vars to make GC faster
+//cache
 	private Vector3f position;
+	private Vector3f position2;
 	private Matrix4f projection;
 	
 	private Matrix4f target=new Matrix4f();
 	private Matrix4f pos=new Matrix4f();
 	private double reverse;
 	
-//end of GC vars
+	private Random random=new Random();
+//
 	
 	public Camera(int width, int height) {
 		position = new Vector3f(0,0,0);
+		position2 = new Vector3f(0,0,0);
 		projection = new Matrix4f().setOrtho2D(-width/2, width/2, -height/2, height/2);
 	}
 	
@@ -103,22 +111,48 @@ public class Camera {
 				noGClerpy=(float)CMath.lerp(reverse, savedy, savedlerpy);
 				position.x=noGClerpx;
 				position.y=noGClerpy;
-				if(shake) {
-					position.x+=(new Random().nextFloat()-0.5f)*intensity;
-					position.y+=(new Random().nextFloat()-0.5f)*intensity;
-				}
+				
 			}
 		}
 		
 		pos.setTranslation(-position.x, -position.y, position.z);
-		
+		shake(position);
 		projection.mul(pos, target);
 		
 		return target;
 	}
 
+	public void shake(long time, float intensity) {
+		shake=true;
+		this.intensity=intensity;
+		this.shakeStart=System.currentTimeMillis();
+		this.shakeDuration=time;
+	}
+	
+	private void shake(Vector3f edit) {
+		if(!shake) {
+			pos.setRotationXYZ(0, 0, 0);
+			return;
+		}
+		if(System.currentTimeMillis()>=shakeStart+shakeDuration) {
+			shake=false;
+			return;
+		}
+		lerpIntensity=(float)CMath.clamp(CMath.remap(System.currentTimeMillis(), shakeStart, shakeStart+shakeDuration, intensity, 0), 0, intensity);
+		
+		edit.x+=(random.nextFloat()-0.5f)*lerpIntensity;
+		edit.y+=(random.nextFloat()-0.5f)*lerpIntensity;
+		
+		pos.setTranslation(-edit.x, -edit.y, 0);
+		pos.setRotationXYZ(0,0,(float)CMath.remap(random.nextDouble(), 0, 1, -lerpIntensity/1000d, lerpIntensity/1000d));
+	}
+	
 	public Matrix4f unTransformedProjection() {
-		return projection;
+		position2.zero();
+		pos.identity();
+		shake(position2);
+		projection.mul(pos, target);
+		return target;
 	}
 	
 }

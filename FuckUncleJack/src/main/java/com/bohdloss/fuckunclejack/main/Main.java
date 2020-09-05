@@ -33,7 +33,6 @@ public static String name=null;
 		}
 		
 		if(GameState.isClient.getValue()) {
-			name = JOptionPane.showInputDialog("username");
 			game = new Game();
 			new Client();
 			game.begin();

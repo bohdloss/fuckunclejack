@@ -147,7 +147,7 @@ static {
 	protected abstract Texture getTexture();
 	
 	protected void renderBackground(Shader s, Matrix4f matrix) {
-		s.setUniform("projection", res);
+		s.setProjection(res);
 		bg.bind(0);
 		square.render();
 	}

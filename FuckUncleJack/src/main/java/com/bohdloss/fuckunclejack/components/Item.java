@@ -55,7 +55,7 @@ static {
 public Item(int uses, int used, int amount, String texture) {
 	this.uses=uses;
 	this.used=used;
-	this.amount=(int)CMath.limit(amount, 1, getMax());
+	this.amount=(int)CMath.clamp(amount, 1, getMax());
 	this.texture=texture;
 	if(amount>0) available=true;
 }
@@ -86,16 +86,16 @@ public ItemEventProperties onLeftClickEnd(float x, float y, Entity entity) {
 }
 
 public void use(int amount) {
-	if(amount>0) used=(int)CMath.limit(used+amount, 0, uses);
+	if(amount>0) used=(int)CMath.clamp(used+amount, 0, uses);
 	if(used==uses) destroy();
 }
 
 public void repair(int amount) {
-	if(amount>0) used=(int)CMath.limit(used-amount, 0, uses);
+	if(amount>0) used=(int)CMath.clamp(used-amount, 0, uses);
 }
 
 public void decrease(int x) {
-	if(x>0) amount=(int)CMath.limit(amount-x, 0, getMax());
+	if(x>0) amount=(int)CMath.clamp(amount-x, 0, getMax());
 	if(amount==0) {
 		available=false;
 		totalDestroy();
@@ -107,7 +107,7 @@ private void totalDestroy() {
 }
 
 public void increase(int x) {
-	if(x>0) amount=(int)CMath.limit(amount+x, 0, getMax());
+	if(x>0) amount=(int)CMath.clamp(amount+x, 0, getMax());
 	if(amount>0) available=true;
 }
 
@@ -148,7 +148,7 @@ public String getTexture() {
 public void render(Shader s, Matrix4f matrix, float x, float y, boolean showInfo) {
 	translate.identity().translate(x, y, 0f);
 	res = matrix.mul(translate, res);
-	s.setUniform("projection", res);
+	s.setProjection(res);
 	
 	boolean found=false;
 		Texture t = Assets.textures.get(texture);

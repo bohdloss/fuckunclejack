@@ -20,7 +20,7 @@ Shader gui = Assets.shaders.get("gui");
 		res = matrix.translate(x, y-0.5f, 0, res);
 		gui.bind();
 		gui.setUniform("red", red);
-		gui.setUniform("projection", res);
+		gui.setProjection(res);
 		Animation a = Assets.animations.get("deserthouse");
 		a.setSpeed(0.25f);
 		a.bind();

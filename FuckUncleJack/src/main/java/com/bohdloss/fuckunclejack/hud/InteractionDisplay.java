@@ -33,7 +33,7 @@ public void render(Shader s, Matrix4f mat) {
 	if(nearHouse!=null) {
 		translation.identity().translate(0, 2, 0);
 		res=mat.mul(translation, res);
-		s.setUniform("projection", res);
+		s.setProjection(res);
 		
 		txt.bind(0);
 		background.render();

@@ -6,8 +6,14 @@ varying vec2 tex_coords;
 varying vec2 redbool;
 varying vec4 grayscale;
 varying vec2 lightlevel;
+varying vec4 mask;
+varying vec2 vopacity;
 
 float lerp(float val, float min, float max);
+vec4 calcGray(vec4 current);
+vec4 calcLight(vec4 current);
+vec4 calcColorMask(vec4 current);
+vec4 calcOpacity(vec4 current);
 
 void main() {
 	vec4 txt = texture2D(sampler, tex_coords);
@@ -15,18 +21,50 @@ void main() {
 		txt.x+=0.5;
 	}
 	
-	float sum = (txt.x)+(txt.y)+(txt.z);
-	float average = sum/3;
+	txt=calcGray(txt);
+	txt=calcLight(txt);
+	txt=calcColorMask(txt);
+	txt=calcOpacity(txt);
 	
-	vec4 interpolation = vec4(lerp(grayscale.x, txt.x, average), lerp(grayscale.y, txt.y, average), lerp(grayscale.z, txt.z, average), txt.w);
-	
-	vec4 lightInterpolation = interpolation;
+	gl_FragColor=txt;
+}
+
+vec4 calcOpacity(vec4 current) {
+	if(vopacity.x>=0) {
+		current.w=vopacity.x;
+	}
+	return current;
+}
+
+vec4 calcColorMask(vec4 current) {
+	if(mask.x>=0) {
+		current.x+=mask.x;
+		current.y+=mask.y;
+		current.z+=mask.z;
+		current.w+=mask.w;
+	}
+	return current;
+}
+
+vec4 calcLight(vec4 current) {
 	if(lightlevel.x!=-1) {
 		vec4 black = vec4(0,0,0,1);
-		lightInterpolation=vec4(lerp(lightlevel.x, black.x, interpolation.x), lerp(lightlevel.x, black.y, interpolation.y), lerp(lightlevel.x, black.z, interpolation.z), interpolation.w);
+		vec4 lightInterpolation=vec4(lerp(lightlevel.x, black.x, current.x), lerp(lightlevel.x, black.y, current.y), lerp(lightlevel.x, black.z, current.z), current.w);
+		return lightInterpolation;
 	}
+	return current;
+}
+
+vec4 calcGray(vec4 current) {
+	if(grayscale.x>0) {
 	
-	gl_FragColor=lightInterpolation;
+		float sum = (current.x)+(current.y)+(current.z);
+		float average = sum/3;
+	
+		vec4 interpolation = vec4(lerp(grayscale.x, current.x, average), lerp(grayscale.y, current.y, average), lerp(grayscale.z, current.z, average), current.w);
+		return interpolation;
+	}
+	return current;
 }
 
 float lerp(float val, float min, float max) {

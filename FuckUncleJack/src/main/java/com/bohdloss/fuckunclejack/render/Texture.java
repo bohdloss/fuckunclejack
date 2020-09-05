@@ -9,12 +9,14 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
+import com.bohdloss.fuckunclejack.main.ResourceLoader;
+
 public class Texture {
 
-private BufferedImage img;
-private int width;
-private int height;
-private int id;
+protected BufferedImage img;
+protected int width;
+protected int height;
+protected int id;
 
 public Texture(BufferedImage img) {
 	this.img=img;
@@ -46,30 +48,58 @@ public Texture(BufferedImage img) {
 }
 
 public Texture(String path) throws Exception{
-	this(ImageIO.read(Texture.class.getResourceAsStream(path)));
+	this(ResourceLoader.loadImage(path));
 }
 	
 public void bind(int sampler) {
-	if(sampler >=0 & sampler<=31) { //why????
-	glActiveTexture(GL_TEXTURE0+sampler); //why did i even implement this what does it do???
-	glBindTexture(GL_TEXTURE_2D, id); //actual bind command
+	if(sampler >=0 & sampler<=31) {
+	glActiveTexture(GL_TEXTURE0+sampler);
+	glBindTexture(GL_TEXTURE_2D, id);
 	}
 }
 
 public BufferedImage getImg() {
-	return img; //just in case
+	return img;
 }
 
 public int getWidth() {
-	return width; //you could getImg().getWidth() but still, just in case
+	return width;
 }
 
 public int getHeight() {
-	return height; //same as other method
+	return height;
 }
 
 public int getId() {
-	return id; //idk may be useful
+	return id;
+}
+
+public static Texture generate(BufferedImage img) {
+	Function<Object> func = new Function<Object>() {
+		public Object execute() throws Throwable{
+			return new Texture(img);
+		}
+	};
+	try {
+		return (Texture) MainEvents.waitReturnValue(MainEvents.queue(func));
+	} catch (Throwable e) {
+		e.printStackTrace();
+	}
+	return null;
+}
+
+public static Texture generate(String path) {
+	Function<Object> func = new Function<Object>() {
+		public Object execute() throws Throwable{
+			return new Texture(path);
+		}
+	};
+	try {
+		return (Texture) MainEvents.waitReturnValue(MainEvents.queue(func));
+	} catch (Throwable e) {
+		e.printStackTrace();
+	}
+	return null;
 }
 
 }

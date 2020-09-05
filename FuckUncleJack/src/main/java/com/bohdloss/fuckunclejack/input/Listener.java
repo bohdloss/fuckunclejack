@@ -20,8 +20,11 @@ import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.main.Game;
+import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.CRectanglef;
+import com.bohdloss.fuckunclejack.render.Function;
+import com.bohdloss.fuckunclejack.render.MainEvents;
 import com.bohdloss.fuckunclejack.render.Point2f;
 
 public class Listener implements KeyListen {
@@ -36,7 +39,7 @@ public class Listener implements KeyListen {
 		    @Override public void invoke (long win, double dx, double dy) {
 		    	if(state==GAME) {
 		    		
-		    		int selected = (int)CMath.limit(sel()-(int)dy, 0, 8);
+		    		int selected = (int)CMath.clamp(sel()-(int)dy, 0, 8);
 		    		
 		    		if(lPlayer.getInventory().selected!=selected) {
 		    			Item item = lPlayer.getInventory().getSelectedItem();
@@ -82,7 +85,13 @@ public class Listener implements KeyListen {
 		
 		switch(code) {
 		case GLFW_KEY_F11:
-			pendingToggle=true;
+			Function<Object> fullscreen = new Function<Object>() {
+				public Object execute() throws Exception{
+					Game.window.toggleFullscreen();
+					return null;
+				}
+			};
+			MainEvents.queue(fullscreen, true);
 			break;
 		case GLFW_KEY_T:
 			lPlayer.x=32000;
@@ -110,6 +119,9 @@ public class Listener implements KeyListen {
 		case GLFW_KEY_I:
 			lPlayer.getInventory().addItem(new StoneBlockItem(100), true);
 			break;
+		case GLFW_KEY_M:
+			ClientState.showMenu(false, true, MenuTab.active.getName());
+			break;
 		}
 	}
 
@@ -136,22 +148,32 @@ public class Listener implements KeyListen {
 		double blockx=hovx;
 		double blocky=hovy;
 		if(code==GLFW_MOUSE_BUTTON_3) {
+			switch(state) {
+			case EDITMODE:
 			Editor.scroll=0;
+			break;
+			}
 		}
 		if(code==GLFW_MOUSE_BUTTON_1) {
 			
-			if(state==EDITMODE) Editor.vertical=!Editor.vertical;
+			switch(state) {
+			case EDITMODE:
 			
-			try {
-				Button.buttons.forEach(v->{
-					if(v.status==Button.HOVERED) {
-						v.status=Button.PRESSED;
-					}
-				});
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-				
+				Editor.vertical=!Editor.vertical;
+			
+				try {
+					Button.buttons.forEach(v->{
+						if(v.status==Button.HOVERED) {
+							v.status=Button.PRESSED;
+						}
+					});
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			
+			break;
+			case GAME:
+			
 				// [M1] Actions within the game world
 				
 				//check if the click is on an entity
@@ -178,15 +200,21 @@ public class Listener implements KeyListen {
 				}
 				
 				//
+			break;
+			}
 				
 		} else if(code==GLFW_MOUSE_BUTTON_2) {
 			
+			switch(state) {
+			case GAME:
 				// [M2] Actions withing the game world
 				
 				Item i = lPlayer.getInventory().slots[sel()].getContent();
 				if(i!=null) i.onRightClickBegin((int)blockx, (int)blocky, null);
 			
 				//
+			break;
+			}
 		}
 	}
 
@@ -196,6 +224,8 @@ public class Listener implements KeyListen {
 		double blocky=hovy;
 		if(code==GLFW_MOUSE_BUTTON_1) {
 			
+			switch(state) {
+			case EDITMODE:
 			try {
 				Button.buttons.forEach(v->{
 					if(v.status==Button.PRESSED) {
@@ -211,9 +241,19 @@ public class Listener implements KeyListen {
 				e.printStackTrace();
 			}
 			
+			break;
+			case GAME:
+			
 			Item i = lPlayer.getInventory().slots[sel()].getContent();
 			if(i!=null) i.onLeftClickEnd((int)blockx, (int)blocky, null);
+			
+			break;
+			}
+			
 		} else if(code==GLFW_MOUSE_BUTTON_2) {
+			
+			switch(state) {
+			case GAME:
 			Item i = lPlayer.getInventory().slots[sel()].getContent();
 			
 			if(i!=null) {
@@ -222,6 +262,8 @@ public class Listener implements KeyListen {
 				}else {
 					i.onRightClickEnd(hovx, hovy, null);
 				}
+			}
+			break;
 			}
 		}
 	}

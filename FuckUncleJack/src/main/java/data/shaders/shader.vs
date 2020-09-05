@@ -7,13 +7,19 @@ varying vec2 tex_coords;
 varying vec2 redbool;
 varying vec4 grayscale;
 varying vec2 lightlevel;
+varying vec4 mask;
+varying vec2 vopacity;
 
 uniform mat4 projection;
 uniform int red;
 uniform float gray;
 uniform float light=-1;
+uniform vec4 colormask=vec4(-1,0,0,0);
+uniform float opacity=-1;
 
 void main() {
+	vopacity=vec2(opacity, 0);
+	mask=colormask;
 	lightlevel=vec2(light, 0);
 	grayscale=vec4(gray, gray, gray, 1);
 	redbool=vec2(red, 0);
