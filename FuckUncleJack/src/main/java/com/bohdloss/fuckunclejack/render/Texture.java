@@ -14,12 +14,13 @@ import com.bohdloss.fuckunclejack.main.ResourceLoader;
 public class Texture {
 
 protected BufferedImage img;
-protected int width;
-protected int height;
-protected int id;
+protected int width=-1;
+protected int height=-1;
+protected int id=-1;
 
 public Texture(BufferedImage img) {
 	this.img=img;
+	if(img!=null) {
 	int w=img.getWidth();
 	int h=img.getHeight();
 	width=w;
@@ -45,13 +46,15 @@ public Texture(BufferedImage img) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels); //write the texture in video card
+	}
 }
 
 public Texture(String path) throws Exception{
-	this(ResourceLoader.loadImage(path));
+	this(path==null?null:ResourceLoader.loadImage(path));
 }
 	
 public void bind(int sampler) {
+	if(img==null) return;
 	if(sampler >=0 & sampler<=31) {
 	glActiveTexture(GL_TEXTURE0+sampler);
 	glBindTexture(GL_TEXTURE_2D, id);

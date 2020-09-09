@@ -70,10 +70,8 @@ private void calcSunlight() {
 			}
 			}
 			if(lerp){
-				double calc=reverseLerp(y, lerpstart, lerpstart-5);
-				double calc2=lerp(calc, 19, 0);
-				//if(calc2!=0)System.out.println(y);
-				values[x][y]=(int)clamp(fastFloor(calc2), 0, 19);
+				double remap = remap(y, lerpstart, lerpstart-5, 19, 0);
+				values[x][y]=fastFloor(clamp(remap, 0, 19));
 			}
 		}
 		

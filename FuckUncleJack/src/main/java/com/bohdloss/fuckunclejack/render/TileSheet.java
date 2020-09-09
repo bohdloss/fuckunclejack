@@ -15,14 +15,22 @@ private int amount;
 	
 private BufferedImage[] tiles;
 
-	public TileSheet(Texture texture, int amount) {
+	public TileSheet(String path, int amount) throws Exception{
+		this(new Texture(path), amount);
+	}
+
+	public TileSheet(Texture texture, int amount) throws Exception{
 		this.texture=texture;
 		this.amount=amount;
 		
 		scale = new Matrix4f().scale(1f, 1f/(float)amount, 1f);
 		translation = new Matrix4f();
 	}
-
+	
+	public TileSheet(BufferedImage img, int amount) throws Exception{
+		this(new Texture(img), amount);
+	}
+	
 	public void bindTile(Shader s, int y) {
 		scale.translate(0, y, 0, translation);
 		

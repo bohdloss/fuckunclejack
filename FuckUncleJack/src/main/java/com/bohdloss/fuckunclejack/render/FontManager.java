@@ -20,7 +20,7 @@ private static Matrix4f translation = new Matrix4f();
 private static Matrix4f res = new Matrix4f();
 //end
 	
-	public static TileSheet load(Font font, Color color) {
+	public static TileSheet load(Font font, Color color) throws Exception {
 		BufferedImage img = new BufferedImage(64, 64*letters.length, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = img.getGraphics();
 		g.setColor(color);

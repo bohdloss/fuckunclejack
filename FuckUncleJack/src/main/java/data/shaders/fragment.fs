@@ -8,12 +8,14 @@ varying vec4 grayscale;
 varying vec2 lightlevel;
 varying vec4 mask;
 varying vec2 vopacity;
+varying vec4 voutline;
 
 float lerp(float val, float min, float max);
 vec4 calcGray(vec4 current);
 vec4 calcLight(vec4 current);
 vec4 calcColorMask(vec4 current);
 vec4 calcOpacity(vec4 current);
+vec4 calcOutline(vec4 current);
 
 void main() {
 	vec4 txt = texture2D(sampler, tex_coords);
@@ -25,6 +27,7 @@ void main() {
 	txt=calcLight(txt);
 	txt=calcColorMask(txt);
 	txt=calcOpacity(txt);
+	txt=calcOutline(txt);
 	
 	gl_FragColor=txt;
 }
@@ -69,4 +72,13 @@ vec4 calcGray(vec4 current) {
 
 float lerp(float val, float min, float max) {
 	return (max-min)*val+min;
+}
+
+vec4 calcOutline(vec4 current) {
+	if(voutline.x>=0) {
+		vec2 stretched = tex_coords;
+		vec4 stretchtxt = texture2D(sampler, tex_coords);
+		return stretchtxt;
+	}
+	return current;
 }

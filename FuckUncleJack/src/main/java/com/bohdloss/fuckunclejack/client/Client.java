@@ -31,6 +31,8 @@ public static boolean sendDebug=false;
 
 public static List<String> invalidMatches = new ArrayList<String>();
 
+public static boolean disconnected=true;
+
 //cache
 private static ByteBuffer buf = ByteBuffer.allocate(bufferSize);
 
@@ -55,18 +57,14 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 		while(true) {
 		try {
 			
-			if(ClientState.state==ClientState.GAME) {
+			if(ClientState.state==ClientState.GAME&!disconnected) {
 			
 				try {
 				
 				socket = new Socket(ClientState.IP, ClientState.PORT);
 				
 				if(invalidMatches.contains(SocketThread.getIP(socket))) {
-					System.out.println("disconnecting");
-					socket.close();
-					ClientState.queueDisconnect=true;
-					
-					
+					throw new IllegalStateException();
 				}
 				
 				while(!socket.isClosed()) {
@@ -93,8 +91,14 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 				} catch(Exception e) {
 					e.printStackTrace();
 				} finally {
+					System.out.println("disconnecting");
+					disconnected=true;
+					ClientState.queueDisconnect=true;
 					auth=false;
-					invalidMatches.add(SocketThread.getIP(socket));
+					if(socket!=null) {
+						invalidMatches.add(SocketThread.getIP(socket));
+						if(!socket.isClosed()) socket.close();
+					}
 				}
 				
 			}

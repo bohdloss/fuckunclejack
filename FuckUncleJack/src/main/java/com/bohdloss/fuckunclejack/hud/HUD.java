@@ -8,6 +8,7 @@ import com.bohdloss.fuckunclejack.editor.Editor;
 
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
 
@@ -58,8 +59,8 @@ static {
 }
 
 	public HUD() {
-		health=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_health"), -10.5f, -4f, 20, 20);
-		armour=new Bar(Assets.textures.get("icon_health"), Assets.textures.get("bar_bg"), Assets.textures.get("bar_armour"), -10.5f, -6f, 100, 25);
+		health=new Bar(Assets.textures.get("icon_health"), new Color(100, 0, 0), -10.5f, -4f, 20, 20);
+		armour=new Bar(Assets.textures.get("icon_health"), new Color(100, 100, 0), -10.5f, -6f, 100, 25);
 		hotbar=new Hotbar();
 		interact = new InteractionDisplay();
 	}
@@ -68,7 +69,7 @@ static {
 		mpoint=CMath.mGLCoord(Game.guiScale);
 		gamepoint=CMath.mGLCoord(Game.scaleAmount);
 		
-		health.current=lPlayer.getHealth();
+		health.setCurrent(lPlayer.getHealth());
 		health.render(s, matrix);
 		armour.render(s, matrix);
 		hotbar.render(s, matrix);

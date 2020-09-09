@@ -8,6 +8,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
 
+import com.bohdloss.fuckunclejack.api.CharacterInfo;
+import com.bohdloss.fuckunclejack.api.GamemodeInfo;
 import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
@@ -44,6 +46,7 @@ public static Matrix4f guitarget;
 public static Matrix4f tempres;
 public static Shader shader;
 
+//This is just a workaround and may be fixed in the future
 public static boolean blocked=true;
 
 public static float fadeVal=0f;
@@ -51,7 +54,6 @@ public static float fadeVal=0f;
 	public void begin() {
 		setup();
 		
-		hud=new HUD();
 		input.start();
 		renderLoop();
 	}
@@ -86,7 +88,7 @@ public static float fadeVal=0f;
 				//Enable transparent textures
 				//Disable depth test
 				
-				System.out.println("Setting OpenGL settings...");
+				System.out.println("Changing OpenGL settings...");
 				
 				glEnable(GL_TEXTURE_2D);
 				glEnable(GL_BLEND);
@@ -135,7 +137,7 @@ public static float fadeVal=0f;
 		
 		glfwPollEvents();
 		
-		if(blocked) return;
+		//if(blocked) return;
 		
 		glClear(GL_COLOR_BUFFER_BIT);
 		
@@ -149,10 +151,10 @@ public static float fadeVal=0f;
 			renderEditor();
 		break;
 		case MENU:
-			renderTabs();
+			if(!blocked)renderTabs();
 		break;
 		}
-		
+		guitarget=guiscale2;
 		shader.bind();
 		shader.setProjection(tempres.identity().scale(2));
 		

@@ -15,6 +15,8 @@ import com.bohdloss.fuckunclejack.components.items.BowItem;
 import com.bohdloss.fuckunclejack.components.items.WinnerswordItem;
 import com.bohdloss.fuckunclejack.components.items.blocks.*;
 import com.bohdloss.fuckunclejack.logic.events.PlayerJoinEvent;
+import com.bohdloss.fuckunclejack.main.Assets;
+import com.bohdloss.fuckunclejack.render.Animation;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.server.Server;
 
@@ -159,6 +161,14 @@ public class FunctionUtils {
 			return new OverworldWorld(name);
 		case 1:
 			return new DeserthouseWorld(name);
+		}
+		return null;
+	}
+	
+	public static Animation getLobbyAnimation(int id) {
+		switch(id) {
+		case 0:
+			return Assets.animationSets.get("dad").longIdle;
 		}
 		return null;
 	}

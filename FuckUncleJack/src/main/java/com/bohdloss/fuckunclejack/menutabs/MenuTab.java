@@ -37,6 +37,7 @@ public static void init() {
 	square=Assets.models.get("square");
 	new MainTab();
 	new SettingsTab();
+	new CharacterTab();
 }
 
 private static void transition(boolean withstart, boolean withend, MenuTab tab) {
@@ -46,8 +47,8 @@ private static void transition(boolean withstart, boolean withend, MenuTab tab) 
 		Game.fadeVal=1;
 	}
 	ClientState.state=ClientState.MENU;
+	tab.onActivate();
 	active=tab;
-	active.onActivate();
 	if(withend) {
 		ClientState.fadeFromBlack();
 	} else {
@@ -69,9 +70,9 @@ public String getName() {
 	return name;
 }
 
-public void onActivate(String...packets) {
+public void onActivate() {
 	fade.reset();
-	fade.start(packets);
+	fade.start();
 	ignoreInput=true;
 }
 

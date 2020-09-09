@@ -25,7 +25,7 @@ public class GuiButton extends GuiComponent{
 static Matrix4f res=new Matrix4f();
 static Matrix4f translate=new Matrix4f();
 
-static float mulConst=25;
+static final float mulConst=25;
 static Model square;
 TileSheet button;
 static Shader gui;
@@ -37,7 +37,7 @@ public Color color;
 
 float i=1;
 
-private VolatileTexture[] changeable = new VolatileTexture[3];
+public VolatileTexture[] changeable = new VolatileTexture[3];
 
 private BufferedImage[] states = new BufferedImage[3];
 
@@ -109,6 +109,7 @@ static {
 	public void render(Shader s, Matrix4f matrix) {
 		if(!visible) return;
 		
+		s.bind();
 		translate.identity().translate(x, y, 0).rotate(rot, 0, 0, 1).scale(getWidth(), getHeight(), 1);
 		s.setProjection(matrix.mul(translate, res));
 		

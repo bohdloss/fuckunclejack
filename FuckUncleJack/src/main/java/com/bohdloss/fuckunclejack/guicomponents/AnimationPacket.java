@@ -70,4 +70,9 @@ protected float x,y,xscale,yscale,rot;
 	
 	public abstract AnimationPacket calc();
 	
+	@Override
+	public String toString() {
+		return "name: "+name+" percent: "+getPercent()+" started: "+started+" ended: "+ended+" x: "+x+" y: "+y+" xscale: "+xscale+" yscale: "+yscale;
+	}
+	
 }

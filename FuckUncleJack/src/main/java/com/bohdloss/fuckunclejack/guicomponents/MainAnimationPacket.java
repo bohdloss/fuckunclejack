@@ -3,6 +3,7 @@ package com.bohdloss.fuckunclejack.guicomponents;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.bohdloss.fuckunclejack.menutabs.MainTab;
 import com.bohdloss.fuckunclejack.render.CMath;
 
 import javafx.animation.Interpolator;
@@ -12,6 +13,12 @@ public class MainAnimationPacket extends AnimationPacket{
 	public MainAnimationPacket(String name) {
 		super(name);
 		duration=1300;
+	}
+	
+	@Override
+	public AnimationPacket reset() {
+		MainTab.buttonfade.reset();
+		return super.reset();
 	}
 	
 	@Override
@@ -39,16 +46,37 @@ public class MainAnimationPacket extends AnimationPacket{
 			rot=0f;
 		}
 		
-		if(percent==1) {
-			if(!owner.animations.get("play").started) {
-				owner.animations.get("play").start();
-				Timer t = new Timer();
-				TimerTask task = new TimerTask() {
-					public void run() {
-						owner.animations.get("settings").start();
-					}
-				};
-				t.schedule(task, 500);
+		if(percent==1&(!ended)) {
+			if(name.equals("left")) {
+			if(MainTab.first) {
+				if(!MainTab.buttonfade.animations.get("play").started) {
+					MainTab.buttonfade.animations.get("play").start();
+					Timer t = new Timer();
+					TimerTask task = new TimerTask() {
+						public void run() {
+							MainTab.buttonfade.animations.get("settings").start();
+						}
+					};
+					t.schedule(task, 500);
+					TimerTask task2 = new TimerTask() {
+						public void run() {
+							MainTab.buttonfade.animations.get("exit").start();
+						}
+					};
+					t.schedule(task2, 1000);
+					TimerTask task3 = new TimerTask() {
+						public void run() {
+							MainTab.secondfade.animations.forEach((k,v)->{v.ended=true;v.started=true;});
+							MainTab.buttonfade=MainTab.secondfade;
+						}
+					};
+					t.schedule(task3, 1500);
+					MainTab.first=false;
+				}
+			} else {
+				MainTab.buttonfade.reset();
+				MainTab.buttonfade.start();
+			}
 			}
 			ended=true;
 		}

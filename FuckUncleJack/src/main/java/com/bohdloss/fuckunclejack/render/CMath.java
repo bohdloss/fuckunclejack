@@ -2,7 +2,6 @@ package com.bohdloss.fuckunclejack.render;
 
 import static com.bohdloss.fuckunclejack.main.Game.window;
 
-import java.awt.Point;
 import java.util.Random;
 
 import com.bohdloss.fuckunclejack.main.Game;
@@ -20,7 +19,17 @@ public class CMath {
 	}
 	
 	public static double reverseLerp(double lerp, double a, double b) {
+		int range = inRangeIgnoreSign(lerp, a, b);
+		if(range!=0) return range==-1?0:1;
 		return (lerp-a)/(b-a);
+	}
+	
+	public static int inRangeIgnoreSign(double val, double a, double b) {
+		if(a<=b) {
+			return val<a?-1:(val>b?1:0);
+		} else {
+			return val>a?-1:(val<b?1:0);
+		}
 	}
 	
 	public static double approx(double step, double in) {

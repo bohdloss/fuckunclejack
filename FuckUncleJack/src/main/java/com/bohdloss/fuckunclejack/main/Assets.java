@@ -95,6 +95,7 @@ public class Assets {
 		
 		shaders.put("shader", new Shader("/data/shaders/shader.vs", "/data/shaders/fragment.fs"));
 		shaders.put("gui", new Shader("/data/shaders/gui.vs", "/data/shaders/fragment.fs"));
+		shaders.put("bar", new Shader("/data/shaders/bar.vs", "/data/shaders/barfrag.fs"));
 	}
 	
 	private static void loadTextures() throws Exception{
@@ -166,11 +167,12 @@ public class Assets {
 		System.out.println("Loading animations...");
 		
 		AnimationSet dad_default = new AnimationSet("dad");
-		dad_default.idle=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/idle.png"), 1), false, "dad_default_idle");
-		dad_default.walking=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/walking.png"), 4), true, "dad_default_walking");
-		dad_default.jumping=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/jump.png"), 1), false, "dad_default_jump");
-		dad_default.falling=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/fall.png"), 1), false, "dad_default_fall");
-		dad_default.damage=new Animation(new TileSheet(new Texture("/data/textures/entities/player/dad/damage.png"), 1), false, "dad_default_damage");
+		dad_default.longIdle=new Animation("/data/textures/entities/player/dad/longidle.png", 23, true, null);
+		dad_default.idle=new Animation("/data/textures/entities/player/dad/idle.png", 1, false, "dad_default_idle");
+		dad_default.walking=new Animation("/data/textures/entities/player/dad/walking.png", 4, true, "dad_default_walking");
+		dad_default.jumping=new Animation("/data/textures/entities/player/dad/jump.png", 1, false, "dad_default_jump");
+		dad_default.falling=new Animation("/data/textures/entities/player/dad/fall.png", 1, false, "dad_default_fall");
+		dad_default.damage=new Animation("/data/textures/entities/player/dad/damage.png", 1, false, "dad_default_damage");
 		
 		animationSets.put("dad", dad_default);
 		

@@ -1,5 +1,6 @@
 package com.bohdloss.fuckunclejack.logic;
 
+import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.World;
 import com.bohdloss.fuckunclejack.components.entities.HouseEntity;
@@ -79,6 +80,7 @@ public static void connect(String ip, int port) {
 	IP=ip;
 	PORT=port;
 	state=GAME;
+	Client.disconnected=false;
 }
 
 public static void disconnect() {

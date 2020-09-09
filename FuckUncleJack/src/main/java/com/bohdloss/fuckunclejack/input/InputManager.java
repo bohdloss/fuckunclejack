@@ -10,6 +10,9 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import static com.bohdloss.fuckunclejack.main.Game.*;
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 
+import com.bohdloss.fuckunclejack.api.CharacterInfo;
+import com.bohdloss.fuckunclejack.api.FUJApi;
+import com.bohdloss.fuckunclejack.api.GamemodeInfo;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.Tickable;
 import com.bohdloss.fuckunclejack.hud.HUD;
@@ -111,8 +114,9 @@ public void delay(long until) {
 
 public void run() {
 	listener.init();
+	FUJApi.init();
 	MenuTab.init();
-	blocked=false;
+	hud=new HUD();
 	ClientState.showMenu(false, true, "main");
 	while(true) {
 		try {

@@ -18,14 +18,8 @@ protected String name;
 		}
 	}
 	
-	public void start(String[] packets) {
-		animations.forEach((k,v)->{
-			boolean found = false;
-			for(int i=0;i<packets.length;i++) {
-				if(packets[i].equals(v.getName())) found=true;
-			}
-			if(found) v.start();
-		});
+	public void start() {
+		animations.forEach((k,v)->v.start());
 	}
 	
 	public void reset() {
