@@ -32,6 +32,14 @@ protected float height;
 		setScale(getTexture().getGLWidth(), getTexture().getGLHeight());
 	}
 	
+	public float getTextWidth() {
+		return getTexture().getGLWidth();
+	}
+	
+	public float getTextHeight() {
+		return getTexture().getGLHeight();
+	}
+	
 	public String getText() {
 		return text;
 	}

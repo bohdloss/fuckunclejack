@@ -6,8 +6,6 @@ import java.util.TimerTask;
 import com.bohdloss.fuckunclejack.menutabs.MainTab;
 import com.bohdloss.fuckunclejack.render.CMath;
 
-import javafx.animation.Interpolator;
-
 public class MainAnimationPacket extends AnimationPacket{
 
 	public MainAnimationPacket(String name) {

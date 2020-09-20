@@ -60,10 +60,14 @@ public static float fadeVal=0f;
 	
 	public void loadLibrary() {
 		System.out.println("Initializing GLFW...");
+		try {
 			if(!glfwInit()) {
-				JOptionPane.showMessageDialog(null, "LWJGL failed to initialize!\nReport this error!");
-				System.exit(1);
+				throw new IllegalStateException("Initialization failed");
 			}
+		} catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "LWJGL failed to initialize!\nReport this error!");
+			System.exit(1);
+		}
 	}
 	
 	public void setup() {

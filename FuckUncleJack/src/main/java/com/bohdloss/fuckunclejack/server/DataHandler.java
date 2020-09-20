@@ -46,6 +46,7 @@ public class DataHandler {
 						dimensions.get("world").join(player, 0, 100);
 						players.put(player.getUID(), player);
 						player.getInventory().addItem(new BowItem(), false);
+						player.getInventory().addItem(new WinnerswordItem(), false);
 						input.sendInventory=true;
 						
 						input.auth=true;

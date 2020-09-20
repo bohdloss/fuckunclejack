@@ -6,8 +6,8 @@ varying vec2 tex_coords;
 varying vec4 mask;
 varying vec3 percentRadiusBool;
 
-float lerp(float val, float min, float max);
-float reverseLerp(float val, float min, float max);
+float lerp(float val, float minimum, float maximum);
+float reverseLerp(float val, float minimum, float maximum);
 float remap(float val, float min1, float max1, float min2, float max2);
 vec4 calcColorMask(vec4 current, vec4 addition);
 vec4 calcGray(vec4 current, float value);
@@ -18,23 +18,23 @@ void main() {
 	
 	float percent = percentRadiusBool.x;
 	float radius = percentRadiusBool.y;
-	bool reverse = (percentRadiusBool.z==1);
+	bool reverse = (percentRadiusBool.z==1.0);
 	
 	vec4 add = mask;
 	
 	if(reverse) {
-		add.x=remap(tex_coords.x, percent, percent-radius, 0, add.x);
-		add.y=remap(tex_coords.x, percent, percent-radius, 0, add.y);
-		add.z=remap(tex_coords.x, percent, percent-radius, 0, add.z);
+		add.x=remap(tex_coords.x, percent, percent-radius, 0.0, add.x);
+		add.y=remap(tex_coords.x, percent, percent-radius, 0.0, add.y);
+		add.z=remap(tex_coords.x, percent, percent-radius, 0.0, add.z);
 	} else {
-		add.x=remap(tex_coords.x, percent, percent+radius, add.x, 0);
-		add.y=remap(tex_coords.x, percent, percent+radius, add.y, 0);
-		add.z=remap(tex_coords.x, percent, percent+radius, add.z, 0);
+		add.x=remap(tex_coords.x, percent, percent+radius, add.x, 0.0);
+		add.y=remap(tex_coords.x, percent, percent+radius, add.y, 0.0);
+		add.z=remap(tex_coords.x, percent, percent+radius, add.z, 0.0);
 	}
 	
 	txt=calcColorMask(txt, add);
 	
-	//float grayval=remap(tex_coords.x, percent, percent+radius, 0, 1);
+	//float grayval=remap(tex_coords.x, percent, percent+radius, 0.0, 1.0);
 	
 	//txt=calcGray(txt, grayval);
 	
@@ -42,7 +42,7 @@ void main() {
 }
 
 vec4 calcGray(vec4 current, float value) {
-	if(value>0) {
+	if(value>0.0) {
 	
 		float sum = (current.x)+(current.y)+(current.z);
 		float average = sum/3;
@@ -63,22 +63,22 @@ vec4 calcColorMask(vec4 current, vec4 addition) {
 
 int inRangeIgnoreSign(float val, float a, float b) {
 		if(a<=b) {
-			return val<a?-1:(val>b?1:0);
+			return val < a ? -1 : (val > b ? 1 : 0);
 		} else {
-			return val>a?-1:(val<b?1:0);
+			return val > a ? -1 : (val < b ? 1 : 0);
 		}
 	}
 
-float lerp(float val, float min, float max) {
-	if(val>=1) return max;
-	if(val<=0) return min;
-	return (max-min)*val+min;
+float lerp(float val, float minimum, float maximum) {
+	if(val>=1.0) return maximum;
+	if(val<=0.0) return minimum;
+	return (maximum-minimum)*val+minimum;
 }
 
-float reverseLerp(float val, float min, float max) {
-	int range = inRangeIgnoreSign(val, min, max);
-	if(range!=0) return range==-1?0:1;
-	return (val-min)/(max-min);
+float reverseLerp(float val, float minimum, float maximum) {
+	int range = inRangeIgnoreSign(val, minimum, maximum);
+	if(range != 0.0) return range == -1.0 ? 0.0 : 1.0;
+	return (val - minimum) / (maximum - minimum);
 }
 
 float remap(float val, float min1, float max1, float min2, float max2) {

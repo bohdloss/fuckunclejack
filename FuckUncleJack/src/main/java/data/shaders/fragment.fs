@@ -10,7 +10,7 @@ varying vec4 mask;
 varying vec2 vopacity;
 varying vec4 voutline;
 
-float lerp(float val, float min, float max);
+float lerp(float val, float minimum, float maximum);
 vec4 calcGray(vec4 current);
 vec4 calcLight(vec4 current);
 vec4 calcColorMask(vec4 current);
@@ -19,7 +19,7 @@ vec4 calcOutline(vec4 current);
 
 void main() {
 	vec4 txt = texture2D(sampler, tex_coords);
-	if(redbool.x==1) {
+	if(redbool.x==1.0) {
 		txt.x+=0.5;
 	}
 	
@@ -33,14 +33,14 @@ void main() {
 }
 
 vec4 calcOpacity(vec4 current) {
-	if(vopacity.x>=0) {
+	if(vopacity.x>=0.0) {
 		current.w=vopacity.x;
 	}
 	return current;
 }
 
 vec4 calcColorMask(vec4 current) {
-	if(mask.x>=0) {
+	if(mask.x>=0.0) {
 		current.x+=mask.x;
 		current.y+=mask.y;
 		current.z+=mask.z;
@@ -50,8 +50,8 @@ vec4 calcColorMask(vec4 current) {
 }
 
 vec4 calcLight(vec4 current) {
-	if(lightlevel.x!=-1) {
-		vec4 black = vec4(0,0,0,1);
+	if(lightlevel.x!=-1.0) {
+		vec4 black = vec4(0.0, 0.0, 0.0, 1.0);
 		vec4 lightInterpolation=vec4(lerp(lightlevel.x, black.x, current.x), lerp(lightlevel.x, black.y, current.y), lerp(lightlevel.x, black.z, current.z), current.w);
 		return lightInterpolation;
 	}
@@ -59,10 +59,10 @@ vec4 calcLight(vec4 current) {
 }
 
 vec4 calcGray(vec4 current) {
-	if(grayscale.x>0) {
+	if(grayscale.x>0.0) {
 	
 		float sum = (current.x)+(current.y)+(current.z);
-		float average = sum/3;
+		float average = sum/3.0;
 	
 		vec4 interpolation = vec4(lerp(grayscale.x, current.x, average), lerp(grayscale.y, current.y, average), lerp(grayscale.z, current.z, average), current.w);
 		return interpolation;
@@ -70,8 +70,8 @@ vec4 calcGray(vec4 current) {
 	return current;
 }
 
-float lerp(float val, float min, float max) {
-	return (max-min)*val+min;
+float lerp(float val, float minimum, float maximum) {
+	return (maximum-minimum)*val+minimum;
 }
 
 vec4 calcOutline(vec4 current) {

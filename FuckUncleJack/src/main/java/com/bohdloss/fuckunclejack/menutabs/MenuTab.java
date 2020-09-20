@@ -19,11 +19,11 @@ import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Point2f;
 import com.bohdloss.fuckunclejack.render.Shader;
 
-public abstract class MenuTab implements Tickable{
+public class MenuTab implements Tickable{
 	
 public static Point2f mouse=new Point2f(0,0);
 public static MenuTab active;
-private static HashMap<String, MenuTab> tabs = new HashMap<String, MenuTab>();
+public static HashMap<String, MenuTab> tabs = new HashMap<String, MenuTab>();
 
 protected AnimationSystem fade;
 protected static Matrix4f translation=new Matrix4f();
@@ -35,6 +35,7 @@ public boolean ignoreInput=false;
 
 public static void init() {
 	square=Assets.models.get("square");
+	new MenuTab("ghost");
 	new MainTab();
 	new SettingsTab();
 	new CharacterTab();
@@ -82,7 +83,7 @@ public void renderComponents(Shader s, Matrix4f matrix) {
 	});
 }
 
-public abstract void render(Shader s, Matrix4f matrix);
+public void render(Shader s, Matrix4f matrix) {}
 
 public void calcMatrix(AnimationPacket packet) {
 	translation.identity().translate(packet.getX(), packet.getY(), 0).rotate(packet.getRot(), 0, 0, 1).scale(packet.getXscale(), packet.getYscale(), 1);
