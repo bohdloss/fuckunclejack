@@ -119,6 +119,7 @@ public class Assets {
 		textures.put("hotbar_bg", new Texture("/data/textures/hud/hotbar_bg.png"));
 		textures.put("smallrect", new Texture("/data/textures/hud/smallrect.png"));
 		textures.put("interaction", new Texture("/data/textures/hud/interaction.png"));
+		textures.put("battery", new Texture("/data/textures/hud/battery.png"));
 		
 		//World backgrounds
 		
