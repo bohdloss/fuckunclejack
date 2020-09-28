@@ -7,7 +7,11 @@ import javax.swing.JOptionPane;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL11;
 
+import com.bohdloss.fuckunclejack.render.Function;
+import com.bohdloss.fuckunclejack.render.MainEvents;
 import com.bohdloss.fuckunclejack.render.Point2f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -23,77 +27,72 @@ private boolean fullscreen;
 
 public static final String title="Fuck Uncle Jack";
 
-
-
-//faster GC
+//cache
 private DoubleBuffer posx=BufferUtils.createDoubleBuffer(1);
 private DoubleBuffer posy=BufferUtils.createDoubleBuffer(1);
 private Point2f curpos=new Point2f(0,0);
 //
 
 public Window() {
-	Dimension2i d = defaultD();
-	int w = (int)(d.getWidth()*0.7d);
-	int h = (int)(d.getHeight()*0.7d);
-	width=w;
-	height=h;
-	createWindow(w, h);
+	GLFWVidMode size = defaultD();
+	width=(int)((double)size.width()*0.7d);
+	height=(int)((double)size.height()*0.7d);
+	createWindow(width, height);
+	Window self = this;
+	glfwSetWindowSizeCallback(window, new GLFWWindowSizeCallback(){
+        @Override
+        public void invoke(long window, int width, int height) {
+            self.width=width;
+            self.height=height;
+
+            Game.camera.setOrtho(width, height);
+            Game.calcScale();
+            
+            Function<Object> updview = new Function<Object>() {
+
+				@Override
+				public Object execute() throws Throwable {
+					GL11.glViewport(0, 0, self.width, self.height);
+					return null;
+				}
+            	
+            };
+            
+            MainEvents.queue(updview, true);
+            
+        }
+    });
 }
 
-public Dimension2i defaultD() {
+public GLFWVidMode defaultD() {
 	GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	int w = mode.width();
-	int h = mode.height();
-	return new Dimension2i(w,h);
+	return mode;
 }
 
 public void toggleFullscreen() {
-/*	if(!fullscreen) {
-		destroy();
-		createFullscreenWindow();
-		Dimension d = defaultD();
-		int w = (int)d.getWidth();
-		int h = (int)d.getHeight();
-		width=w;
-		height=h;
-	} else {
-		destroy();
-		Dimension d = defaultD();
-		int w = (int)(d.getWidth()*0.7d);
-		int h = (int)(d.getHeight()*0.7d);
-		width=w;
-		height=h;
-		createWindow(w,h);
-	} */
+	GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	
-	if(!fullscreen) {
-	Dimension2i d = defaultD();
-	int w = (int)(d.getWidth()*0.7d);
-	int h = (int)(d.getHeight()*0.7d);
-	width=w;
-	height=h;
+	if(fullscreen) {
+		width=(int)((double)mode.width()*0.7d);
+		height=(int)((double)mode.height()*0.7d);
 	} else {
-		Dimension2i d = defaultD();
-		int w = (int)(d.getWidth());
-		int h = (int)(d.getHeight());
-		width=w;
-		height=h;
+		width=mode.width();
+		height=mode.height();
 	}
-	
-	glfwSetWindowMonitor(window, !fullscreen ? glfwGetPrimaryMonitor() : 0, 0, 0, width, height, GLFW_DONT_CARE);
-	
+	glfwSetWindowMonitor(window, fullscreen ? 0 : glfwGetPrimaryMonitor(), 0, 0, width, height, GLFW_DONT_CARE);
+	glfwSetWindowPos(window, (int)((double)mode.width()*0.5-(double)width*0.5), (int)((double)mode.height()*0.5-(double)height*0.5));
 	fullscreen=!fullscreen;
 }
 
 public void createWindow(int width, int height) {
-	Dimension2i d = defaultD();
+	GLFWVidMode d = defaultD();
 	window = glfwCreateWindow(width, height, title, 0, 0);
 	if(window==0) {
-		JOptionPane.showMessageDialog(null, "WTF? You broke it! Are you happy now? Do you feel accomplished? Well, i'm happy for you because only god knows how many brain cells died to create this game and make it work the best i could... just for you to come here and ruin my work. If i ever catch you making my game crash again, i swear to god it will be the last time.");
+		JOptionPane.showMessageDialog(null, "Window could not be initialized ¯\\_(ツ)_/¯");
 		System.exit(1);
 	}
-	glfwSetWindowSizeLimits(window, width, height, width, height);
-	glfwSetWindowPos(window, (int)((d.getWidth()-width)/2), (int)((d.getHeight()-height)/2));
+	glfwSetWindowSizeLimits(window, 100, 100, d.width(), d.height());
+	glfwSetWindowPos(window, (int)((d.width()-width)/2), (int)((d.height()-height)/2));
 	
 	GLFWImage icon = ImageLoader.load_image("/data/icon.png");
 	GLFWImage iconSmall = ImageLoader.load_image("/data/icon_small.png");
@@ -114,6 +113,7 @@ public Point2f getCursorPos() {
 	glfwGetCursorPos(window, posx, posy);
 	curpos.x=(float)posx.get(0);
 	curpos.y=(float)posy.get(0);
+	
 	return curpos;
 }
 

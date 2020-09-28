@@ -119,7 +119,6 @@ public class Assets {
 		textures.put("hotbar_bg", new Texture("/data/textures/hud/hotbar_bg.png"));
 		textures.put("smallrect", new Texture("/data/textures/hud/smallrect.png"));
 		textures.put("interaction", new Texture("/data/textures/hud/interaction.png"));
-		textures.put("battery", new Texture("/data/textures/hud/battery.png"));
 		
 		//World backgrounds
 		
@@ -148,9 +147,13 @@ public class Assets {
 		
 		//Menus
 		textures.put("mainbackground", new Texture("/data/textures/menus/background.png"));
+		textures.put("characters_background", new Texture("/data/textures/menus/characters_background.png"));
 		textures.put("mainleft", new Texture("/data/textures/menus/left.png"));
 		textures.put("mainright", new Texture("/data/textures/menus/right.png"));
 		textures.put("maintitle", new Texture("/data/textures/menus/title.png"));
+		textures.put("battery", new Texture("/data/textures/hud/battery.png"));
+		textures.put("stats_bg", new Texture("/data/textures/hud/stats_bg.png"));
+		textures.put("stats_reflection", new Texture("/data/textures/hud/stats_reflection.png"));
 		
 		loadBlocks();
 	}

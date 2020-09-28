@@ -43,6 +43,7 @@ public static int PORT;
 public static boolean locked;
 public static boolean hardLocked;
 public static boolean renderPlayer=true;
+public static boolean debug=true;
 
 private static final long fadeAnim=500l;
 

@@ -39,16 +39,16 @@ static {
 	public CharacterTab() {
 		super("character");
 		
-		gamemode=new Label(FUJApi.getGamemode().getName(), new Font("Arial", Font.BOLD, 15), new Color(100, 100, 100), 10, 1);
+		gamemode=new Label(FUJApi.getGamemode().getName(), new Font("Arial", Font.BOLD, 15), new Color(100, 100, 100));
 		gamemode.setY(6.75f);
 		
-		AnimationPacket back = new SmoothAnimationPacket("back", new Vector4f(0,0,0,0), new Vector4f(-12.25f, 5.75f, 2f, 1.25f), 500);
-		AnimationPacket prev = new SmoothAnimationPacket("prev", new Vector4f(0,0,0,0), new Vector4f(0, 5.75f, 1.25f, 1.25f), 500);
-		AnimationPacket next = new SmoothAnimationPacket("next", new Vector4f(0,0,0,0), new Vector4f(0, 5.75f, 1.25f, 1.25f), 500);
-		AnimationPacket nextc = new SmoothAnimationPacket("nextc", new Vector4f(0,0,0,0), new Vector4f(5, 0, 1.5f, 1.5f), 500);
-		AnimationPacket prevc = new SmoothAnimationPacket("prevc", new Vector4f(0,0,0,0), new Vector4f(-5, 0, 1.5f, 1.5f), 500);
-		AnimationPacket player = new SmoothAnimationPacket("player", new Vector4f(0,0,0,0), new Vector4f(0, 0, 8, 4), 500);
-		AnimationPacket gmlabel = new SmoothAnimationPacket("gmlabel", new Vector4f(0,0,0,0), new Vector4f(0,6.75f,gamemode.getTextWidth(),gamemode.getTextHeight()), 500);
+		AnimationPacket back = new SmoothAnimationPacket("back", new Vector4f(0,0,0,0), new Vector4f(-12.25f, 6.75f, 2f, 1.25f), 500);
+		AnimationPacket prev = new SmoothAnimationPacket("prev", new Vector4f(0,0,0,0), new Vector4f(0, 4.0f, 1.25f, 1.25f), 500);
+		AnimationPacket next = new SmoothAnimationPacket("next", new Vector4f(0,0,0,0), new Vector4f(0, 4.0f, 1.25f, 1.25f), 500);
+		AnimationPacket nextc = new SmoothAnimationPacket("nextc", new Vector4f(0,0,0,0), new Vector4f(5, -2, 1.5f, 1.5f), 500);
+		AnimationPacket prevc = new SmoothAnimationPacket("prevc", new Vector4f(0,0,0,0), new Vector4f(-5, -2, 1.5f, 1.5f), 500);
+		AnimationPacket player = new SmoothAnimationPacket("player", new Vector4f(0,0,0,0), new Vector4f(0, -2, 8, 4), 500);
+		AnimationPacket gmlabel = new SmoothAnimationPacket("gmlabel", new Vector4f(0,0,0,0), new Vector4f(0,4.0f,gamemode.getTextWidth(),gamemode.getTextHeight()), 500);
 		
 		fade = new AnimationSystem("character", back, prev, next, player, nextc, prevc, gmlabel);
 		
@@ -104,7 +104,7 @@ static {
 		
 		translation.identity().translate(0, 0, 0).scale(26.9f, 15.2f, 1);
 		setShader(s, translation, matrix);
-		renderSprite("mainbackground");
+		renderSprite("characters_background");
 		
 		//Back button animation
 		

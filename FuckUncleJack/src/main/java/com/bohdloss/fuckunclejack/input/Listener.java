@@ -120,6 +120,7 @@ public class Listener implements KeyListen {
 			lPlayer.getInventory().addItem(new StoneBlockItem(100), true);
 			break;
 		case GLFW_KEY_M:
+			if(state==GAME) ClientState.disconnect();
 			ClientState.showMenu(false, true, MenuTab.active.getName());
 			break;
 		}

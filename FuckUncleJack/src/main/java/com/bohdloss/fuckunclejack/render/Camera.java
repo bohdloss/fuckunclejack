@@ -51,6 +51,10 @@ public class Camera {
 	public Camera(int width, int height) {
 		position = new Vector3f(0,0,0);
 		position2 = new Vector3f(0,0,0);
+		setOrtho(width, height);
+	}
+	
+	public void setOrtho(int width, int height) {
 		projection = new Matrix4f().setOrtho2D(-width/2, width/2, -height/2, height/2);
 	}
 	
@@ -147,7 +151,7 @@ public class Camera {
 		pos.setRotationXYZ(0,0,(float)CMath.remap(random.nextDouble(), 0, 1, -lerpIntensity/1000d, lerpIntensity/1000d));
 	}
 	
-	public Matrix4f unTransformedProjection() {
+	public  Matrix4f unTransformedProjection() {
 		position2.zero();
 		pos.identity();
 		shake(position2);

@@ -31,8 +31,6 @@ public boolean red=false;
 //
 
 public boolean dying = false;
-public static boolean debugHitboxes=false;
-	
 public static int randID=0;
 
 public boolean cooldown=false;
@@ -469,7 +467,7 @@ public void render(Shader s, Matrix4f input) {
 }
 
 public final void renderHitboxes(Shader s, Matrix4f input) {
-	if(debugHitboxes) {
+	if(ClientState.debug) {
 		res = input.translate(x, y, 0, res).scale(width, height, 1, res);
 		s.setProjection(res);
 		Assets.textures.get("green").bind(0);

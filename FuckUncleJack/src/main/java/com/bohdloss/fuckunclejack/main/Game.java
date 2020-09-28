@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.Toolkit;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import com.bohdloss.fuckunclejack.api.CharacterInfo;
@@ -15,6 +16,7 @@ import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.input.InputManager;
+import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.Camera;
 import com.bohdloss.fuckunclejack.render.FontManager;
@@ -25,19 +27,19 @@ import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 
 import javax.swing.JOptionPane;
 
-public class Game{
+public final class Game{
 	
 public static Window window;
 public static InputManager input=new InputManager();
 public static Camera camera;
 public static HUD hud;
 
-public static float scaleAmount=60*((float)Toolkit.getDefaultToolkit().getScreenResolution()/120f);
-public static float guiScale=scaleAmount-10;
+public static float scaleAmount;
+public static float guiScale;
 
-private int frames=0;
-private String fps="0 FPS";
-private long lastTime=0;
+public static int frames=0;
+public static String fps="0 FPS";
+public static long lastTime=0;
 
 public static Matrix4f scale;
 public static Matrix4f target;
@@ -51,14 +53,20 @@ public static boolean blocked=true;
 
 public static float fadeVal=0f;
 
-	public void begin() {
-		setup();
+	private Game() {}
+
+static {
+	if(GameState.isClient.getValue()) {
+	setup();
+	input.start();
+	}
+}
+
+	public static void init() {
 		
-		input.start();
-		renderLoop();
 	}
 	
-	public void loadLibrary() {
+	private static void loadLibrary() {
 		System.out.println("Initializing GLFW...");
 		try {
 			if(!glfwInit()) {
@@ -70,7 +78,7 @@ public static float fadeVal=0f;
 		}
 	}
 	
-	public void setup() {
+	private static void setup() {
 		//Essential setup
 				loadLibrary();
 				
@@ -85,6 +93,8 @@ public static float fadeVal=0f;
 				System.out.println("Creating context...");
 				
 				GL.createCapabilities();
+				
+				calcScale();
 				
 				//After creating context because otherwise it crashes on Linux
 				Main.name ="";// JOptionPane.showInputDialog("username");
@@ -109,7 +119,46 @@ public static float fadeVal=0f;
 				System.out.println("Done!");
 	}
 	
-	public void renderLoop() {
+	public static void calcScale() {
+		/*GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		
+		int screen_w = mode.width();
+		int screen_h = mode.height();
+		
+		final double shrinkConst = 0.7;
+		final double mulConst = 60;
+		
+		//NOTA PER DOMANI:
+		//VIRTUAL VUOL DIRE CHE DEVE ESSERE PRE-CALCOLATA LA GRANDEZZA
+		//DELLA PARTE VISUALIZZATA DI GIOCO
+		//
+		//RICORDA DI CONSIDERARE IL //RATIO\\
+		//
+		// ** http://www.david-amador.com/2013/04/opengl-2d-independent-resolution-rendering/ **
+		int virtual_w = (int) ((double) screen_w * shrinkConst * mulConst);
+		int virtual_h = (int) ((double) screen_h * shrinkConst * mulConst);
+		
+		float xscale = (float) ((double) screen_w / (double) virtual_w);
+		float yscale = (float) ((double) screen_h / (double) virtual_h);
+		
+		System.out.println("X: "+(1/xscale)+" Y: "+(1/yscale));
+		
+		scaleAmount=1/xscale;
+		guiScale=scaleAmount;*/
+		
+		int win_w = window.getWidth(), win_h = window.getHeight();
+		
+		double aspectRatio = (double)win_w/(double)win_h;
+		double targetRatio = 1.7777777777777777;
+		
+		double result=aspectRatio <= targetRatio? win_w / 26.75 : (win_h / targetRatio) / 8.5;
+		
+		scaleAmount=(float)result;
+		guiScale=scaleAmount;
+		
+	}
+	
+	public static void renderLoop() {
 		
 		scale = new Matrix4f().scale(scaleAmount);
 		target = new Matrix4f();
@@ -131,7 +180,7 @@ public static float fadeVal=0f;
 		System.exit(0);
 	}
 	
-	public void loopEvents() {
+	private static void loopEvents() {
 		MainEvents.computeEvents();
 		
 		scale.identity().scale(scaleAmount);
@@ -182,7 +231,7 @@ public static float fadeVal=0f;
 		frames++;
 	}
 	
-	public void renderGame() {
+	private static void renderGame() {
 		target=scale;
 		if(lWorld!=null&lPlayer!=null) {
 			shader.bind();
@@ -190,25 +239,22 @@ public static float fadeVal=0f;
 		}
 	}
 	
-	public void renderEditor() {
+	private static void renderEditor() {
 		guitarget=guiscale2;
 		Editor.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
 	}
 	
-	public void renderHud() {
+	private static void renderHud() {
 		guitarget=guiscale2;
 		hud.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
 	}
 	
-	public void renderTabs() {
+	private static void renderTabs() {
 		guitarget=guiscale2;
 		shader.bind();
 		if(MenuTab.active!=null) {
 			MenuTab.active.render(shader, camera.unTransformedProjection().mul(guitarget, tempres));
 		}
-	}
-	
-	public void fullscreen() {
 	}
 	
 }

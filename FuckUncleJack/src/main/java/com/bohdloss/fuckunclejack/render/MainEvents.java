@@ -15,13 +15,22 @@ private static HashMap<Long, Throwable> exceptions = new HashMap<Long, Throwable
 private static List<Long> hasException = new ArrayList<Long>();
 private static List<Long> ignoreReturn = new ArrayList<Long>();
 
+private static long executingThread=1;
+
 public static synchronized long queue(Function<Object> function) {
 	return queue(function, false);
 }
 
 public static synchronized long queue(Function<Object> function, boolean ignoreReturnValue) {
-	calls.put(function.getId(), function);
 	if(ignoreReturnValue) ignoreReturn.add(function.getId());
+	
+	long thread = Thread.currentThread().getId();
+	if(thread==executingThread) {
+		processFunction(function.getId(), function);
+	} else {
+		calls.put(function.getId(), function);
+	}
+	
 	return function.getId();
 }
 
@@ -58,20 +67,24 @@ public static synchronized Object getReturnValue(long funcId) throws Throwable{
 
 public static synchronized void computeEvents() {
 	calls.forEach((id, function)->{
-		try {
-			Object ret = function.execute();
-			if(!ignoreReturn.contains(id)) {
-				returnValues.put(id, ret);
-				hasReturn.add(id);
-			} else {
-				ignoreReturn.remove((Long)id);
-			}
-		} catch(Throwable e) {
-			hasException.add(id);
-			exceptions.put(id, e);
-		}
+		processFunction(id, function);
 	});
 	calls.clear();
+}
+
+private static synchronized void processFunction(long id, Function<Object> function) {
+	try {
+		Object ret = function.execute();
+		if(!ignoreReturn.contains(id)) {
+			returnValues.put(id, ret);
+			hasReturn.add(id);
+		} else {
+			ignoreReturn.remove((Long)id);
+		}
+	} catch(Throwable e) {
+		hasException.add(id);
+		exceptions.put(id, e);
+	}
 }
 
 }

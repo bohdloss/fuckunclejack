@@ -12,16 +12,12 @@ public class Label extends Mesh{
 protected String text;
 protected Font font;
 protected Color color;
-protected float width;
-protected float height;
 	
-	public Label(String text, Font font, Color color, float width, float height) {
+	public Label(String text, Font font, Color color) {
 		super(Assets.textures.get("empty"), Assets.models.get("square"));
 		this.text=text;
 		this.font=font;
 		this.color=color;
-		this.width=width;
-		this.height=height;
 		texture = TextTexture.generate(text, font, color);
 		setScale(getTexture().getGLWidth(), getTexture().getGLHeight());
 	}
@@ -29,6 +25,10 @@ protected float height;
 	public void setText(String text) {
 		this.text=text;
 		((TextTexture)texture).setText(text).update();
+		updateSize();
+	}
+	
+	private void updateSize() {
 		setScale(getTexture().getGLWidth(), getTexture().getGLHeight());
 	}
 	
@@ -42,6 +42,26 @@ protected float height;
 	
 	public String getText() {
 		return text;
+	}
+	
+	public Font getFont() {
+		return font;
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+	
+	public void setFont(Font font) {
+		this.font=font;
+		getTexture().setFont(font).update();
+		updateSize();
+	}
+	
+	public void setColor(Color color) {
+		this.color=color;
+		getTexture().setColor(color).update();
+		updateSize();
 	}
 	
 	@Override

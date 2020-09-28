@@ -38,7 +38,6 @@ protected static Matrix4f translate=new Matrix4f();
 	@Override
 	protected void renderBackground(Shader s, Matrix4f matrix) {
 		Camera c = Game.camera;
-		Game.scaleAmount=60;
 		scale.identity().scale(Game.scaleAmount*20, Game.scaleAmount*14, 1);
 		for(int i=0;i<3;i++) {
 			
