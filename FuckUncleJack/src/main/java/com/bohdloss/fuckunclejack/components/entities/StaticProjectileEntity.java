@@ -29,8 +29,8 @@ private Object[] data = new Object[2];
 	}
 
 	@Override
-	public void tick() {
-		physics();
+	public void tick(float delta) {
+		physics(delta);
 		
 		if(velx!=0|vely!=0) destroy();
 	}

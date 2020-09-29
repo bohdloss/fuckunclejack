@@ -31,42 +31,42 @@ public class ProjectileEntity extends Entity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(float delta) {
+		super.tick(delta);
 		angle=CMath.lookAt(velx, vely);
 	}
 	
 	@Override
-	public void physics() {
-		vel.x=velx;
+	public void physics(float delta) {
+		vel.x=velx*mult(delta);
 		vel.y=0;
 		execMove(vel);
 		vel.x=0;
-		vel.y=vely;
+		vel.y=vely*mult(delta);
 		execMove(vel);
 		if(!flight) {
 			if(inAir()) {
-				vely+=gravity.y;
+				vely+=gravity.y*mult(delta);
 				vely=(float)CMath.clampMin(vely, -0.5f);
 			} else {
 				vely=0;
 			}
 		} else {
 			if(vely>0) {
-				vely-=0.01f;
+				vely-=0.01f*mult(delta);
 				vely=(float)CMath.clampMin(vely, 0);
 			}
 			if(vely<0) {
-				vely+=0.01f;
+				vely+=0.01f*mult(delta);
 				vely=(float)CMath.clampMax(vely, 0);
 			}
 		}
 	if(velx>0) {
-		velx-=0.01f;
+		velx-=0.01f*mult(delta);
 		velx=(float)CMath.clampMin(velx, 0);
 	}
 	if(velx<0) {
-		velx+=0.01f;
+		velx+=0.01f*mult(delta);
 		velx=(float)CMath.clampMax(velx, 0);
 	}
 	vel.x=0;
@@ -75,11 +75,28 @@ public class ProjectileEntity extends Entity {
 	if(!move(vel, false)) {
 		boolean hit = false;
 		if(entCollisions.size()>0&!hit) {
-			if(hitTarget(entCollisions.get(0))) hit=true;
+			
+			for(int i=0;i<entCollisions.size();i++) {
+				
+				if(hitTarget(entCollisions.get(i))) {
+					hit=true;
+					break;
+				}
+				
+			}
 			
 		}
 		if(collisions.size()>0&!hit) {
-			if(hitTarget(collisions.get(0))) hit=true;
+			
+			for(int i=0;i<collisions.size();i++) {
+			
+				if(hitTarget(collisions.get(i))) {
+					hit=true;
+					break;
+				}
+			
+			}
+			
 		}
 	}
 	collision=false;
@@ -89,9 +106,9 @@ public class ProjectileEntity extends Entity {
 		if(GameState.isClient.getValue()|obj==null) return false;
 		if(Block.class.isAssignableFrom(obj.getClass())) {
 			StaticProjectileEntity still = new StaticProjectileEntity(texture, angle);
+			destroy();
 			if(!EventHandler.entitySpawned(false, new EntitySpawnedEvent(GameEvent.tickSpawn, still, new Object[0])).isCancelled()) {
 				world.join(still, x, y);
-				destroy();
 				return true;
 			}
 		}

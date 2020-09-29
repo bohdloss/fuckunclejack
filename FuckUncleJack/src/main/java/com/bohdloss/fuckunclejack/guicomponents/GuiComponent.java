@@ -64,7 +64,7 @@ protected MenuTab owner;
 	public abstract void render(Shader s, Matrix4f matrix);
 	
 	@Override
-	public void tick() {
+	public void tick(float delta) {
 		if(!visible|status==DISABLED) return;
 		bounds.setFrame(getX(), getY(), getWidth(), getHeight());
 		boolean intersects = bounds.pIntersects(MenuTab.mouse);

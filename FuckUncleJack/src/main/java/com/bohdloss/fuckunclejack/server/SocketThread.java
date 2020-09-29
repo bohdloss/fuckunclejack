@@ -246,7 +246,7 @@ public void fillObject() {
 			buf.put(CHUNKS);
 			buf.putInt(calcChunks.size());
 			calcChunks.forEach(chunk->{
-				buf.putInt(chunk.getOffsetx());
+				buf.putInt(chunk!=null?chunk.getOffsetx():0);
 				buf.put(chunk!=null?(byte)1:(byte)0);
 				if(chunk!=null) {
 					BlockLayer[][] layers = chunk.blocks;

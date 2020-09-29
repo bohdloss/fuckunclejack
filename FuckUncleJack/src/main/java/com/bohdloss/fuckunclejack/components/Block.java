@@ -67,7 +67,7 @@ public CRectanglef getBounds() {
 	return bounds;
 }
 
-public void tick() {
+public void tick(float delta) {
 	
 }
 

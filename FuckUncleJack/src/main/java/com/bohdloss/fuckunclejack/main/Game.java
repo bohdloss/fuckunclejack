@@ -120,31 +120,6 @@ static {
 	}
 	
 	public static void calcScale() {
-		/*GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		
-		int screen_w = mode.width();
-		int screen_h = mode.height();
-		
-		final double shrinkConst = 0.7;
-		final double mulConst = 60;
-		
-		//NOTA PER DOMANI:
-		//VIRTUAL VUOL DIRE CHE DEVE ESSERE PRE-CALCOLATA LA GRANDEZZA
-		//DELLA PARTE VISUALIZZATA DI GIOCO
-		//
-		//RICORDA DI CONSIDERARE IL //RATIO\\
-		//
-		// ** http://www.david-amador.com/2013/04/opengl-2d-independent-resolution-rendering/ **
-		int virtual_w = (int) ((double) screen_w * shrinkConst * mulConst);
-		int virtual_h = (int) ((double) screen_h * shrinkConst * mulConst);
-		
-		float xscale = (float) ((double) screen_w / (double) virtual_w);
-		float yscale = (float) ((double) screen_h / (double) virtual_h);
-		
-		System.out.println("X: "+(1/xscale)+" Y: "+(1/yscale));
-		
-		scaleAmount=1/xscale;
-		guiScale=scaleAmount;*/
 		
 		int win_w = window.getWidth(), win_h = window.getHeight();
 		

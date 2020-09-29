@@ -13,7 +13,7 @@ import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Shader;
 import com.bohdloss.fuckunclejack.render.Texture;
 
-public class BlockLayer {
+public class BlockLayer implements Tickable{
 
 private Block background;
 private Block top;
@@ -63,9 +63,9 @@ public void render(Shader s, Matrix4f matrix) {
 	}
 }
 
-public void tick() {
-	background.tick();
-	top.tick();
+public void tick(float delta) {
+	background.tick(0);
+	top.tick(0);
 }
 
 public Block getBackground() {

@@ -56,10 +56,10 @@ public void render(Shader s, Matrix4f matrix) {
 	}
 }
 
-public void tick() {
+public void tick(float delta) {
 	for(int x=0;x<16;x++) {
 		for(int y=0;y<256;y++) {
-			blocks[x][y].tick();
+			blocks[x][y].tick(delta);
 		}
 	}
 }

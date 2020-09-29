@@ -98,7 +98,7 @@ public void renderSprite(String name) {
 }
 
 @Override
-public void tick() {
+public void tick(float delta) {
 	if(ignoreInput&&fade.over()) {
 		ignoreInput=false;
 	}
@@ -107,7 +107,7 @@ public void tick() {
 	mouse = CMath.mGLCoord(Game.guiScale);
 	
 	components.forEach(component->{
-		component.tick();
+		component.tick(0);
 	});
 	
 }

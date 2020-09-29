@@ -23,7 +23,7 @@ public class WinnerswordItem extends Item {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(float delta) {
 		
 	}
 	

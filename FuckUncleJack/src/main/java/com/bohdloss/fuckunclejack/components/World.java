@@ -72,23 +72,23 @@ static {
 		return toRet;
 	}
 	
-	public void tick() {
+	public void tick(float delta) {
 		
 		//Tick everything
 		
 		try {
-		chunks.forEach((k,v)->v.tick());
+		chunks.forEach((k,v)->v.tick(delta));
 		} catch(ConcurrentModificationException e) {}
 		try {
 		entities.forEach((k,v)->{
-			v.tick();
+			v.tick(delta);
 			if(v.getY()<-1) {
-				entities.remove(k);
+				//entities.remove(k);
 			}
 			});
 		} catch(ConcurrentModificationException e) {}
 		try {
-		player.forEach((k,v)->v.tick());
+		player.forEach((k,v)->v.tick(delta));
 		} catch(ConcurrentModificationException e) {}
 		
 		//removed GameState.isClient.getValue() check here

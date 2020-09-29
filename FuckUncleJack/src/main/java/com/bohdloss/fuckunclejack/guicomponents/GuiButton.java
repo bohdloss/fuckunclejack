@@ -101,8 +101,8 @@ static {
 	}
 	
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(float delta) {
+		super.tick(delta);
 	}
 	
 	@Override

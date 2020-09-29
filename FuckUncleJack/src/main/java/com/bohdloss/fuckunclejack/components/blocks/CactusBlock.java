@@ -27,8 +27,8 @@ public class CactusBlock extends Block{
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(float delta) {
+		super.tick(delta);
 		if(GameState.isClient.getValue()) return;
 		boolean airBackground = chunk.blocks[chunkx][y-1].getBackground() instanceof AirBlock;
 		boolean airTop = chunk.blocks[chunkx][y-1].getTop() instanceof AirBlock;

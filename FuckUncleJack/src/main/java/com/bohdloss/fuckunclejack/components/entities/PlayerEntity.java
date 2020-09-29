@@ -85,14 +85,16 @@ static {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(float delta) {
+		
+		//System.out.println(delta);
 		
 		//For animation orientation
 		
 		if(velx>0) direction=1;
 		if(velx<0) direction=-1;
 		
-		super.tick();
+		super.tick(delta);
 		
 		//Choose animation to play
 		
@@ -113,7 +115,7 @@ static {
 		
 		for(int i=0;i<9;i++) {
 			ItemSlot slot = inventory.slots[i];
-			if(!slot.isEmpty()) slot.getContent().tick();
+			if(!slot.isEmpty()) slot.getContent().tick(delta);
 		}
 	}
 	

@@ -10,29 +10,30 @@ import static com.bohdloss.fuckunclejack.logic.GameState.*;
 
 public class TickThread extends Thread {
 
+public long lastTime;
+	
 	public TickThread() {
 		dimensions.put("world", new OverworldWorld(new Random().nextLong(), "world"));
 		start();
 	}
-	
-	public void delay(long until) {
-		while(System.currentTimeMillis()<until) {
-			try {
-				sleep(0);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	public void run() {
 		while(true) {
+			
+			long current = System.currentTimeMillis();
+			
+			if(lastTime==0) lastTime = current;
+			
+			long time = System.currentTimeMillis();
+			
+			long pre = time-lastTime;
+			float delta = (float)pre;
+			
+			lastTime = current;
+			
 			try {
-				long time = System.currentTimeMillis();
-				update();
-				
-				delay(time+tickDelay);
-				
+				update(delta);
+				sleep(3);
 			} catch(Exception e) {
 				if(!(e instanceof ConcurrentModificationException)) {
 				e.printStackTrace();
@@ -41,10 +42,10 @@ public class TickThread extends Thread {
 		}
 	}
 	
-	public void update() {
+	public void update(float delta) {
 		dimensions.forEach((k,v)->{
 			if(v.player.size()>0) {
-			v.tick();
+			v.tick(delta);
 			}
 		});
 	}

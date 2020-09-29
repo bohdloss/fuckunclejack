@@ -45,8 +45,8 @@ public abstract class HouseEntity extends Entity{
 	}
 	
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(float delta) {
+		super.tick(delta);
 		
 		if(isClient.getValue()) {
 			double dist2 = distance2(x, y, lPlayer.getX(), lPlayer.getY());

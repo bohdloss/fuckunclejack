@@ -30,12 +30,14 @@ public static boolean[] button = new boolean[GLFW_MOUSE_BUTTON_LAST];
 
 public static Listener listener = new Listener();
 
-//faster GC
+//cache
 private Point2f pos;
 public double blockx;
 public double blocky;
 public float visiblex;
 public float visibley;
+
+public long lastTime=0;
 //end
 
 static {
@@ -47,8 +49,8 @@ static {
 	}
 }
 
-public void gameUpdate() {
-	if(lPlayer==null|lWorld==null) return;
+public void gameUpdate(float delta) {
+	if(lPlayer==null||lWorld==null) return;
 	
 	hoverCalc(scaleAmount);
 	
@@ -58,7 +60,7 @@ public void gameUpdate() {
 	}
 	
 	nearHouseB=false;
-	if(lWorld!=null) ClientState.lWorld.tick();
+	if(lWorld!=null) ClientState.lWorld.tick(delta);
 	if(nearHouseB==true) {
 		nearHouse=lastHouse;
 	} else {
@@ -73,18 +75,18 @@ public void gameUpdate() {
 	}
 	boolean moved=false;
 	if(keys[GLFW_KEY_A]) {
-		ClientState.lPlayer.moveLateral(-1);
+		ClientState.lPlayer.moveLateral(-1, delta);
 		moved=true;
 	}
 	if(keys[GLFW_KEY_D]) {
-		ClientState.lPlayer.moveLateral(1);
+		ClientState.lPlayer.moveLateral(1, delta);
 		moved=true;
 	}
 	if(keys[GLFW_KEY_W]) {
-		ClientState.lPlayer.moveVertical(1);
+		ClientState.lPlayer.moveVertical(1, delta);
 	}
 	if(keys[GLFW_KEY_S]) {
-		ClientState.lPlayer.moveVertical(-1);
+		ClientState.lPlayer.moveVertical(-1, delta);
 	}
 	
 	if(keys[GLFW_KEY_R]) {
@@ -102,16 +104,6 @@ public void gameUpdate() {
 	}
 }
 
-public void delay(long until) {
-	while(System.currentTimeMillis()<until) {
-		try {
-			sleep(0);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-}
-
 public void run() {
 	listener.init();
 	FUJApi.init();
@@ -119,10 +111,23 @@ public void run() {
 	hud=new HUD();
 	ClientState.showMenu(false, true, "main");
 	while(true) {
+		
+		long current = System.currentTimeMillis();
+		
+		if(lastTime==0) lastTime = current;
+		
+		long time = System.currentTimeMillis();
+		
+		long pre = time-lastTime;
+		float delta = (float)pre;
+		
+		lastTime = current;
+		
+		//System.out.println("LOG\ncurrent: "+current+"\nlastTime: "+lastTime+"\ntime: "+time+"\npre: "+pre+"\ndelta: "+delta);
+		
 		try {
-			long time = System.currentTimeMillis();
-			tick();
-			delay(time+GameState.tickDelay);
+			tick(delta);
+			sleep(3);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -161,24 +166,24 @@ public void baseUpdate() {
 	}
 }
 
-public void menuUpdate() {
+public void menuUpdate(float delta) {
 	if(MenuTab.active!=null) {
-		MenuTab.active.tick();
+		MenuTab.active.tick(delta);
 	}
 }
 
 @Override
-public void tick() {
+public void tick(float delta) {
 	baseUpdate();
 	switch(state) {
 	case GAME:
-		gameUpdate();
+		gameUpdate(delta);
 	break;
 	case EDITMODE:
-		gameUpdate();
+		gameUpdate(delta);
 	break;
 	case MENU:
-		menuUpdate();
+		menuUpdate(delta);
 	break;
 	}
 }

@@ -380,14 +380,14 @@ public void jump() {
 	}
 }
 
-public void moveLateral(float direction) {
+public void moveLateral(float direction, float delta) {
 	
 	float speedAmount = (running?runSpeed:speed)*(flight?2:1);
 	
-	velx=(float)CMath.clamp(velx+(direction*speedAmount)/7f, -speedAmount, speedAmount);
+	velx=(float)CMath.clamp(velx+((direction*speedAmount)/7f)*mult(delta), -speedAmount, speedAmount);
 }
 
-public void moveVertical(float direction) {
+public void moveVertical(float direction, float delta) {
 	if(!flight) return;
 	
 	float speedAmount = (running?runSpeed:speed)*2;
@@ -411,9 +411,9 @@ private void chunkTest() {
 	}
 }
 
-public void tick() {
+public void tick(float delta) {
 	chunkTest();
-	if(physics|forcePhysics) physics();
+	if(physics|forcePhysics) physics(delta);
 }
 
 public boolean checkFallDamage() {
@@ -422,36 +422,40 @@ public boolean checkFallDamage() {
 	return damageSelf(damage);
 }
 
-public void physics() {
-	vel.x=velx;
+public float mult(float delta) {
+	return delta/GameState.tickDelay;
+}
+
+public void physics(float delta) {
+	vel.x=velx*mult(delta);
 	vel.y=0;
 	move(vel, true);
 	vel.x=0;
-	vel.y=vely;
+	vel.y=vely*mult(delta);
 	move(vel, true);
 	if(!flight) {
 		if(inAir()) {
-			vely+=gravity.y;
+			vely+=gravity.y*mult(delta);
 			vely=(float)CMath.clampMin(vely, -0.5f);
 		} else {
 			vely=0;
 		}
 	} else {
 		if(vely>0) {
-			vely-=0.01f;
+			vely-=0.01f*mult(delta);
 			vely=(float)CMath.clampMin(vely, 0);
 		}
 		if(vely<0) {
-			vely+=0.01f;
+			vely+=0.01f*mult(delta);
 			vely=(float)CMath.clampMax(vely, 0);
 		}
 	}
 if(velx>0) {
-	velx-=0.01f;
+	velx-=0.01f*mult(delta);
 	velx=(float)CMath.clampMin(velx, 0);
 }
 if(velx<0) {
-	velx+=0.01f;
+	velx+=0.01f*mult(delta);
 	velx=(float)CMath.clampMax(velx, 0);
 }
 }
