@@ -97,17 +97,20 @@ public void renderSprite(String name) {
 	square.render();
 }
 
+public void onOver() {}
+
 @Override
 public void tick(float delta) {
 	if(ignoreInput&&fade.over()) {
 		ignoreInput=false;
+		onOver();
 	}
 	if(ignoreInput) return;
 	
 	mouse = CMath.mGLCoord(Game.guiScale);
 	
 	components.forEach(component->{
-		component.tick(0);
+		component.tick(delta);
 	});
 	
 }

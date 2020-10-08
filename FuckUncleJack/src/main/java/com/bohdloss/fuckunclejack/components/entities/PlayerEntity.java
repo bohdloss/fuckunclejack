@@ -67,7 +67,7 @@ static {
 		gui=Assets.shaders.get("gui");
 		model=Assets.models.get("player_model");
 		
-		character = Assets.animationSets.get("dad");
+		character = Assets.animationSets.get("dad_default");
 		anim=character.idle;
 		
 		}

@@ -63,7 +63,6 @@ public class VolatileTexture extends Texture{
 	private void update(BufferedImage img) {
 		glDeleteTextures(id);
 		
-		this.img=img;
 		int w=img.getWidth();
 		int h=img.getHeight();
 		width=w;

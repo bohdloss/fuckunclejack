@@ -50,9 +50,9 @@ public static AnimationSystem secondfade;
 		new GuiButton(this, "Play", 0f, 0.75f, 6f, 2f, Assets.sheets.get("menubuttons"), new Color(100, 0, 0, 0)).setAction(new Callable<Integer>(){
 			public Integer call() {
 				//ClientState.showMenu(true, true, "character");
-				ClientState.fadeToBlack();
+				//ClientState.fadeToBlack();
 				ClientState.connect("localhost", Server.port);
-				ClientState.fadeFromBlack();
+				//ClientState.fadeFromBlack();
 				return 0;
 			}
 		});

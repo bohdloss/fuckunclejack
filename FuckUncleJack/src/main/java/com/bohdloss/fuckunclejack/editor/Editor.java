@@ -144,7 +144,6 @@ static {
 				if(t!=null) {
 					usedtxt=t;
 					custEnt.texture=name;
-					custEnt.txt=usedtxt.getImg();
 					status=MODEL;
 				} else {
 					JOptionPane.showMessageDialog(null, "invalid name");

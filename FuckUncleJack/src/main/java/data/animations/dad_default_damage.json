@@ -17,5 +17,12 @@
 		"rot":[
 			"2.5307271f"
 		]
-	}
+	},
+	"prefix":"/data/textures/entities/player/dad/damage",
+	"suffix":".png",
+	"data":[
+		{
+			"tiles":"1"
+		}
+	]
 }

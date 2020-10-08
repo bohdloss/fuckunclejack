@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 public class ButtonSheetGenerator {
 
 	public static void main(String[] args) throws Exception{
-		String input = "C:\\Users\\Antonio\\git\\fuckunclejack\\FuckUncleJack\\src\\main\\java\\data\\textures\\menus\\buttons\\button";//JOptionPane.showInputDialog("Image files prefix:");
+		String input = "/home/bohdloss/git/fuckunclejack/FuckUncleJack/src/main/java/data/textures/menus/buttons/"+JOptionPane.showInputDialog("Image files prefix:");
 		File imgi = new File(input+"i.png");
 		File imgh = new File(input+"h.png");
 		File imgp = new File(input+"p.png");
@@ -20,8 +20,8 @@ public class ButtonSheetGenerator {
 		imgs[1] = ImageIO.read(imgh);
 		imgs[2] = ImageIO.read(imgp);
 		
-		int width=13;//Integer.parseInt(JOptionPane.showInputDialog("width:"));
-		int height=13;//Integer.parseInt(JOptionPane.showInputDialog("height:"));
+		int width=Integer.parseInt(JOptionPane.showInputDialog("width:"));
+		int height=Integer.parseInt(JOptionPane.showInputDialog("height:"));
 		
 		BufferedImage[] res = new BufferedImage[imgs.length];
 		
@@ -65,7 +65,7 @@ public class ButtonSheetGenerator {
 		File out = new File(input+"sheet.png");
 		ImageIO.write(result, "png", out);
 		
-		//JOptionPane.showMessageDialog(null, "Done!");
+		JOptionPane.showMessageDialog(null, "Done!");
 		
 	}
 

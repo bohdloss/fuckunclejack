@@ -17,5 +17,12 @@
 		"rot":[
 			"-0.61086524f"
 		]
-	}
+	},
+	"prefix":"/data/textures/entities/player/dad/idle",
+	"suffix":".png",
+	"data":[
+		{
+			"tiles":"1"
+		}
+	]
 }

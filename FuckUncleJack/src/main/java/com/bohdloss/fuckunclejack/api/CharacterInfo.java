@@ -7,7 +7,7 @@ import java.util.List;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.render.AnimationSet;
 
-public class CharacterInfo {
+public final class CharacterInfo {
 	
 public static final CharacterInfo[] AVAILABLE;
 public static final CharacterInfo[][] SUBDIVIDED;
@@ -20,9 +20,9 @@ public static final CharacterInfo JACK;
 	
 static {
 	UNKNOWN=new CharacterInfo(-1, null, "Unknown");
-	DAD=new CharacterInfo(0, Assets.animationSets.get("dad"), "Dad", GamemodeInfo.NORMAL_FAMILY.getId());
-	SON=new CharacterInfo(1, Assets.animationSets.get("son"), "Son", GamemodeInfo.NORMAL_FAMILY.getId());
-	JACK=new CharacterInfo(2, Assets.animationSets.get("jack"), "Jack", GamemodeInfo.NORMAL_JACK.getId());
+	DAD=new CharacterInfo(0, new int[] {0, 3}, "Dad", GamemodeInfo.NORMAL_FAMILY.getId());
+	SON=new CharacterInfo(1, new int[] {1}, "Son", GamemodeInfo.NORMAL_FAMILY.getId());
+	JACK=new CharacterInfo(2, new int[] {2}, "Jack", GamemodeInfo.NORMAL_JACK.getId());
 	
 	AVAILABLE=new CharacterInfo[3];
 	AVAILABLE[0]=DAD;
@@ -43,7 +43,7 @@ static {
 	
 	/*for(int i=0;i<SUBDIVIDED.length;i++) {
 		for(int j=0;j<SUBDIVIDED[i].length;j++) {
-			System.out.println("["+i+"]["+j+"]="+SUBDIVIDED[i][j].id());
+			System.out.println("["+i+"]["+j+"]="+SUBDIVIDED[i][j].getId());
 		}
 	}*/
 	
@@ -68,15 +68,27 @@ public boolean hasGamemode(int id) {
 
 public static void init() {}
 
-private AnimationSet anims;
+private int[] skins;
 private String name;
 private int id;
 private int[] gamemodes;
 
-public AnimationSet getAnimationSet() {
-	return anims;
+public AnimationSet getAnimationSet(int skinIndex) {
+	return SkinInfo.AVAILABLE[skins[skinIndex]].getData();
 }
 	
+public int[] getSkins() {
+	return skins;
+}
+
+public int getDefaultSkin() {
+	return skins[0];
+}
+
+public int getSkinsAmount() {
+	return skins.length;
+}
+
 public String getName() {
 	return name;
 }
@@ -85,8 +97,8 @@ public int getId() {
 	return id;
 }
 
-private CharacterInfo(int id, AnimationSet anims, String name, int...gamemodes) {
-	this.anims=anims;
+private CharacterInfo(int id, int[] skins, String name, int...gamemodes) {
+	this.skins=skins;
 	this.id=id;
 	this.name=name;
 	this.gamemodes=gamemodes;

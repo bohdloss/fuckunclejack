@@ -25,7 +25,6 @@ public class GuiButton extends GuiComponent{
 static Matrix4f res=new Matrix4f();
 static Matrix4f translate=new Matrix4f();
 
-static final float mulConst=25;
 static Model square;
 TileSheet button;
 static Shader gui;
@@ -38,8 +37,6 @@ public Color color;
 float i=1;
 
 public VolatileTexture[] changeable = new VolatileTexture[3];
-
-private BufferedImage[] states = new BufferedImage[3];
 
 static {
 	square=Assets.models.get("square");
@@ -62,13 +59,14 @@ static {
 		this.color=color;
 	}
 	
-	public void updateSize() {
+	@Override
+	public GuiButton updateSize() {
 		float w=getWidth();
 		float h=getHeight();
 		for(int i=0;i<3;i++) {
 			BufferedImage size = new BufferedImage((int)(w*mulConst), (int)(h*mulConst), BufferedImage.TYPE_INT_ARGB);
 			Graphics g = size.getGraphics();
-		
+			
 			BufferedImage[] imgs = button.getTiles();
 		
 			int bordx=13;
@@ -94,10 +92,9 @@ static {
 			
 			g.drawString(text, drawx, drawy);
 			
-			states[i]=size;
-			
-			changeable[i].change(states[i]);
+			changeable[i].change(size);
 		}
+		return this;
 	}
 	
 	@Override

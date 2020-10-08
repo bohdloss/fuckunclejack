@@ -17,5 +17,12 @@
 		"rot":[
 			"-7.5049148f","-0.61086524f","-6.6322503f","-0.61086524f"
 		]
-	}
+	},
+	"prefix":"/data/textures/entities/player/dad/walking",
+	"suffix":".png",
+	"data":[
+		{
+			"tiles":"4"
+		}
+	]
 }

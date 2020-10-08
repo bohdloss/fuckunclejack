@@ -65,7 +65,7 @@ static {
 		
 		matBuf.set(matrix);
 		
-		matBuf.translate(0, 6.65f, 0).scale(0.75f, 0.65f, 1);
+		matBuf.scale(0.75f, 0.65f, 1);
 		
 		s.setProjection(matBuf.translate(0, 0, 0, res).scale(27, 3, 1, res));
 		

@@ -148,17 +148,17 @@ public class CMath {
 	}
 	
 	public static double lerpEaseIn(double in, double a, double b) {
-		double curve=clamp((in<0.2)?(2.777*Math.pow(in,2)):((1.111*in)-0.111),0,1);
+		double curve=clamp((in<0.3)?(2.777*Math.pow(in,2)):((1.111*in)-0.111),0,1);
 		return a+(b-a)*curve;
 	}
 	
 	public static double lerpEaseOut(double in, double a, double b) {
-		double curve=clamp((in>0.8)?((-2.777*Math.pow(in,2))+(5.555*in)-1.777):(1.111*in),0,1);
+		double curve=clamp((in>0.7)?((-2.777*Math.pow(in,2))+(5.555*in)-1.777):(1.111*in),0,1);
 		return a+(b-a)*curve;
 	}
 	
 	public static double lerpEaseBoth(double in, double a, double b) {
-		double curve=clamp((in<0.2)?(3.125*Math.pow(in,2)):((in>0.8)?(-3.125*Math.pow(in,2)+(6.25*in)-2.125):((1.25*in)-0.125)),0,1);
+		double curve=clamp((in<0.3)?(3.125*Math.pow(in,2)):((in>0.7)?(-3.125*Math.pow(in,2)+(6.25*in)-2.125):((1.25*in)-0.125)),0,1);
 		return a+(b-a)*curve;
 	}
 	

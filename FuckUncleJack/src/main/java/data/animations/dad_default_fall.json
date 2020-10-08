@@ -17,5 +17,12 @@
 		"rot":[
 			"2.2689278f"
 		]
-	}
+	},
+	"prefix":"/data/textures/entities/player/dad/fall",
+	"suffix":".png",
+	"data":[
+		{
+			"tiles":"1"
+		}
+	]
 }

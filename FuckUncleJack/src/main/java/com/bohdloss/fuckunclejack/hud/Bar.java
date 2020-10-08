@@ -78,7 +78,7 @@ public void updateSize() {
 	float h=1;
 		BufferedImage size = new BufferedImage((int)(w*mulConst), (int)(h*mulConst), BufferedImage.TYPE_INT_ARGB);
 		Graphics g = size.getGraphics();
-	
+		
 		BufferedImage[] imgs = template.getTiles();
 	
 		int bordx=13;

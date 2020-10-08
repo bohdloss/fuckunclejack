@@ -66,6 +66,16 @@ public class Assets {
 			System.exit(1);
 		}
 		
+		//Disposing unused data
+		
+		try {
+			Runtime.getRuntime().gc();
+		} catch(Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Crashed(While disposing data)! :D\nThis error is not fatal, but the performance of your pc may be greatly affected");
+		}
+		
+		
 		System.out.println("Assets loaded");
 	}
 	
@@ -161,16 +171,17 @@ public class Assets {
 	private static void loadTileSheets() throws Exception{
 		System.out.println("Loading tile sheets...");
 		
-		sheets.put("buttons", new TileSheet(textures.get("hud_buttons"), 4));
-		sheets.put("font", FontManager.load(new Font("Arial", 1, 32), new Color(127,127,127,255)));
-	
-		sheets.put("menubuttons", new TileSheet(new Texture("/data/textures/menus/buttons/buttonsheet.png"), 27));
+		sheets.put("buttons", new TileSheet(textures.get("hud_buttons"), 4).disposeAll());
+		sheets.put("font", FontManager.load(new Font("Arial", 1, 32), new Color(127,127,127,255)).disposeAll());
+		
+		sheets.put("menubuttons", new TileSheet("/data/textures/menus/buttons/buttonsheet.png", 27));
+		sheets.put("metalbuttons", new TileSheet("/data/textures/menus/buttons/metalsheet.png", 27));
 	}
 	
 	private static void loadAnimations() throws Exception{
 		System.out.println("Loading animations...");
 		
-		AnimationSet dad_default = new AnimationSet("dad");
+		AnimationSet dad_default = new AnimationSet("dad_default");
 		dad_default.longIdle=new Animation("/data/textures/entities/player/dad/longidle.png", 23, true, null);
 		dad_default.idle=new Animation("/data/textures/entities/player/dad/idle.png", 1, false, "dad_default_idle");
 		dad_default.walking=new Animation("/data/textures/entities/player/dad/walking.png", 4, true, "dad_default_walking");
@@ -178,9 +189,9 @@ public class Assets {
 		dad_default.falling=new Animation("/data/textures/entities/player/dad/fall.png", 1, false, "dad_default_fall");
 		dad_default.damage=new Animation("/data/textures/entities/player/dad/damage.png", 1, false, "dad_default_damage");
 		
-		animationSets.put("dad", dad_default);
+		animationSets.put("dad_default", dad_default);
 		
-		animations.put("deserthouse", new Animation(new TileSheet(new Texture("/data/textures/entities/structures/deserthouse.png"), 29), true, null));
+		animations.put("deserthouse", new Animation("/data/textures/entities/structures/deserthouse.png", 29, true, null));
 	
 	}
 	

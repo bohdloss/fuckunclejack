@@ -3,23 +3,27 @@ package com.bohdloss.fuckunclejack.render;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import java.awt.image.BufferedImage;
+import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
-
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
 import com.bohdloss.fuckunclejack.main.ResourceLoader;
 
 public class Texture {
-
-protected BufferedImage img;
+	
 protected int width=-1;
 protected int height=-1;
 protected int id=-1;
 
-public Texture(BufferedImage img) {
-	this.img=img;
+protected static List<WeakReference<Texture>> instances = new ArrayList<WeakReference<Texture>>();
+public static List<WeakReference<Texture>> getInstances() {
+	return instances;
+}
+
+public Texture(BufferedImage img, boolean keepImg) {
 	if(img!=null) {
 	int w=img.getWidth();
 	int h=img.getHeight();
@@ -46,23 +50,27 @@ public Texture(BufferedImage img) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels); //write the texture in video card
+	
 	}
 }
 
-public Texture(String path) throws Exception{
+public Texture(String path, boolean keepImage) throws Exception{
 	this(path==null?null:ResourceLoader.loadImage(path));
 }
-	
+
+public Texture(String path) throws Exception{
+	this(path, false);
+}
+
+public Texture(BufferedImage img) {
+	this(img, false);
+}
+
 public void bind(int sampler) {
-	if(img==null) return;
 	if(sampler >=0 & sampler<=31) {
 	glActiveTexture(GL_TEXTURE0+sampler);
 	glBindTexture(GL_TEXTURE_2D, id);
 	}
-}
-
-public BufferedImage getImg() {
-	return img;
 }
 
 public int getWidth() {

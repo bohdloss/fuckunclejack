@@ -3,6 +3,7 @@ package com.bohdloss.fuckunclejack.guicomponents;
 import java.util.concurrent.Callable;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
 import com.bohdloss.fuckunclejack.components.Tickable;
@@ -18,6 +19,8 @@ public float x;
 public float y;
 public float rot;
 
+float mulConst=25;
+
 public static final int DISABLED=0;
 
 public static final int IDLE=1;
@@ -31,8 +34,21 @@ private Callable<Integer> onClick;
 public CRectanglef bounds=new CRectanglef(0,0,0,0);
 
 public boolean visible=true;
-	
+private Vector4f glpos=new Vector4f();
 protected MenuTab owner;
+	
+	public GuiComponent setMulConst(float val) {
+		this.mulConst=val;
+		return this;
+	}
+
+	public float getMulConst() {
+		return this.mulConst;
+	}
+	
+	public GuiComponent updateSize() {
+		return this;
+	}
 	
 	public GuiComponent(MenuTab owner) {
 		this.owner=owner;
@@ -98,13 +114,22 @@ protected MenuTab owner;
 		}
 	}
 
-	public void setAction(Callable<Integer> callable) {
+	public GuiComponent setAction(Callable<Integer> callable) {
 		onClick=callable;
+		return this;
 	}
 	
 	@Override
 	public void finalize() {
 		owner.components.remove(this);
+	}
+	
+	public Vector4f transformInfo() {
+		glpos.x=x;
+		glpos.y=y;
+		glpos.z=getWidth();
+		glpos.w=getHeight();
+		return glpos;
 	}
 	
 	public abstract float getX();

@@ -4,21 +4,33 @@ public final class FUJApi {
 
 private static int[] selectedCharacter;
 private static Boolean[] ownsCharacter;
+private static Boolean[] ownsSkin;
 private static int selectedGamemode=-1;
 private static int currency=-1;
 private static double rank=-1;;
+private static int[] selectedSkin;
 
 static {
 	CharacterInfo.init();
 	GamemodeInfo.init();
+	SkinInfo.init();
 	selectedCharacter=new int[GamemodeInfo.AVAILABLE.length];
 	for(int i=0;i<selectedCharacter.length;i++) {
 		selectedCharacter[i]=-1;
+	}
+	selectedSkin=new int[CharacterInfo.AVAILABLE.length];
+	for(int i=0;i<selectedSkin.length;i++) {
+		selectedSkin[i]=-1;
 	}
 	ownsCharacter=new Boolean[CharacterInfo.AVAILABLE.length];
 	for(int i=0;i<ownsCharacter.length;i++) {
 		ownsCharacter[i]=null;
 	}
+	ownsSkin=new Boolean[SkinInfo.AVAILABLE.length];
+	for(int i=0;i<ownsSkin.length;i++) {
+		ownsSkin[i]=null;
+	}
+	
 }
 
 	public static synchronized void init() {}
@@ -34,7 +46,13 @@ static {
 			fetchSelectedCharacter(i);
 		}
 		for(int i=0;i<CharacterInfo.AVAILABLE.length;i++) {
+			fetchSelectedSkin(i);
+		}
+		for(int i=0;i<CharacterInfo.AVAILABLE.length;i++) {
 			fetchOwnedCharacter(i);
+		}
+		for(int i=0;i<SkinInfo.AVAILABLE.length;i++) {
+			fetchOwnedSkin(i);
 		}
 		fetchSelectedGameMode();
 		fetchOwnedCurrency();
@@ -47,6 +65,9 @@ static {
 	public static synchronized void pushAll() {
 		for(int i=0;i<GamemodeInfo.AVAILABLE.length;i++) {
 			pushSelectedCharacter(i);
+		}
+		for(int i=0;i<CharacterInfo.AVAILABLE.length;i++) {
+			pushSelectedSkin(i);
 		}
 		pushSelectedGamemode();
 	}
@@ -82,10 +103,7 @@ static {
 	}
 	
 	private static synchronized CharacterInfo getCharacterInfoById(int id) {
-		switch(id) {
-		case 0:
-			return CharacterInfo.DAD;
-		}
+		if(id>=0&&id<CharacterInfo.AVAILABLE.length) return CharacterInfo.AVAILABLE[id];
 		return CharacterInfo.UNKNOWN;
 	}
 	
@@ -120,12 +138,7 @@ static {
 	}
 		
 	private static synchronized GamemodeInfo getGamemodeInfoById(int id) {
-		switch(id) {
-		case 0:
-			return GamemodeInfo.NORMAL_FAMILY;
-		case 1:
-			return GamemodeInfo.NORMAL_JACK;
-		}
+		if(id>=0&&id<GamemodeInfo.AVAILABLE.length) return GamemodeInfo.AVAILABLE[id];
 		return GamemodeInfo.UNKNOWN;
 	}
 	
@@ -137,12 +150,13 @@ static {
 
 	//Forces character ownage cache to be synced with the dedicated server
 	public static synchronized boolean fetchOwnedCharacter(int id) {
-		return (ownsCharacter[id]=false);
+		return (ownsCharacter[id]=(id!=1));
 	}
 	
 	//substitute to push method for owned characters
 	public static synchronized void buyCharacter(int id) {
-		
+		//TODO
+		fetchOwnedCharacter(id);
 	}
 	
 	//Gets an integer that indicates the amount of currency owned
@@ -173,5 +187,53 @@ static {
 	
 	//No push method: clients have no permissions to edit the rank
 	//only the server can handle rank calculations
+	
+	//Forces skin ownage cache to be synced with the dedicated server
+	public static synchronized boolean fetchOwnedSkin(int id) {
+		return (ownsSkin[id]=false);
+	}
+	
+	//Gets a boolean that indicates wheter or not a skin is owned either from cache or from the server
+	public static synchronized boolean getOwnedSkin(int id) {
+		if(ownsSkin[id]==null) return fetchOwnedSkin(id);
+		return ownsSkin[id];
+	}
+	
+	//Substitute for push method for owned skins
+	public static synchronized void buySkin(int id) {
+		//TODO
+		fetchOwnedSkin(id);
+	}
+	
+	//Forces the selected skin cache to be synched with the dedicated server
+	public static synchronized int fetchSelectedSkin(int character) {
+		return (selectedSkin[character]=CharacterInfo.AVAILABLE[character].getSkins()[0]);
+	}
+	
+	//Return the skin id of the selected character of the selected gamemode
+	public static synchronized int getSelectedSkin() {
+		if(selectedSkin[getSelectedCharacter()]==-1) return fetchSelectedSkin(getSelectedCharacter());
+		return selectedSkin[getSelectedCharacter()];
+	}
+	
+	//Updates the local value of the selected skin of the selected character of the selected gamemode
+	public static synchronized void setSelectedSkin(int skin) {
+		selectedSkin[getSelectedCharacter()]=skin;
+	}
+	
+	//Updates the selected gamemode info to the server
+	public static synchronized void pushSelectedSkin(int character) {
+		//TODO
+		fetchSelectedSkin(character);
+	}
+
+	public static synchronized SkinInfo getSkin() {
+		return getSkinInfoById(getSelectedSkin());
+	}
+	
+	private static synchronized SkinInfo getSkinInfoById(int id) {
+		if(id>=0&&id<SkinInfo.AVAILABLE.length) return SkinInfo.AVAILABLE[id];
+		return SkinInfo.UNKNOWN;
+	}
 	
 }

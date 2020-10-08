@@ -1,0 +1,28 @@
+{
+	"scale":{
+		"x":[
+			"1f","TO DO FOR ALl 27 FRAMES"
+		],
+		"y":[
+			"1f"
+		]
+	},
+	"hand":{
+		"x":[
+			"0.2f"
+		],
+		"y":[
+			"-0.25f"
+		],
+		"rot":[
+			"-0.61086524f"
+		]
+	},
+	"prefix":"/data/textures/entities/player/dad/longidle",
+	"suffix":".png",
+	"data":[
+		{
+			"tiles":"27"
+		}
+	]
+}

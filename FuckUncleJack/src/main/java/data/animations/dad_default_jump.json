@@ -17,5 +17,12 @@
 		"rot":[
 			"-3.8397238f"
 		]
-	}
+	},
+	"prefix":"/data/textures/entities/player/dad/jump",
+	"suffix":".png",
+	"data":[
+		{
+			"tiles":"1"
+		}
+	]
 }

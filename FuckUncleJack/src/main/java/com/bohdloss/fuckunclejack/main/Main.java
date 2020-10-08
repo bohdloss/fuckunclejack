@@ -13,6 +13,9 @@ public static String ip=true?"localhost":"95.111.250.134";
 public static String name=null;
 
 	public static void main(String[] args) {
+		try {
+			//Thread.sleep(60000);
+		} catch(Exception e) {}
 		PrintListener.setListener(new ArgFunction<Object>(){
 
 			@Override

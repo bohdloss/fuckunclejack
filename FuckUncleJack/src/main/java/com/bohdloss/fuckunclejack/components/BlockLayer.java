@@ -64,8 +64,8 @@ public void render(Shader s, Matrix4f matrix) {
 }
 
 public void tick(float delta) {
-	background.tick(0);
-	top.tick(0);
+	background.tick(delta);
+	top.tick(delta);
 }
 
 public Block getBackground() {

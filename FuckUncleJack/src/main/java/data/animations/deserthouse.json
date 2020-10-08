@@ -1,0 +1,9 @@
+{
+	"prefix":"/data/textures/entities/structures/deserthouse",
+	"suffix":".png",
+	"data":[
+		{
+			"tiles":"29"
+		}
+	]
+}

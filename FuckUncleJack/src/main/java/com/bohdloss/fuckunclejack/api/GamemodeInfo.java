@@ -1,6 +1,6 @@
 package com.bohdloss.fuckunclejack.api;
 
-public class GamemodeInfo {
+public final class GamemodeInfo {
 
 public static final GamemodeInfo[] AVAILABLE;
 	

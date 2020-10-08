@@ -1,12 +1,5 @@
 package com.bohdloss.fuckunclejack.render;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.json.simple.JSONArray;
@@ -17,7 +10,7 @@ import com.bohdloss.fuckunclejack.main.ResourceLoader;
 
 public class Animation {
 
-private int total;
+private int total=0;
 private long last=0;	
 private static Shader gui;
 private static final long wait=250;
@@ -26,62 +19,20 @@ protected int currentIndex=0;
 protected boolean looping;
 private Vector3f[] hand;
 private Vector2f[] scale;
-protected TileSheet[] split;
-private static int statid=0;
-private static final double MAXFRAMES=10d;
+protected TileSheet sheet;
 
 static {
 	gui=Assets.shaders.get("gui");
 }
 
-private void construct(int offset, TileSheet frames, int index) throws Exception{
-	BufferedImage output = new BufferedImage(frames.getTiles()[0].getWidth(), (int)((double)frames.getTiles()[0].getHeight()*(CMath.clampMax((double)offset+MAXFRAMES, (double)frames.getTiles().length)-(double)offset)), BufferedImage.TYPE_INT_ARGB);
-	Graphics g = output.getGraphics();
-	
-	int amo=0;
-	for(int i=offset;i<CMath.clampMax(frames.getTiles().length, offset+MAXFRAMES);i++) {
-		g.drawImage(frames.getTiles()[i], 0, frames.getTiles()[i].getHeight()*(i-offset), null);
-		amo++;
-	}
-	
-	//ImageIO.write(output, "png", new File("C:/Users/Antonio/Desktop/tilesheet"+statid+"i"+index+".png"));
-	
-	split[index]=new TileSheet(output, amo);
-}
-
-public Animation(TileSheet frames, boolean looping, String json) throws Exception{
+public Animation(TileSheet sheet, boolean looping, String json) throws Exception{
 	this.looping=looping;
-	this.total=frames.getAmount();
 	parseJson(json);
-	
-	split=new TileSheet[((int)((double)frames.getAmount()/MAXFRAMES))+1];
-	
-	int remaining=frames.getAmount();
-	int offset=0;
-	int index=0;
-	
-	while(true) {
-		int done = remaining-(int)CMath.clampMin(remaining-MAXFRAMES, 0);
-		
-		if(done==0) break;
-		construct(offset, frames, index);
-		offset+=done;
-		remaining-=done;
-		index++;
-	}
-	statid++;
+	this.sheet=sheet.disposeAll();
 }
 
-public Animation(String path, int amount, boolean looping, String json) throws Exception{
-	this(new TileSheet(path, amount), looping, json);
-}
-
-public Animation(BufferedImage img, int amount, boolean looping, String json) throws Exception{
-	this(new TileSheet(img, amount), looping, json);
-}
-
-public Animation(Texture txt, int amount, boolean looping, String json) throws Exception{
-	this(new TileSheet(txt, amount), looping, json);
+public Animation(String sheet, int amount, boolean looping, String json) throws Exception{
+	this(new TileSheet(sheet, amount).disposeAll(), looping, json);
 }
 
 public void setSpeed(float speed) {
@@ -123,8 +74,7 @@ public void bind() {
 		last=System.currentTimeMillis();
 		calcIndex();
 	}
-	int pick = CMath.fastFloor((double)currentIndex/MAXFRAMES);
-	split[pick].bindTile(gui, (int)(currentIndex-MAXFRAMES*pick));
+	sheet.bindTile(gui, currentIndex);
 }
 
 public boolean isLooping() {

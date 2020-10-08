@@ -34,7 +34,7 @@ private static final float mulConst=25;
 		return this;
 	}
 	
-	private void change(boolean delete) {
+	private void change(BufferedImage img, boolean delete) {
 		
 		if(delete)glDeleteTextures(id);
 		
@@ -86,9 +86,7 @@ private static final float mulConst=25;
 		
 		g.drawString(text, drawx, drawy);
 		
-		img=image;
-		
-		change(id!=-1);
+		change(image, id!=-1);
 	}
 	
 	public void queueUpdate() {

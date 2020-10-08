@@ -147,6 +147,12 @@ static {
 		
 		System.out.println("Rendering started");
 		
+		//int a=0;
+		
+		
+		
+		//while(a==0) {}
+		
 		while(!window.shouldClose()) {
 			loopEvents();
 		}

@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 
 public class CustomEnt {
 
-public BufferedImage txt;
 public String texture;
 public float xscale;
 public float yscale;
