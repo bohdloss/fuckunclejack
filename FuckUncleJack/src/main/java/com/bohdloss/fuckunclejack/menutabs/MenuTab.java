@@ -21,7 +21,6 @@ import com.bohdloss.fuckunclejack.render.Shader;
 
 public class MenuTab implements Tickable{
 	
-public static Point2f mouse=new Point2f(0,0);
 public static MenuTab active;
 public static HashMap<String, MenuTab> tabs = new HashMap<String, MenuTab>();
 
@@ -106,8 +105,6 @@ public void tick(float delta) {
 		onOver();
 	}
 	if(ignoreInput) return;
-	
-	mouse = CMath.mGLCoord(Game.guiScale);
 	
 	components.forEach(component->{
 		component.tick(delta);

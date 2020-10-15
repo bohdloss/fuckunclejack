@@ -187,7 +187,7 @@ static {
 		//render aiming dots for bow-like items
 		
 		if(bowAimDots) {
-			float aimAngle = CMath.oppositeTo(HUD.mpoint);
+			float aimAngle = CMath.oppositeTo(Game.guiMouse);
 			float aimCos = (float)Math.cos(aimAngle);
 			float aimSin = (float)Math.sin(aimAngle);
 			for(int i=0;i<5;i++) {

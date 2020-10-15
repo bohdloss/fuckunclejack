@@ -83,7 +83,7 @@ protected MenuTab owner;
 	public void tick(float delta) {
 		if(!visible|status==DISABLED) return;
 		bounds.setFrame(getX(), getY(), getWidth(), getHeight());
-		boolean intersects = bounds.pIntersects(MenuTab.mouse);
+		boolean intersects = bounds.pIntersects(Game.mouse);
 		
 		switch(status) {
 		case DISABLED:

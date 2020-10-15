@@ -300,11 +300,9 @@ static {
 		
 		//GUI
 		
-		HUD.mpoint=CMath.mGLCoord(Game.guiScale);
-		
 		Button.buttons.forEach(v->{
 			if(v.status!=Button.DISABLED) {
-				if(v.bounds.pIntersects(HUD.mpoint)) {
+				if(v.bounds.pIntersects(Game.guiMouse)) {
 					if(v.status==Button.IDLE) {
 						v.status=Button.HOVERED;
 					}

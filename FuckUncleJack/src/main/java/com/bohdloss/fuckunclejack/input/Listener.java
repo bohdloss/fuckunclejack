@@ -45,7 +45,7 @@ public class Listener implements KeyListen {
 		    			Item item = lPlayer.getInventory().getSelectedItem();
 		    			if(item!=null) {
 		    				if(BowItem.class.isAssignableFrom(item.getClass())) {
-		    					item.onRightClickEnd(HUD.mpoint.x, HUD.mpoint.y, null);
+		    					item.onRightClickEnd(Game.guiMouse.x, Game.guiMouse.y, null);
 		    				}else {
 		    					item.onRightClickEnd(hovx, hovy, null);
 		    				}
@@ -134,7 +134,7 @@ public class Listener implements KeyListen {
 		if(!foundEntityHit) {
 			CRectanglef entframe = v.getBounds();
 			frame.setFrame(entframe.x-(Game.camera.getX()/Game.scaleAmount), entframe.y-(Game.camera.getY()/Game.scaleAmount), entframe.width, entframe.height);
-			if(frame.pIntersects(HUD.gamepoint)) {
+			if(frame.pIntersects(Game.mouse)) {
 				if(v.hit(lPlayer)) {
 					foundEntityHit=true;
 				
@@ -230,7 +230,7 @@ public class Listener implements KeyListen {
 			try {
 				Button.buttons.forEach(v->{
 					if(v.status==Button.PRESSED) {
-						if(v.bounds.pIntersects(HUD.mpoint)) {
+						if(v.bounds.pIntersects(Game.guiMouse)) {
 						v.click();
 						v.status=Button.HOVERED;
 						} else {
@@ -259,7 +259,7 @@ public class Listener implements KeyListen {
 			
 			if(i!=null) {
 				if(BowItem.class.isAssignableFrom(i.getClass())) {
-					i.onRightClickEnd(HUD.mpoint.x, HUD.mpoint.y, null);
+					i.onRightClickEnd(Game.guiMouse.x, Game.guiMouse.y, null);
 				}else {
 					i.onRightClickEnd(hovx, hovy, null);
 				}

@@ -7,7 +7,7 @@ import java.util.Random;
 import com.bohdloss.fuckunclejack.main.Game;
 
 public class CMath {	
-
+	
 	public static double remap(double value, double min1, double max1, double min2, double max2) {
 		return lerp(reverseLerp(value, min1, max1), min2, max2);
 	}
@@ -95,7 +95,7 @@ public class CMath {
 		return (in>=min&max<=max);
 	}
 
-	public static Point2f toGLCoord(float x, float y, float scale) {
+	public static Point2f toGLCoord(float x, float y, float scale, Point2f pointer) {
 			float visiblex, visibley, blockx, blocky;
 			Point2f pos;
 		
@@ -115,12 +115,15 @@ public class CMath {
 			blockx-=visiblex/2f;
 			blocky+=visibley/2f;
 			
-			return new Point2f(blockx, blocky);
+			pointer.x=blockx;
+			pointer.y=blocky;
+			
+			return pointer;
 	}
 	
-	public static Point2f mGLCoord(float scale) {
+	public static Point2f mGLCoord(float scale, Point2f pointer) {
 		Point2f p = Game.window.getCursorPos();
-		return toGLCoord(p.x, p.y, scale);
+		return toGLCoord(p.x, p.y, scale, pointer);
 	}
 	
 	public static boolean random(Random r, int iterations) {

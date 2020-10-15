@@ -18,9 +18,11 @@ import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.input.InputManager;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.menutabs.MenuTab;
+import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.Camera;
 import com.bohdloss.fuckunclejack.render.FontManager;
 import com.bohdloss.fuckunclejack.render.MainEvents;
+import com.bohdloss.fuckunclejack.render.Point2f;
 import com.bohdloss.fuckunclejack.render.Shader;
 
 import static com.bohdloss.fuckunclejack.logic.ClientState.*;
@@ -28,6 +30,9 @@ import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 import javax.swing.JOptionPane;
 
 public final class Game{
+	
+public static Point2f mouse = new Point2f(0,0);
+public static Point2f guiMouse = new Point2f(0,0);
 	
 public static Window window;
 public static InputManager input=new InputManager();
@@ -202,6 +207,9 @@ static {
 		FontManager.renderString(-FontManager.strWidth(fps)/2, 7, Assets.sheets.get("font"), Assets.shaders.get("gui"), camera.unTransformedProjection().mul(guitarget, tempres), Assets.models.get("item"), fps);
 		
 		window.swap();
+		
+		CMath.mGLCoord(scaleAmount, mouse);
+		CMath.mGLCoord(guiScale, guiMouse);
 		
 		if(System.currentTimeMillis()>=lastTime+1000) {
 			fps=frames+" FPS";

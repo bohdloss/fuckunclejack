@@ -30,7 +30,6 @@ public static synchronized long queue(Function<Object> function, boolean ignoreR
 	} else {
 		calls.put(function.getId(), function);
 	}
-	
 	return function.getId();
 }
 
@@ -46,19 +45,19 @@ public static Object waitReturnValue(long funcId) throws Throwable{
 }
 
 public static synchronized boolean hasReturnValue(long funcId) {
-	return hasReturn.contains((Long)funcId);
+	return hasReturn.contains(funcId);
 }
 
 public static synchronized boolean hasException(long funcId) {
-	return hasException.contains((Long)funcId);
+	return hasException.contains(funcId);
 }
 
 public static synchronized Object getReturnValue(long funcId) throws Throwable{
 	if(hasException(funcId)) {
-		hasException.remove((Long)funcId);
+		hasException.remove(funcId);
 		throw exceptions.remove(funcId);
 	} else if(hasReturnValue(funcId)){
-		hasReturn.remove((Long)funcId);
+		hasReturn.remove(funcId);
 		return returnValues.remove(funcId);
 	} else {
 		return null;
@@ -79,7 +78,7 @@ private static synchronized void processFunction(long id, Function<Object> funct
 			returnValues.put(id, ret);
 			hasReturn.add(id);
 		} else {
-			ignoreReturn.remove((Long)id);
+			ignoreReturn.remove(id);
 		}
 	} catch(Throwable e) {
 		hasException.add(id);

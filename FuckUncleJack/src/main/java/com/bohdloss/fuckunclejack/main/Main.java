@@ -1,6 +1,7 @@
 package com.bohdloss.fuckunclejack.main;
 
-import javax.swing.JOptionPane;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.logic.ClientState;
@@ -14,7 +15,7 @@ public static String name=null;
 
 	public static void main(String[] args) {
 		try {
-			//Thread.sleep(60000);
+			new BufferedReader(new InputStreamReader(System.in)).readLine();
 		} catch(Exception e) {}
 		PrintListener.setListener(new ArgFunction<Object>(){
 
@@ -25,13 +26,11 @@ public static String name=null;
 			
 		});
 		
-		boolean set=false;
 		
 		if(args.length>=1) {
 			if(args[0].equals("server")) {
 				GameState.isClient.setValue(false);
 				GameState.isClient.lock();
-				set=true;
 			}
 		}
 			GameState.isClient.setValue(true);

@@ -31,7 +31,6 @@ public static boolean[] button = new boolean[GLFW_MOUSE_BUTTON_LAST];
 public static Listener listener = new Listener();
 
 //cache
-private Point2f pos;
 public double blockx;
 public double blocky;
 public float visiblex;
@@ -135,10 +134,9 @@ public void run() {
 }
 
 public void hoverCalc(float scale) {
-	pos = CMath.mGLCoord(Game.scaleAmount);
 	
-	blockx=CMath.fastFloor(pos.x+camera.getPosition().x/Game.scaleAmount+0.5f);
-	blocky=CMath.fastFloor(pos.y+camera.getPosition().y/Game.scaleAmount+0.5f);
+	blockx=CMath.fastFloor(Game.mouse.x+camera.getPosition().x/Game.scaleAmount+0.5f);
+	blocky=CMath.fastFloor(Game.mouse.y+camera.getPosition().y/Game.scaleAmount+0.5f);
 	
 	ClientState.hover((int)blockx, (int)blocky);
 }
