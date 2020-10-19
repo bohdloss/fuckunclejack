@@ -76,12 +76,14 @@ public static int sel() {
 }
 
 public static void connect(String ip, int port) {
+	fadeToBlack();
 	lWorld=new OverworldWorld("world");
 	lPlayer=new PlayerEntity("bohdloss");
 	IP=ip;
 	PORT=port;
 	state=GAME;
 	Client.disconnected=false;
+	fadeFromBlack();
 }
 
 public static void disconnect() {

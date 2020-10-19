@@ -18,11 +18,13 @@ import com.bohdloss.fuckunclejack.guicomponents.GuiStatistics;
 import com.bohdloss.fuckunclejack.guicomponents.SmoothAnimationPacket;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.main.Assets;
+import com.bohdloss.fuckunclejack.main.Main;
 import com.bohdloss.fuckunclejack.render.Animation;
 import com.bohdloss.fuckunclejack.render.AnimationSet;
 import com.bohdloss.fuckunclejack.render.Label;
 import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Shader;
+import com.bohdloss.fuckunclejack.server.Server;
 
 public class CharacterTab extends MenuTab {
 	
@@ -106,6 +108,12 @@ static {
 				return 0;
 			}
 		}).setMulConst(mulConst).updateSize();
+		GuiButton butPlay = (GuiButton) new GuiButton(this, "Game >", 11.5f, -6, 2.5f, 1.25f, Assets.sheets.get("menubuttons"), new Color(100, 100, 0, 0)).setAction(new Callable<Integer>(){
+			public Integer call() {
+				ClientState.connect(Main.ip, Server.port);
+				return 0;
+			}
+		}).setMulConst(mulConst).updateSize();
 		
 		AnimationPacket back = new SmoothAnimationPacket("back", new Vector4f(), butBack.transformInfo(), 500);
 		AnimationPacket prev = new SmoothAnimationPacket("prev", new Vector4f(), butPrevMode.transformInfo(), 500);
@@ -118,10 +126,11 @@ static {
 		AnimationPacket plname = new SmoothAnimationPacket("plname", new Vector4f(), charname.transformInfo(), 500);
 		AnimationPacket prevs = new SmoothAnimationPacket("prevs", new Vector4f(), butPrevSkin.transformInfo(), 500);
 		AnimationPacket nexts = new SmoothAnimationPacket("nexts", new Vector4f(), butNextSkin.transformInfo(), 500);
+		AnimationPacket play = new SmoothAnimationPacket("play", new Vector4f(), butPlay.transformInfo(), 500);
 		
 		AnimationPacket bar = new SmoothAnimationPacket("bar", new Vector4f(0,9,0,0), new Vector4f(0,6.65f,0,0), 500);
 		
-		fade = new AnimationSystem("character", back, prev, next, player, nextc, prevc, gmlabel, bgdeform, plname, prevs, nexts);
+		fade = new AnimationSystem("character", back, prev, next, player, nextc, prevc, gmlabel, bgdeform, plname, prevs, nexts, play);
 		other = new AnimationSystem("character_other", bar);
 	}
 	
@@ -233,6 +242,11 @@ static {
 		setShader(s, translation, matrix);
 		GuiButton nexts = (GuiButton) components.get(7);
 		nexts.renderNoTransform(s);
+		
+		calcMatrix(fade.animations.get("play").calc());
+		setShader(s, translation, matrix);
+		GuiButton play = (GuiButton) components.get(8);
+		play.renderNoTransform(s);
 		
 		//Render stats bar
 		

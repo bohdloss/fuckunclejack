@@ -20,7 +20,7 @@ import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 public class Client extends Thread{
 
 public static List<GameEvent> events = new ArrayList<GameEvent>();
-public static List<GameEvent> swapBuf = new ArrayList<GameEvent>();
+private static List<GameEvent> swapBuf = new ArrayList<GameEvent>();
 
 public static HashMap<Integer, ChunkRequest> chunkrequest = new HashMap<Integer, ChunkRequest>();
 public static Socket socket;	

@@ -41,7 +41,7 @@ public boolean sendInventory=false;
 
 public List<GameEvent> events = new ArrayList<GameEvent>();
 
-public List<GameEvent> swapBuf = new ArrayList<GameEvent>();
+private List<GameEvent> swapBuf = new ArrayList<GameEvent>();
 
 //CACHE
 private boolean playerDead;

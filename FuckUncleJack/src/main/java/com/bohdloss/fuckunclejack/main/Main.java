@@ -15,7 +15,7 @@ public static String name=null;
 
 	public static void main(String[] args) {
 		try {
-			new BufferedReader(new InputStreamReader(System.in)).readLine();
+			//new BufferedReader(new InputStreamReader(System.in)).readLine();
 		} catch(Exception e) {}
 		PrintListener.setListener(new ArgFunction<Object>(){
 

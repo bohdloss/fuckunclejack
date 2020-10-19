@@ -161,9 +161,9 @@ public class Assets {
 		textures.put("mainleft", new Texture("/data/textures/menus/left.png"));
 		textures.put("mainright", new Texture("/data/textures/menus/right.png"));
 		textures.put("maintitle", new Texture("/data/textures/menus/title.png"));
-		textures.put("battery", new Texture("/data/textures/hud/battery.png"));
-		textures.put("stats_bg", new Texture("/data/textures/hud/stats_bg.png"));
-		textures.put("stats_reflection", new Texture("/data/textures/hud/stats_reflection.png"));
+		textures.put("battery", new Texture("/data/textures/menus/battery.png"));
+		textures.put("stats_bg", new Texture("/data/textures/menus/stats_bg.png"));
+		textures.put("stats_reflection", new Texture("/data/textures/menus/stats_reflection.png"));
 		
 		loadBlocks();
 	}
