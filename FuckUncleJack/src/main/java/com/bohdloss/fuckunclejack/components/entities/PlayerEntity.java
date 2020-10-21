@@ -238,36 +238,22 @@ static {
 			s.setUniform("red", red);
 			s.setProjection(matrix.mul(translation, res));
 			
-			boolean found=false;
-			boolean smallmodel=false;
 			Texture t = Assets.textures.get(i.texture);
+			BlockTexture bt = Assets.blocks.get(i.texture);
+			
+			s.setUniform("gray", i.grayFactor());
 			if(t!=null) {
 				t.bind(0);
-				found=true;
-			} else {
-				BlockTexture load = Assets.blocks.get(i.texture);
-				if(load!=null) {
-					t=load.txt[19];
-					smallmodel=true;
-					found=true;
-				}
+				item.render();
+			} else if(bt!=null){
+				//Adjust to animation offset
+				
+				translation.translate(-0.1f, -0.1f, 0);
+				matrix.mul(translation, res);
+				
+				bt.render(smallItem, s, res);
 			}
-			
-			if(found) {
-				s.setUniform("gray", i.grayFactor());
-				t.bind(0);
-				if(smallmodel) {
-					//Adjust to animation offset
-					
-					translation.translate(-0.1f, -0.1f, 0);
-					s.setProjection(matrix.mul(translation, res));
-					
-					smallItem.render();
-				} else {
-					item.render();
-				}
-				s.setUniform("gray", 0f);
-			}
+			s.setUniform("gray", 0f);
 			
 			s.setUniform("red", false);
 			

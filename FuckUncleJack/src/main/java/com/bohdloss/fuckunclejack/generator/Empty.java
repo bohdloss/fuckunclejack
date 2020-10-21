@@ -14,7 +14,7 @@ public class Empty extends ColumnGenerator {
 	@Override
 	public int heightPhase(OpenSimplexNoise noise, int x, Chunk c) {
 		int height=height(noise, x, c);
-		for(int y=0;y<256;y++) {
+		for(int y=0;y<100;y++) {
 			if(y<=height) {
 				c.blocks[x][y].setTop(new StoneBlock(c, x, y));
 			}

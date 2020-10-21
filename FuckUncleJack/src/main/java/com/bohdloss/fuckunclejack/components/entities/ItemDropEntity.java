@@ -44,8 +44,7 @@ private Model itemmodel;
 		s.setProjection(res);
 		BlockTexture t = Assets.blocks.get(item.getTexture());
 		if(t==null) return;
-		t.txt[19].bind(0);
-		itemmodel.render();
+		t.render(itemmodel, s, res);
 		
 		s.setUniform("red", false);
 		

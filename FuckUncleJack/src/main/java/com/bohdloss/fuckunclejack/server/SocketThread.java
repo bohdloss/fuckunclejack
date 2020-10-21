@@ -251,7 +251,7 @@ public void fillObject() {
 				if(chunk!=null) {
 					BlockLayer[][] layers = chunk.blocks;
 					for(int x=0;x<16;x++) {
-						for(int y=0;y<256;y++) {
+						for(int y=0;y<100;y++) {
 							BlockLayer layer = layers[x][y];
 							buf.putInt(layer.getTop().getId());
 							buf.putInt(layer.getBackground().getId());

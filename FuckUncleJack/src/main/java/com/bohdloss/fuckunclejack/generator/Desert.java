@@ -17,7 +17,7 @@ public class Desert extends ColumnGenerator{
 		
 		int height=height(noise, x, c);
 		
-			for(int y=0;y<255;y++) {
+			for(int y=0;y<100;y++) {
 				
 				height=height(noise, x, c);
 				
@@ -48,7 +48,7 @@ public class Desert extends ColumnGenerator{
 			}
 			int h = height(noise, x, c);
 			int height = heightr.nextInt(3)+1;
-			for(int y=0;y<255;y++) {
+			for(int y=0;y<100;y++) {
 				if(y>h&y<=h+height) {
 					if(spawn) {
 						lastTree=0;

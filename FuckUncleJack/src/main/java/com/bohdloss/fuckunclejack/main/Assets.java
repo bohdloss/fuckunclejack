@@ -42,6 +42,7 @@ public class Assets {
 		try {
 			loadTextures();
 			loadTileSheets();
+			loadBlocks();
 		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Crashed(While loading textures)! :D");
@@ -106,6 +107,7 @@ public class Assets {
 		shaders.put("shader", new Shader("/data/shaders/shader.vs", "/data/shaders/fragment.fs"));
 		shaders.put("gui", new Shader("/data/shaders/gui.vs", "/data/shaders/fragment.fs"));
 		shaders.put("bar", new Shader("/data/shaders/bar.vs", "/data/shaders/barfrag.fs"));
+		shaders.put("block", new Shader("/data/shaders/blockvertex.vs", "/data/shaders/blockfrag.fs"));
 	}
 	
 	private static void loadTextures() throws Exception{
@@ -164,8 +166,6 @@ public class Assets {
 		textures.put("battery", new Texture("/data/textures/menus/battery.png"));
 		textures.put("stats_bg", new Texture("/data/textures/menus/stats_bg.png"));
 		textures.put("stats_reflection", new Texture("/data/textures/menus/stats_reflection.png"));
-		
-		loadBlocks();
 	}
 	
 	private static void loadTileSheets() throws Exception{
@@ -173,6 +173,7 @@ public class Assets {
 		
 		sheets.put("buttons", new TileSheet(textures.get("hud_buttons"), 4).disposeAll());
 		sheets.put("font", FontManager.load(new Font("Arial", 1, 32), new Color(127,127,127,255)).disposeAll());
+		sheets.put("blockborder", new TileSheet("/data/textures/blocks/assets/border.png", 15).disposeAll());
 		
 		sheets.put("menubuttons", new TileSheet("/data/textures/menus/buttons/buttonsheet.png", 27));
 		sheets.put("metalbuttons", new TileSheet("/data/textures/menus/buttons/metalsheet.png", 27));

@@ -2,12 +2,16 @@ package com.bohdloss.fuckunclejack.components;
 
 import static com.bohdloss.fuckunclejack.render.CMath.*;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.Random;
 
 import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.main.Assets;
+import com.bohdloss.fuckunclejack.render.BlockTexture;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.Model;
 import com.bohdloss.fuckunclejack.render.Shader;
@@ -26,9 +30,20 @@ private Chunk chunk;
 private Texture hovered;
 private Model model;
 
-//faster GC
-private Matrix4f res=new Matrix4f();
+//cache
+private static Matrix4f res;
+private static Shader blockS;
+private static Texture empty;
+private static FloatBuffer lightBuffer;
+private int[][] lightPosCache;
 //end
+
+static {
+	res = new Matrix4f();
+	blockS = Assets.shaders.get("block");
+	empty = Assets.textures.get("empty");
+	lightBuffer = BufferUtils.createFloatBuffer(9);
+}
 
 public static float grayf=0;
 
@@ -47,20 +62,55 @@ public BlockLayer(Block background, Block top) {
 }
 	
 public void render(Shader s, Matrix4f matrix) {
-	//float sin = (float)CMath.remap(Math.sin(grayf), -1, 1, 0, 1);
 	
 	res = matrix.translate(worldx, y, 0f, res);
 	s.setProjection(res);
-	//s.setUniform("gray", sin);
 	if(top.opaque) {
-		background.render(s, matrix, chunk.lightmap.values[x][y]);
+		background.render(s, res, BlockTexture.NOSIDES);
 	}
-	top.render(s, matrix, chunk.lightmap.values[x][y]);
-	//s.setUniform("gray", 0f);
+	top.render(s, res, chunk.lightmap.sides[x][y]);
 	if(ClientState.hovx==worldx&ClientState.hovy==y) {
 		hovered.bind(0);
 		model.render();
 	}
+	
+	//First fill the light buffer with data from
+	//the lightmap
+	
+	fillLightBuffer();
+	
+	//Now bind block shader and draw black shader
+	//This simulates shadow using interpolation
+	//of the alpha channel
+	
+	blockS.bind();
+	blockS.setProjection(res);
+	blockS.setUniform("light_uniform", lightBuffer);
+	
+	empty.bind(0);
+	model.render();
+	
+	s.bind();
+}
+
+private void fillLightBuffer() {
+	
+	lightBuffer.rewind();
+	
+	lightBuffer.put(chunk.lightmap.get(x-1, y-1));
+	lightBuffer.put(chunk.lightmap.get(x, y-1));
+	lightBuffer.put(chunk.lightmap.get(x+1, y-1));
+	
+	lightBuffer.put(chunk.lightmap.get(x-1, y));
+	lightBuffer.put(chunk.lightmap.get(x, y));
+	lightBuffer.put(chunk.lightmap.get(x+1, y));
+	
+	lightBuffer.put(chunk.lightmap.get(x-1, y+1));
+	lightBuffer.put(chunk.lightmap.get(x, y+1));
+	lightBuffer.put(chunk.lightmap.get(x+1, y+1));
+	
+	lightBuffer.rewind();
+	
 }
 
 public void tick(float delta) {

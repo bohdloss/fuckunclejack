@@ -10,7 +10,6 @@ import com.bohdloss.fuckunclejack.main.ResourceLoader;
 
 public class Animation {
 
-private int total=0;
 private long last=0;	
 private static Shader gui;
 private static final long wait=250;
@@ -49,7 +48,7 @@ public void clear() {
 }
 
 private void calcIndex() {
-	if(currentIndex==total-1) {
+	if(currentIndex==sheet.getAmount()-1) {
 		if(looping) {
 		currentIndex=0;
 		}
@@ -59,11 +58,11 @@ private void calcIndex() {
 }
 
 public Vector3f getHandPosition() {
-	return hand[(int)CMath.clamp(currentIndex, 0, total)];
+	return hand[(int)CMath.clamp(currentIndex, 0, sheet.getAmount())];
 }
 
 public Vector2f getScale() {
-	return scale[(int)CMath.clamp(currentIndex, 0, total)];
+	return scale[(int)CMath.clamp(currentIndex, 0, sheet.getAmount())];
 }
 
 public void bind() {

@@ -6,10 +6,12 @@ import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import com.bohdloss.fuckunclejack.main.ResourceLoader;
 
@@ -24,7 +26,7 @@ private int vs;
 	
 public static final String PROJECTION = "projection";
 
-//Variables to reduce time taken by GC
+//cache
 private int uniformlocation;
 private FloatBuffer floatbuffer=BufferUtils.createFloatBuffer(16);
 
@@ -105,6 +107,13 @@ public void setUniform(String name, Color c) {
 	uniformlocation = glGetUniformLocation(program, name);
 	if(uniformlocation!=-1) {
 		glUniform4f(uniformlocation, c==NO_COLOR?-1:(float)c.getRed()/255f, (float)c.getGreen()/255f, (float)c.getBlue()/255f, (float)c.getAlpha()/255f);
+	}
+}
+
+public void setUniform(String name, FloatBuffer buffer) {
+	uniformlocation = glGetUniformLocation(program, name);
+	if(uniformlocation!=-1) {
+		glUniform1fv(uniformlocation, buffer);
 	}
 }
 

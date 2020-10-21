@@ -3,32 +3,36 @@ package com.bohdloss.fuckunclejack.components;
 import org.joml.Matrix4f;
 
 import com.bohdloss.fuckunclejack.components.blocks.AirBlock;
-import com.bohdloss.fuckunclejack.components.items.BlockItem;
-import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
-import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
-import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.Shader;
+
+import static com.bohdloss.fuckunclejack.logic.ClientState.*;
+import static com.bohdloss.fuckunclejack.render.CMath.*;
 
 public class Chunk implements Tickable{
 	
-public BlockLayer[][] blocks = new BlockLayer[16][256];
+public BlockLayer[][] blocks = new BlockLayer[16][100];
 protected int offsetx;
 protected World world;
 
-public LightMap lightmap;
+public MetaData lightmap;
+
+//cache
+private int off;
+//
 
 public Chunk(World world, int offsetx) {
 	this.world=world;
 	this.offsetx=offsetx;
 	for(int x=0;x<16;x++) {
-		for(int y=0;y<256;y++) {
+		for(int y=0;y<100;y++) {
 			blocks[x][y]=new BlockLayer(new AirBlock(this, x, y), new AirBlock(this, x, y));
 		}
 	}
-	lightmap=new LightMap(this);
+	lightmap=new MetaData(this);
+	off=offsetx*16;
 }
 
 public World getWorld() {
@@ -41,6 +45,7 @@ public int getOffsetx() {
 
 public void setOffsetx(int x) {
 	offsetx=x;
+	off=offsetx*16;
 }
 
 
@@ -49,8 +54,8 @@ public void render(Shader s, Matrix4f matrix) {
 	if(getWorld().needsLightmap) lightmap.calculate();
 	
 	for(int x=0;x<16;x++) {
-		for(int y=0;y<256;y++) {
-			if(CMath.distance2((double)x+offsetx*16, (double)y, ClientState.lPlayer.getX(), ClientState.lPlayer.getY())>ClientState.drawDistance) continue;
+		for(int y=0;y<100;y++) {
+			if(diff(off+x, lPlayer.getX()) > xdrawDistance || diff(y, lPlayer.getY()) > ydrawDistance) continue;
 			blocks[x][y].render(s, matrix);
 		}
 	}
@@ -58,7 +63,7 @@ public void render(Shader s, Matrix4f matrix) {
 
 public void tick(float delta) {
 	for(int x=0;x<16;x++) {
-		for(int y=0;y<256;y++) {
+		for(int y=0;y<100;y++) {
 			blocks[x][y].tick(delta);
 		}
 	}

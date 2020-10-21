@@ -33,13 +33,16 @@ protected boolean opaque;
 protected float hardness;
 
 private BlockTexture txt;
-private Texture bg;
-private Model model;
 	
-//GC
+//cache
 protected Matrix4f res=new Matrix4f();
 protected Vector3f vector = new Vector3f(0,0,0);
+private static Model model;
 //end
+
+static {
+	model=Assets.models.get("square");
+}
 
 public Block(Chunk chunk, int chunkx, int y, String texture) {
 	this.chunk=chunk;
@@ -52,15 +55,12 @@ public Block(Chunk chunk, int chunkx, int y, String texture) {
 	vector.y=y;
 	bounds = new CRectanglef(worldx-0.5f, y-0.5f, 1f, 1f);
 	txt=Assets.blocks.get(texture);
-	bg=Assets.textures.get("background_block");
-	model=Assets.models.get("square");
 }
 
 
 
 public void render(Shader s, Matrix4f input, int index) {
-	txt.txt[(int)CMath.clamp(background?index-5:index, 0, 19)].bind(0);
-	model.render();
+	txt.render(model, s, input, index);
 }
 
 public CRectanglef getBounds() {

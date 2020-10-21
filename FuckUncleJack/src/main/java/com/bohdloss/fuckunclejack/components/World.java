@@ -1,7 +1,5 @@
 package com.bohdloss.fuckunclejack.components;
 
-import static com.bohdloss.fuckunclejack.logic.GameState.dimensions;
-
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -153,26 +151,20 @@ static {
 	}
 	
 	public void render(Shader s, Matrix4f matrix) {
-		BlockLayer.grayf+=0.05f;
-		renderBackground(s, matrix);
-		try {
-			entities.forEach((k,v)->{
-				if(CMath.distance2((double)v.getX(), (double)v.getY(), ClientState.lPlayer.getX(), ClientState.lPlayer.getY())<ClientState.drawDistance) {
-				v.render(s, matrix);
-				}
-			
-			});
-			} catch(ConcurrentModificationException e) {}
 		while(true) {
 			try {
-					chunks.forEach((k,v)->v.render(s, matrix));
-					break;
+				renderBackground(s, matrix);
+				entities.forEach((k,v)->{
+					if(CMath.diff(ClientState.lPlayer.getX(), v.getX()) < ClientState.xdrawDistance && CMath.diff(ClientState.lPlayer.getY(), v.getY()) < ClientState.ydrawDistance) {
+						v.render(s, matrix);
+					}
+				});
+				chunks.forEach((k,v)->v.render(s, matrix));
+				player.forEach((k,v)->v.render(s, matrix));
+				
+				break;
 			} catch(ConcurrentModificationException e) {}
 		}
-		try {
-		player.forEach((k,v)->v.render(s, matrix));
-		} catch(ConcurrentModificationException e) {}
-		
 	}
 	
 	public World(long seed, String name) {

@@ -22,7 +22,7 @@ public ColumnGenerator(long seed, WorldGenerator gen) {
 	public abstract int height(OpenSimplexNoise noise, int x, Chunk c);
 	
 	public void cavePhase(OpenSimplexNoise noise, int x, Chunk c) {
-			for(int y=0;y<255;y++) {
+			for(int y=0;y<100;y++) {
 				double divide=7d;
 				int n = roundNoise(noise.eval((double)x/divide+(double)c.getOffsetx()*16d/divide, (double)y/divide), 10, 60);
 /*					if(y>50){

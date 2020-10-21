@@ -222,7 +222,7 @@ private static Object[] data=null;
 					if(CH_OK) {
 					CH_GEN = new Chunk(lWorld, CH_CUR);
 						for(int x=0;x<16;x++) {
-							for(int y=0;y<256;y++) {
+							for(int y=0;y<100;y++) {
 								int CH_BLOCK_ID = buf.getInt();
 								int CH_BLOCK_BG_ID = buf.getInt();
 								CH_GEN.blocks[x][y].setTop(genBlockByIdChunk(CH_BLOCK_ID, CH_GEN, x, y));

@@ -19,9 +19,11 @@ import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.main.Game;
+import com.bohdloss.fuckunclejack.main.Main;
 import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.render.Point2f;
+import com.bohdloss.fuckunclejack.server.Server;
 
 public class InputManager extends Thread implements Tickable{
 
@@ -99,6 +101,13 @@ public void gameUpdate(float delta) {
 	} else {
 		ClientState.lPlayer.setRunning(false);
 	}
+	/*if(keys[GLFW_KEY_B]) {
+		if(ClientState.lWorld!=null) {
+			ClientState.lWorld.chunks.forEach((k,v)->{
+				v.lightmap.calculate();
+			});
+		}
+	}*/
 	
 	}
 }
@@ -108,7 +117,8 @@ public void run() {
 	FUJApi.init();
 	MenuTab.init();
 	hud=new HUD();
-	ClientState.showMenu(false, true, "main");
+	//ClientState.showMenu(false, true, "main");
+	ClientState.connect(Main.ip, Server.port);
 	while(true) {
 		
 		long current = System.currentTimeMillis();

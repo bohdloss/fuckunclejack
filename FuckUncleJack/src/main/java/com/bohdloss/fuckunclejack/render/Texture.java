@@ -23,6 +23,16 @@ public static List<WeakReference<Texture>> getInstances() {
 	return instances;
 }
 
+public Texture disposeAll(boolean gc) {
+	glDeleteTextures(id);
+	if(gc) System.gc();
+	return this;
+}
+
+public Texture disposeAll() {
+	return disposeAll(false);
+}
+
 public Texture(BufferedImage img, boolean keepImg) {
 	if(img!=null) {
 	int w=img.getWidth();
@@ -67,7 +77,7 @@ public Texture(BufferedImage img) {
 }
 
 public void bind(int sampler) {
-	if(sampler >=0 & sampler<=31) {
+	if(sampler >=0 && sampler<=31 && id!=-1) {
 	glActiveTexture(GL_TEXTURE0+sampler);
 	glBindTexture(GL_TEXTURE_2D, id);
 	}

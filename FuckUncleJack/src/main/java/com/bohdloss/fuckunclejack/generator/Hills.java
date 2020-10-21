@@ -16,7 +16,7 @@ public class Hills extends ColumnGenerator{
 	@Override
 	public int heightPhase(OpenSimplexNoise noise, int x, Chunk c) {
 		int height=0;
-			for(int y=0;y<255;y++) {
+			for(int y=0;y<100;y++) {
 				height=height(noise, x, c);
 				if(y<height) {
 					c.blocks[x][y].setTop(new DirtBlock(c, x, y));

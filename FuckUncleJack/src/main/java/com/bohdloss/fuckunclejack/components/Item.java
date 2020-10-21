@@ -150,39 +150,34 @@ public void render(Shader s, Matrix4f matrix, float x, float y, boolean showInfo
 	res = matrix.mul(translate, res);
 	s.setProjection(res);
 	
-	boolean found=false;
-		Texture t = Assets.textures.get(texture);
-		if(t!=null) {
-			t.bind(0);
-			found=true;
-		} else {
-			BlockTexture load = Assets.blocks.get(texture);
-			if(load!=null) {
-				load.txt[19].bind(0);
-				found=true;
-			}
-		}
-		if(found) {
-		s.setUniform("gray", grayFactor());
-		itemm.render();
-		s.setUniform("gray", 0f);
-		}
-		if(showInfo&amount>1) {
-			char[] chars = (""+amount).toCharArray();
-			smallrectt.bind(0);
-			float calcx=x;
-			if(chars.length==1) {
-				smallrect.render();
-			} else if(chars.length==2) {
-				rect.render();
-				calcx-=0.125f;
-			} else {
-				bigrect.render();
-				calcx-=0.25f;
-			}
+	Texture t = Assets.textures.get(texture);
+	BlockTexture bt = Assets.blocks.get(texture);
 		
-			FontManager.renderString(calcx, y, sheet, gui, matrix, slot, ""+amount);
+	s.setUniform("gray", grayFactor());
+	if(t!=null) {
+		t.bind(0);
+		itemm.render();
+	} else if(bt!=null) {
+		bt.render(itemm, s, res);
+	}
+	s.setUniform("gray", 0f);
+		
+	if(showInfo&amount>1) {
+		char[] chars = (""+amount).toCharArray();
+		smallrectt.bind(0);
+		float calcx=x;
+		if(chars.length==1) {
+			smallrect.render();
+		} else if(chars.length==2) {
+			rect.render();
+			calcx-=0.125f;
+		} else {
+			bigrect.render();
+			calcx-=0.25f;
 		}
+		
+		FontManager.renderString(calcx, y, sheet, gui, matrix, slot, ""+amount);
+	}
 		s.bind();
 }
 

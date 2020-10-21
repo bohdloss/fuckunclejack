@@ -26,7 +26,8 @@ public static Editor editor;
 public static World lWorld;
 public static PlayerEntity lPlayer;
 
-public static final double drawDistance=20*20;
+public static final double xdrawDistance=20;
+public static final double ydrawDistance=10;
 
 public static HouseEntity nearHouse;
 public static boolean nearHouseB=false;
