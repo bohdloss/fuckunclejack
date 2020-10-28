@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.concurrent.Callable;
 
+import javax.swing.JOptionPane;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -110,7 +112,7 @@ static {
 		}).setMulConst(mulConst).updateSize();
 		GuiButton butPlay = (GuiButton) new GuiButton(this, "Game >", 11.5f, -6, 2.5f, 1.25f, Assets.sheets.get("menubuttons"), new Color(100, 100, 0, 0)).setAction(new Callable<Integer>(){
 			public Integer call() {
-				ClientState.connect(Main.ip, Server.port);
+				ClientState.connect(Main.ip, Server.port, JOptionPane.showInputDialog("Choose a name: "));
 				return 0;
 			}
 		}).setMulConst(mulConst).updateSize();

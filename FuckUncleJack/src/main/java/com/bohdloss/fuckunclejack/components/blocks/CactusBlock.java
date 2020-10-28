@@ -30,10 +30,10 @@ public class CactusBlock extends Block{
 	public void tick(float delta) {
 		super.tick(delta);
 		if(GameState.isClient.getValue()) return;
-		boolean airBackground = chunk.blocks[chunkx][y-1].getBackground() instanceof AirBlock;
 		boolean airTop = chunk.blocks[chunkx][y-1].getTop() instanceof AirBlock;
+		boolean bgTop = chunk.blocks[chunkx][y-1].getBackground() instanceof AirBlock;
 		
-		if(airTop&airBackground) {
+		if(airTop&&bgTop) {
 			chunk.destroyBlock(GameEvent.tickDestroy, null, worldx, y, this.isBackground(), true);
 		}
 	}

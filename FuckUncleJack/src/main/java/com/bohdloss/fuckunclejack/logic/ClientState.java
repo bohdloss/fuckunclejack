@@ -77,9 +77,13 @@ public static int sel() {
 }
 
 public static void connect(String ip, int port) {
+	connect(ip, port, "Player");
+}
+
+public static void connect(String ip, int port, String name) {
 	fadeToBlack();
 	lWorld=new OverworldWorld("world");
-	lPlayer=new PlayerEntity("bohdloss");
+	lPlayer=new PlayerEntity(name);
 	IP=ip;
 	PORT=port;
 	state=GAME;

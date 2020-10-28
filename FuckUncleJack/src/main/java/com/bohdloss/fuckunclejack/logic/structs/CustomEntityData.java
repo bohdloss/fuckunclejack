@@ -1,10 +1,8 @@
-package com.bohdloss.fuckunclejack.editor;
-
-import java.awt.image.BufferedImage;
+package com.bohdloss.fuckunclejack.logic.structs;
 
 import org.json.simple.JSONObject;
 
-public class CustomEnt {
+public class CustomEntityData {
 
 public String texture;
 public float xscale;

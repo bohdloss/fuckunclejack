@@ -22,6 +22,8 @@ public class HouseGenerator extends WorldGenerator {
 	public Chunk generateChunk(int offsetx) {
 		Chunk res = new Chunk(world, offsetx);
 		
+		
+		
 		return res;
 	}
 	

@@ -105,15 +105,11 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 			e.printStackTrace();
 		}
 		
-/*		if(send&!event.isCancelled()) {
+		if(send&!event.isCancelled()) {
 			if(GameState.isClient.getValue()) {
 				Client.events.add(event);
-			} else {
-				Server.threads.forEach(t -> {
-					t.events.add(event);
-				});
 			}
-		} */
+		}
 		
 		return event;
 	}

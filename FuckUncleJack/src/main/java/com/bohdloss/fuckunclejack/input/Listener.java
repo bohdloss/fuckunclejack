@@ -123,6 +123,9 @@ public class Listener implements KeyListen {
 			if(state==GAME) ClientState.disconnect();
 			ClientState.showMenu(false, true, MenuTab.active.getName());
 			break;
+		case GLFW_KEY_Q:
+			lPlayer.getInventory().dropSelectedItem();
+			break;
 		}
 	}
 

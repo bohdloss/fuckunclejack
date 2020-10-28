@@ -17,12 +17,12 @@ protected static Matrix4f translate=new Matrix4f();
 	public DeserthouseWorld(long seed, String name) {
 		super(seed, name);
 		generator=new HouseGenerator(this, seed);
-		needsLightmap=false;
+		needsLightmap=true;
 	}
 
 	public DeserthouseWorld(String name) {
 		super(name);
-		needsLightmap=false;
+		needsLightmap=true;
 	}
 
 	@Override

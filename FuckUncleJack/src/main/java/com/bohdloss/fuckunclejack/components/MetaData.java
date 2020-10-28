@@ -3,19 +3,31 @@ package com.bohdloss.fuckunclejack.components;
 import java.util.ArrayList;
 import java.util.List;
 import static com.bohdloss.fuckunclejack.render.CMath.*;
+
+import org.joml.Vector3f;
 import org.joml.Vector3i;
+import org.joml.Vector4f;
 
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.render.BlockTexture;
 import com.bohdloss.fuckunclejack.render.CMath;
 
+import sun.misc.Cache;
+
 public class MetaData {
 
+public static float MINLIGHT=0.05f;
+public static float MAXLIGHT=1;
+	
 public float[][] values = new float[16][100];
 public int[][] sides = new int[16][100];
 
-private List<Vector3i> sources = new ArrayList<Vector3i>();
-	
+//X, Y, RANGE, INTENSITY
+private static List<Vector4f> sources = new ArrayList<Vector4f>();
+private static Vector4f cache1 = new Vector4f();
+private static Vector4f cache2 = new Vector4f();	
+private static Vector4f cache3 = new Vector4f();	
+
 public Chunk origin;
 
 private int x;
@@ -30,6 +42,10 @@ private Block[] surrounding=new Block[9];
 
 public MetaData(Chunk origin) {
 	this.origin=origin;
+}
+
+public static void calculateStatic() {
+	calcSources();
 }
 
 public float get(int x, int y) {
@@ -47,27 +63,32 @@ public float get(int x, int y) {
 }
 
 public void lights() {
-	calcSources();
 	
 	outer:
 	for(x=0;x<16;x++) {
+		inner:
 		for(y=0;y<100;y++) {
 			if (sources.size()==0) break outer;
-			if(CMath.distance2((double)x+origin.getOffsetx()*16, (double)y, ClientState.lPlayer.getX(), ClientState.lPlayer.getY())>ClientState.xdrawDistance) continue;
-			
-			origin.world.chunks.forEach((k,v)->{
-			
-			Object[] s=v.lightmap.sources.toArray();
+				
+			Object[] s=sources.toArray();
 			float result=0;
 			for(int i=0;i<s.length;i++) {
-				Vector3i cur =(Vector3i)s[i];
-				double first = clamp((float)distance(x+origin.getOffsetx()*16, y, cur.x, cur.y)/cur.z, 0, 1);
-				double second = lerp((-first)+1, 0, 20);
-				result=(float)clamp((float)(result+second), 0f, (float)19);
+				Vector4f cur =(Vector4f)s[i];
+				
+				if(diff(cur.x, x+origin.offsetx*16)>cur.z) {
+					continue;
+				}
+				if(diff(cur.y, y)>cur.z) {
+					continue;
+				}
+				
+				double dist = distance(cur.x, cur.y, x+origin.offsetx*16, y);
+				
+				double remap = remap(dist, 0, cur.z, cur.w, 0);
+				
+				result=result+(float)remap;
 			}
-			values[x][y]=fastFloor(result);
-			
-			});
+			values[x][y]=(float)clamp(result, MINLIGHT, MAXLIGHT);
 			
 		}
 	}
@@ -165,8 +186,13 @@ public void borders() {
 	}
 }
 
-private void calcSources() {
+private static void calcSources() {
 	sources.clear();
+	cache1.x=ClientState.lPlayer.getX();
+	cache1.y=ClientState.lPlayer.getY();
+	cache1.z=4;
+	cache1.w=1f;
+	sources.add(cache1);
 }
 
 private void calcSunlight() {
@@ -185,7 +211,7 @@ private void calcSunlight() {
 			}
 			if(lerp){
 				double remap = reverseLerp(y, lerpstart-3, lerpstart);
-				values[x][y]=(float)remap;
+				values[x][y]=(float)max(values[x][y], remap);
 			}
 		}
 		

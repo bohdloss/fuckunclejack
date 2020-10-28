@@ -199,6 +199,12 @@ public class DataHandler {
 							e_SSCE_I.onRightClickEnd(e_SSTE_ARGX, e_SSTE_ARGY, null);
 						}
 					break;
+					case ItemDroppedEvent:
+						buf.getInt();
+						
+						input.player.getInventory().dropSelectedItem();
+						input.sendInventory=true;
+					break;
 					}
 					
 				}
@@ -223,7 +229,6 @@ public class DataHandler {
 				ProjectileEntity spawning = new ProjectileEntity("arrow", input.player);
 				spawning.setVelocity(0.2f, 0.2f);
 				input.player.getWorld().join(spawning, input.player.getX(), input.player.getY()+5);
-				System.out.println("spawned");
 			break;
 			}
 		}

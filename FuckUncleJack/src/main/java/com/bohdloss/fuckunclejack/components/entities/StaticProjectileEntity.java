@@ -20,6 +20,7 @@ private Object[] data = new Object[2];
 		collision=false;
 		width=1;
 		height=1;
+		prioritizeRender=true;
 		updateBounds();
 	}
 

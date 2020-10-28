@@ -94,8 +94,12 @@ private CRectanglef ebounds;
 		default: e.cancel("nocause");
 		case groundPick:
 		
-		
 			//In case the item is being picked up from an Item Drop on the ground
+			
+			if(e.getEntity().pickDelay>0) {
+				e.cancel();
+				return;
+			}
 			
 			double distance = CMath.distance(e.getIssuer().getX(), e.getIssuer().getY(), e.getEntity().getX(), e.getEntity().getY());
 			

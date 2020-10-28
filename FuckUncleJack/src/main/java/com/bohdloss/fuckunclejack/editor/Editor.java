@@ -25,6 +25,7 @@ import com.bohdloss.fuckunclejack.hud.Button;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.FunctionUtils;
+import com.bohdloss.fuckunclejack.logic.structs.CustomEntityData;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.CMath;
@@ -48,13 +49,13 @@ public static Texture usedtxt;
 public static float xscale=1;
 public static float yscale=1;
 public static boolean vertical=false;
-public static List<CustomEnt> customs = new ArrayList<CustomEnt>();
+public static List<CustomEntityData> customs = new ArrayList<CustomEntityData>();
 
 public static List<Integer> normalids = new ArrayList<Integer>();
 public static List<Float> normx = new ArrayList<Float>();
 public static List<Float> normy = new ArrayList<Float>();
 
-public static CustomEnt custEnt;
+public static CustomEntityData custEnt;
 public static int curID;
 public static Entity curEnt;
 public static boolean savedPhysics;
@@ -84,7 +85,7 @@ static {
 	new Button("new entity",-9,6).setAction(new Callable<Integer>() {
 		public Integer call() {
 			if(state==EDITMODE&status==READY) {
-				custEnt = new CustomEnt();
+				custEnt = new CustomEntityData();
 				customs.add(custEnt);
 				custEnt.collision=JOptionPane.showInputDialog("true/false has collision").equals("true");
 				custEnt.physics=JOptionPane.showInputDialog("true/false has physics").equals("true");

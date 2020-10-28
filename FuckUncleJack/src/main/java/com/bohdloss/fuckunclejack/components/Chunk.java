@@ -48,7 +48,6 @@ public void setOffsetx(int x) {
 	off=offsetx*16;
 }
 
-
 public void render(Shader s, Matrix4f matrix) {
 
 	if(getWorld().needsLightmap) lightmap.calculate();

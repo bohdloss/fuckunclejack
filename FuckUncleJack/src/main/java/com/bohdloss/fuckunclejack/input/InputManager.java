@@ -13,6 +13,7 @@ import static com.bohdloss.fuckunclejack.logic.ClientState.*;
 import com.bohdloss.fuckunclejack.api.CharacterInfo;
 import com.bohdloss.fuckunclejack.api.FUJApi;
 import com.bohdloss.fuckunclejack.api.GamemodeInfo;
+import com.bohdloss.fuckunclejack.client.Client;
 import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.Tickable;
 import com.bohdloss.fuckunclejack.hud.HUD;
@@ -95,7 +96,9 @@ public void gameUpdate(float delta) {
 		ClientState.lPlayer.y=80f;
 		ClientState.lPlayer.updateBounds();
 	}
-	
+	if(keys[GLFW_KEY_P]) {
+		Client.sendDebug=true;
+	}
 	if(keys[GLFW_KEY_LEFT_SHIFT]) {
 		ClientState.lPlayer.setRunning(true);
 	} else {

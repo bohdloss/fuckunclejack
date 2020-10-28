@@ -39,6 +39,7 @@ protected List<Integer> used = new ArrayList<Integer>();
 protected int getChunk;
 protected static Model square;
 protected Texture bg;
+private ArrayList<Entity> priority = new ArrayList<Entity>();
 //
 
 static {
@@ -151,15 +152,22 @@ static {
 	}
 	
 	public void render(Shader s, Matrix4f matrix) {
+		priority.clear();
 		while(true) {
 			try {
 				renderBackground(s, matrix);
 				entities.forEach((k,v)->{
 					if(CMath.diff(ClientState.lPlayer.getX(), v.getX()) < ClientState.xdrawDistance && CMath.diff(ClientState.lPlayer.getY(), v.getY()) < ClientState.ydrawDistance) {
-						v.render(s, matrix);
+						if(!v.prioritizeRender) {
+							v.render(s, matrix);
+						} else {
+						priority.add(v);
+						}
 					}
 				});
+				MetaData.calculateStatic();
 				chunks.forEach((k,v)->v.render(s, matrix));
+				priority.forEach(v->v.render(s, matrix));
 				player.forEach((k,v)->v.render(s, matrix));
 				
 				break;

@@ -35,6 +35,7 @@ static {
 		this.yscale=yscale;
 		invulnerable=true;
 		txt=Assets.textures.get(texture);
+		prioritizeRender=true;
 		updateBounds();
 	}
 

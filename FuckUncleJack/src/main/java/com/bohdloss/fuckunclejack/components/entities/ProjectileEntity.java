@@ -26,6 +26,7 @@ public class ProjectileEntity extends Entity {
 		collision=false;
 		width=1;
 		height=1;
+		prioritizeRender=true;
 		updateBounds();
 		this.owner=owner;
 	}

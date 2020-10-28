@@ -28,6 +28,7 @@ public static Timer timer = new Timer();
 	
 //client only
 public boolean red=false;
+public boolean prioritizeRender;
 //
 
 public boolean dying = false;

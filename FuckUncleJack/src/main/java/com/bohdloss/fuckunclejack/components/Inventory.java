@@ -1,9 +1,14 @@
 package com.bohdloss.fuckunclejack.components;
 
+import com.bohdloss.fuckunclejack.components.entities.ItemDropEntity;
+import com.bohdloss.fuckunclejack.components.items.BowItem;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
+import com.bohdloss.fuckunclejack.logic.FunctionUtils;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.logic.events.AddInvItemEvent;
+import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
+import com.bohdloss.fuckunclejack.main.Game;
 
 public class Inventory {
 
@@ -103,6 +108,21 @@ public void addItem(Item in, boolean ignoreCheck) {
 	if(!found) {
 		//NO ROOM IN INVENTORY;
 		//TODO: DROP ITEM
+	}
+	
+}
+
+public void dropSelectedItem() {
+	if(!EventHandler.itemDropped(GameState.isClient.getValue(), new ItemDroppedEvent(GameEvent.invDrop, owner, getSelectedItem())).isCancelled()) {
+		if(!GameState.isClient.getValue()) {
+			ItemDropEntity ide = (ItemDropEntity) FunctionUtils.genItemEntity(getSelectedItem());
+			ide.pickDelay=2000;
+			if(getSelectedItem()!=null && BowItem.class.isAssignableFrom(getSelectedItem().getClass())) {
+				getSelectedItem().onRightClickEnd(Game.guiMouse.x, Game.guiMouse.y, null);
+			}
+			owner.getWorld().join(ide, owner.getX(), owner.getY());
+			slots[selected].setContent(null);
+		}
 	}
 	
 }

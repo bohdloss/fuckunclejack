@@ -19,6 +19,7 @@ import com.bohdloss.fuckunclejack.render.Texture;
 public class ItemDropEntity extends Entity {
 
 protected Item item;
+public long pickDelay;
 
 //GC
 private Matrix4f res=new Matrix4f();
@@ -33,6 +34,7 @@ private Model itemmodel;
 		width=0.8f;
 		height=0.8f;
 		invulnerable=true;
+		prioritizeRender=true;
 		updateBounds();
 	}
 
@@ -42,9 +44,14 @@ private Model itemmodel;
 		
 		res = input.translate(x, y, 0, res);
 		s.setProjection(res);
-		BlockTexture t = Assets.blocks.get(item.getTexture());
-		if(t==null) return;
-		t.render(itemmodel, s, res);
+		BlockTexture bt = Assets.blocks.get(item.getTexture());
+		Texture t = Assets.textures.get(item.getTexture());
+		if(bt!=null) {
+			bt.render(itemmodel, s, res);
+		} else if(t!=null) {
+			t.bind(0);
+			itemmodel.render();
+		}
 		
 		s.setUniform("red", false);
 		
@@ -53,6 +60,12 @@ private Model itemmodel;
 
 	public Item getItem() {
 		return item;
+	}
+	
+	@Override
+	public void tick(float delta) {
+		super.tick(delta);
+		pickDelay-=delta;
 	}
 	
 	public void pickUp(Entity entity, boolean send) {

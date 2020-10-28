@@ -35,7 +35,6 @@ private static Matrix4f res;
 private static Shader blockS;
 private static Texture empty;
 private static FloatBuffer lightBuffer;
-private int[][] lightPosCache;
 //end
 
 static {
