@@ -2,6 +2,7 @@ package com.bohdloss.fuckunclejack.logic;
 
 import java.nio.ByteBuffer;
 import java.util.Random;
+import java.util.TimerTask;
 
 import com.bohdloss.fuckunclejack.components.Block;
 import com.bohdloss.fuckunclejack.components.Chunk;
@@ -19,6 +20,7 @@ import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.render.Animation;
 import com.bohdloss.fuckunclejack.render.CMath;
 import com.bohdloss.fuckunclejack.server.Server;
+import com.bohdloss.fuckunclejack.server.SocketThread;
 
 import static com.bohdloss.fuckunclejack.server.CSocketUtils.*;
 
@@ -141,7 +143,7 @@ public class FunctionUtils {
 		return databuffer;
 	}
 	
-	public static void travel(PlayerEntity p, World w, int x, int y) {
+	public static void travel(PlayerEntity p, World w, float x, float y) {
 		if(GameState.isClient.getValue()) return;
 		
 		p.getWorld().player.remove(p.getUID());
@@ -151,6 +153,17 @@ public class FunctionUtils {
 		});
 		
 		w.join(p, x, y);
+		Server.threads.forEach(v->{
+			if(v.UPID==p.getUID()) {
+				v.sendOwnPosition=true;
+				
+				SocketThread.timer.schedule(new TimerTask() {
+					public void run() {
+						v.sendOwnPosition=false;
+					}
+				}, 1000);
+			}
+		});
 		
 		System.out.println("Player "+p.getName()+" traveled to world "+w.getName());
 	}

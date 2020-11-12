@@ -63,6 +63,10 @@ public static final byte chargeItem=(byte)17;
 
 public static final byte stopChargeItem=(byte)18;
 
+//EXIT HOUSE
+
+public static final byte exitHouse=(byte)19;
+
 protected Object issuer;
 protected boolean serveronly;
 protected boolean cancelled=false;
@@ -124,5 +128,6 @@ public static final byte HitEvent=(byte)11;
 public static final byte DamageEvent=(byte)12;
 public static final byte StartChargingEvent=(byte)13;
 public static final byte StopChargingEvent=(byte)14;
+public static final byte ExitHouseEvent=(byte)15;
 
 }

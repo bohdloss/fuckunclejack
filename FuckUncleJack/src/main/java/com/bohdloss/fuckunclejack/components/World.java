@@ -118,11 +118,15 @@ static {
 		return entities.get(uid);
 	}
 	
-	public Block getBlock(int x, int y) {
+	public Block getBlock(int x, int y, boolean top) {
 		int chunk = CMath.fastFloor(((double)x/16d));
 		Chunk c = getChunk(chunk, false);
 		if(c==null) return null;
-		return c.getBlock(x, y);
+		return c.getBlock(x, y, top);
+	}
+	
+	public Block getBlock(int x, int y) {
+		return getBlock(x, y, true);
 	}
 	
 	public void join(Entity e, float x, float y) {
@@ -146,6 +150,7 @@ static {
 	protected abstract Texture getTexture();
 	
 	protected void renderBackground(Shader s, Matrix4f matrix) {
+		res.identity().scale(2);
 		s.setProjection(res);
 		bg.bind(0);
 		square.render();
@@ -157,11 +162,11 @@ static {
 			try {
 				renderBackground(s, matrix);
 				entities.forEach((k,v)->{
-					if(CMath.diff(ClientState.lPlayer.getX(), v.getX()) < ClientState.xdrawDistance && CMath.diff(ClientState.lPlayer.getY(), v.getY()) < ClientState.ydrawDistance) {
+					if(ClientState.renderRange(v.getX(), v.getY())) {
 						if(!v.prioritizeRender) {
 							v.render(s, matrix);
 						} else {
-						priority.add(v);
+							priority.add(v);
 						}
 					}
 				});

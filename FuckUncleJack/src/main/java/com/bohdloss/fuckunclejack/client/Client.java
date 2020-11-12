@@ -63,9 +63,9 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 				
 				socket = new Socket(ClientState.IP, ClientState.PORT);
 				
-				if(invalidMatches.contains(SocketThread.getIP(socket))) {
-					throw new IllegalStateException();
-				}
+				//if(invalidMatches.contains(SocketThread.getIP(socket))) {
+				//	throw new IllegalStateException();
+				//}
 				
 				while(!socket.isClosed()) {
 					
@@ -96,7 +96,7 @@ private static ByteBuffer rec = ByteBuffer.allocate(bufferSize);
 					ClientState.queueDisconnect=true;
 					auth=false;
 					if(socket!=null) {
-						invalidMatches.add(SocketThread.getIP(socket));
+						//invalidMatches.add(SocketThread.getIP(socket));
 						if(!socket.isClosed()) socket.close();
 					}
 				}

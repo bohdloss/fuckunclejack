@@ -15,6 +15,7 @@ import com.bohdloss.fuckunclejack.components.entities.ItemDropEntity;
 import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.components.items.BowItem;
 import com.bohdloss.fuckunclejack.components.items.WinnerswordItem;
+import com.bohdloss.fuckunclejack.generator.generators.DeserthouseWorld;
 import com.bohdloss.fuckunclejack.logic.GameState;
 import com.bohdloss.fuckunclejack.render.CMath;
 
@@ -46,7 +47,7 @@ public class DataHandler {
 						dimensions.get("world").join(player, 0, 100);
 						players.put(player.getUID(), player);
 						player.getInventory().addItem(new BowItem(), false);
-						player.getInventory().addItem(new WinnerswordItem(), false);
+						//player.getInventory().addItem(new WinnerswordItem(), false);
 						input.sendInventory=true;
 						
 						input.auth=true;
@@ -159,6 +160,19 @@ public class DataHandler {
 							e.printStackTrace();
 						}
 					break;
+					case ExitHouseEvent:
+						try {
+						PlayerEntity e_EEHE_ISSUER=input.player;
+						buf.getInt();
+						int e_EEHE_UID = buf.getInt();
+						HouseEntity e_EEHE_HOUSE = ((DeserthouseWorld) input.player.getWorld()).house;
+						
+						travel(e_EEHE_ISSUER, e_EEHE_HOUSE.getWorld(), e_EEHE_HOUSE.getX(), e_EEHE_HOUSE.getY());
+						
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+					break;
 					case HitEvent:
 						try {
 						Entity e_HE_ISSUER=input.player;
@@ -225,10 +239,10 @@ public class DataHandler {
 			break;
 			case DEBUG:
 				//input.player.getWorld().join(new Table(false, (byte)1), input.player.getX(), input.player.getY()+20);
-				//input.player.getWorld().join(new DesertHouse(), input.player.getX(), input.player.getY()+20);
-				ProjectileEntity spawning = new ProjectileEntity("arrow", input.player);
-				spawning.setVelocity(0.2f, 0.2f);
-				input.player.getWorld().join(spawning, input.player.getX(), input.player.getY()+5);
+				input.player.getWorld().join(new DesertHouseEntity(), input.player.getX(), input.player.getY()+20);
+				//ProjectileEntity spawning = new ProjectileEntity("arrow", input.player);
+				//spawning.setVelocity(0.2f, 0.2f);
+				//input.player.getWorld().join(spawning, input.player.getX(), input.player.getY()+5);
 			break;
 			}
 		}

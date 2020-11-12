@@ -24,6 +24,7 @@ public int[][] sides = new int[16][100];
 
 //X, Y, RANGE, INTENSITY
 private static List<Vector4f> sources = new ArrayList<Vector4f>();
+
 private static Vector4f cache1 = new Vector4f();
 private static Vector4f cache2 = new Vector4f();	
 private static Vector4f cache3 = new Vector4f();	

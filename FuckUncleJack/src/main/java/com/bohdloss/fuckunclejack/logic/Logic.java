@@ -16,6 +16,7 @@ import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
 import com.bohdloss.fuckunclejack.logic.events.DamageEvent;
 import com.bohdloss.fuckunclejack.logic.events.EnterHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.EntitySpawnedEvent;
+import com.bohdloss.fuckunclejack.logic.events.ExitHouseEvent;
 import com.bohdloss.fuckunclejack.logic.events.HitEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemDroppedEvent;
 import com.bohdloss.fuckunclejack.logic.events.ItemPickupEvent;
@@ -303,6 +304,17 @@ private CRectanglef ebounds;
 		default:
 			e.cancel("nocause");
 		case stopChargeItem:
+			
+		break;
+		}
+	}
+
+	@Override
+	public void onExitHouse(ExitHouseEvent e) {
+		switch(e.getCause()) {
+		default:
+			e.cancel("nocause");
+		case exitHouse:
 			
 		break;
 		}

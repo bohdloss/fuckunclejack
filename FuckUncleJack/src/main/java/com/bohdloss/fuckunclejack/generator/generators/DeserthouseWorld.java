@@ -1,30 +1,56 @@
 package com.bohdloss.fuckunclejack.generator.generators;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import com.bohdloss.fuckunclejack.components.World;
+import com.bohdloss.fuckunclejack.components.entities.HouseEntity;
+import com.bohdloss.fuckunclejack.generator.dungeoncommon.Dungeon;
 import com.bohdloss.fuckunclejack.main.Assets;
 import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.render.Camera;
+import com.bohdloss.fuckunclejack.render.Mesh;
 import com.bohdloss.fuckunclejack.render.Shader;
 import com.bohdloss.fuckunclejack.render.Texture;
 
 public class DeserthouseWorld extends World {
+	
+protected static Matrix4f translate = new Matrix4f();
+protected Mesh[] background = new Mesh[3];
+private static final float width = 25f;
+private static final float height = 17.5f;
 
-protected static Matrix4f scale=new Matrix4f().scale(Game.scaleAmount);
-protected static Matrix4f translate=new Matrix4f();
+protected Dungeon dungeon;
+public HouseEntity house;
 
 	public DeserthouseWorld(long seed, String name) {
 		super(seed, name);
-		generator=new HouseGenerator(this, seed);
-		needsLightmap=true;
+		generator = new HouseGenerator(this, seed);
+		dungeon = new Dungeon(this);
+		commonInit();
 	}
 
 	public DeserthouseWorld(String name) {
 		super(name);
-		needsLightmap=true;
+		commonInit();
+		for(int i=0;i<background.length;i++) {
+			background[i] = new Mesh(getTexture(), Assets.models.get("square"));
+			background[i].setXScale(width);;
+			background[i].setYScale(height);
+			background[i].setX((i-1)*width);
+		}
 	}
 
+	@Override
+	public void tick(float delta) {
+		super.tick(delta);
+		//if(dungeon!=null) dungeon.tick(delta);
+	}
+	
+	private void commonInit() {
+		needsLightmap=true;
+	}
+	
 	@Override
 	public int getID() {
 		return 1;
@@ -38,17 +64,42 @@ protected static Matrix4f translate=new Matrix4f();
 	@Override
 	protected void renderBackground(Shader s, Matrix4f matrix) {
 		Camera c = Game.camera;
-		scale.identity().scale(Game.scaleAmount*20, Game.scaleAmount*14, 1);
-		for(int i=0;i<3;i++) {
+		c.unTransformedProjection().mul(Game.scale, res);
+		
+		float movFactor = (-c.getX()/Game.scaleAmount)/1.25f;
+		
+		translate.identity().translate(movFactor, 0, 0);
+		res.mul(translate);
+		
+		//Check if meshes have to be moved
+		
+		float centerMeshX = background[1].getX();
+		float halfWidth = width/2;
+		
+		if(-movFactor>centerMeshX+halfWidth) {
 			
-			float movFactor = (-c.getX()/(Game.scaleAmount*20));
-			float yCoord = ((-c.getY()+400)/(Game.scaleAmount*14));
+			//shift everything to the right
 			
-			translate.identity().translate((i-1)+movFactor, yCoord, 0);
-			res=c.unTransformedProjection().mul(scale, res).mul(translate, res);
-			s.setProjection(res);
-			bg.bind(0);
-			square.render();
+			for(int i=0;i<background.length;i++) {
+				Mesh current = background[i];
+				current.setX(current.getX()+width);
+			}
+			
+		} else if(-movFactor<centerMeshX-halfWidth) {
+			
+			//shift everything to the left
+			
+			for(int i=0;i<background.length;i++) {
+				Mesh current = background[i];
+				current.setX(current.getX()-width);
+			}
+			
+		}
+		
+		for(int i=0;i<background.length;i++) {
+			
+			background[i].render(s, res);
+			
 		}
 	}
 	

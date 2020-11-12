@@ -14,11 +14,13 @@ import com.bohdloss.fuckunclejack.components.Item;
 import com.bohdloss.fuckunclejack.components.items.BowItem;
 import com.bohdloss.fuckunclejack.components.items.blocks.StoneBlockItem;
 import com.bohdloss.fuckunclejack.editor.Editor;
+import com.bohdloss.fuckunclejack.generator.generators.DeserthouseWorld;
 import com.bohdloss.fuckunclejack.hud.Button;
 import com.bohdloss.fuckunclejack.hud.HUD;
 import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.GameEvent;
+import com.bohdloss.fuckunclejack.logic.events.ExitHouseEvent;
 import com.bohdloss.fuckunclejack.main.Game;
 import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.CMath;
@@ -74,6 +76,18 @@ public class Listener implements KeyListen {
 		    			} else {
 		    				Editor.savedx+=dy*0.25f;
 		    			}
+		    		} else if(Editor.status==Editor.BOUNDS) {
+		    			if(Editor.vertical) {
+		    				Editor.width+=dy*0.25f;
+		    			} else {
+		    				Editor.height+=dy*0.25f;
+		    			}
+		    		} else if(Editor.status==Editor.OFFSET) {
+		    			if(Editor.vertical) {
+		    				Editor.offsetx+=dy*0.25f;
+		    			} else {
+		    				Editor.offsety+=dy*0.25f;
+		    			}
 		    		}
 		    	}
 		    }
@@ -99,6 +113,10 @@ public class Listener implements KeyListen {
 			break;
 		case GLFW_KEY_F:
 			if(nearHouse!=null) nearHouse.enterHouse(lPlayer);
+			else if(lWorld instanceof DeserthouseWorld) {
+				DeserthouseWorld w = (DeserthouseWorld) lWorld;
+				EventHandler.exitedHouse(true, new ExitHouseEvent(lPlayer, GameEvent.exitHouse, w.house));
+			}
 			break;
 		case GLFW_KEY_P:
 			Client.sendDebug=true;
@@ -109,12 +127,7 @@ public class Listener implements KeyListen {
 			lPlayer.forcePhysics=!lPlayer.forcePhysics;
 			break;
 		case GLFW_KEY_O:
-			if(state==GAME) {
-				state=EDITMODE;
-			} else if(state==EDITMODE) {
-				state=GAME;
-			}
-			
+			toggleEditor();
 			break;
 		case GLFW_KEY_I:
 			lPlayer.getInventory().addItem(new StoneBlockItem(100), true);

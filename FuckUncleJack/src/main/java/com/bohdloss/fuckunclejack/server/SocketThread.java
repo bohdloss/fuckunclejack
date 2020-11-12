@@ -124,7 +124,7 @@ public void run() {
 }
 
 public void termination(boolean event) {
-	Server.matchBan.add(getIP(socket));
+	//Server.matchBan.add(getIP(socket));
 	if(event) {
 		leaveEvent();
 	}

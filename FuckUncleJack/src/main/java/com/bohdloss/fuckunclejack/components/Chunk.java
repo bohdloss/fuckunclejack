@@ -3,6 +3,7 @@ package com.bohdloss.fuckunclejack.components;
 import org.joml.Matrix4f;
 
 import com.bohdloss.fuckunclejack.components.blocks.AirBlock;
+import com.bohdloss.fuckunclejack.logic.ClientState;
 import com.bohdloss.fuckunclejack.logic.EventHandler;
 import com.bohdloss.fuckunclejack.logic.events.BlockDestroyedEvent;
 import com.bohdloss.fuckunclejack.logic.events.BlockPlacedEvent;
@@ -54,7 +55,7 @@ public void render(Shader s, Matrix4f matrix) {
 	
 	for(int x=0;x<16;x++) {
 		for(int y=0;y<100;y++) {
-			if(diff(off+x, lPlayer.getX()) > xdrawDistance || diff(y, lPlayer.getY()) > ydrawDistance) continue;
+			if(!ClientState.renderRange(x+off, y)) continue;
 			blocks[x][y].render(s, matrix);
 		}
 	}
@@ -117,8 +118,12 @@ public boolean placeBlock(byte cause, Entity issuer, int x, int y, Block place, 
 	return false;
 }
 
-public Block getBlock(int x, int y) {
+public Block getBlock(int x, int y, boolean top) {
 	return blocks[x-(offsetx)*16][y].getTop();
+}
+
+public Block getBlock(int x, int y) {
+	return getBlock(x,y,true);
 }
 
 }

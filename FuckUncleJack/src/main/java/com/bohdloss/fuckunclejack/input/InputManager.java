@@ -96,9 +96,6 @@ public void gameUpdate(float delta) {
 		ClientState.lPlayer.y=80f;
 		ClientState.lPlayer.updateBounds();
 	}
-	if(keys[GLFW_KEY_P]) {
-		Client.sendDebug=true;
-	}
 	if(keys[GLFW_KEY_LEFT_SHIFT]) {
 		ClientState.lPlayer.setRunning(true);
 	} else {
@@ -120,8 +117,8 @@ public void run() {
 	FUJApi.init();
 	MenuTab.init();
 	hud=new HUD();
-	//ClientState.showMenu(false, true, "main");
-	ClientState.connect(Main.ip, Server.port);
+	ClientState.showMenu(false, true, "main");
+	//ClientState.connect(Main.ip, Server.port);
 	while(true) {
 		
 		long current = System.currentTimeMillis();

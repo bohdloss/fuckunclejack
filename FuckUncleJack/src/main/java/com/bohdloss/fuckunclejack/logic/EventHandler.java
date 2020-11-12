@@ -312,4 +312,21 @@ private static List<GameEventListener> listeners = new ArrayList<GameEventListen
 		
 		return event;
 	}
+	
+	public static ExitHouseEvent exitedHouse(boolean send, ExitHouseEvent event) {
+		logic.onExitHouse(event);
+		try {
+			listeners.forEach(i -> i.onExitHouse(event));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(send&!event.isCancelled()) {
+			if(GameState.isClient.getValue()) {
+				Client.events.add(event);
+			}
+		}
+		
+		return event;
+	}
 }

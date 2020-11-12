@@ -26,7 +26,7 @@ public abstract class HouseEntity extends Entity{
 		updateBounds();
 		physics=true;
 		ignoreCollision=true;
-		invulnerable=false; //set to true later
+		invulnerable=true; //set to true later
 	}
 	
 	public void enterHouse(PlayerEntity p) {
@@ -34,12 +34,13 @@ public abstract class HouseEntity extends Entity{
 			enteredHouse(true, new EnterHouseEvent(p, enterHouse, this));
 		} else {
 			if(!enteredHouse(false, new EnterHouseEvent(p, enterHouse, this)).isCancelled()) {
-				
-				if(dimensions.get("house"+getUID())==null) {
-					dimensions.put("house"+getUID(), new DeserthouseWorld(0,"house"+getUID()));
+				String className = getClass().getTypeName();
+				if(dimensions.get(className+getUID())==null) {
+					dimensions.put(className+getUID(), new DeserthouseWorld(0,className+getUID()));
 				}
-				World travel = dimensions.get("house"+getUID());
-				travel(p, travel, 0, 100);
+				DeserthouseWorld travel = (DeserthouseWorld) dimensions.get(className+getUID());
+				travel.house=this;
+				travel(p, travel, 0, 50);
 			}
 		}
 	}

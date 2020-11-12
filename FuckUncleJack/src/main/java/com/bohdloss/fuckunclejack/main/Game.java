@@ -152,12 +152,6 @@ static {
 		
 		System.out.println("Rendering started");
 		
-		//int a=0;
-		
-		
-		
-		//while(a==0) {}
-		
 		while(!window.shouldClose()) {
 			loopEvents();
 		}
@@ -175,8 +169,6 @@ static {
 		if(window.isDestroyed()) return;
 		
 		glfwPollEvents();
-		
-		//if(blocked) return;
 		
 		glClear(GL_COLOR_BUFFER_BIT);
 		

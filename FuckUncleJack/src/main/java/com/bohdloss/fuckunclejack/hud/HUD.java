@@ -33,6 +33,7 @@ public Bar health;
 public Bar armour;
 public Hotbar hotbar;
 public InteractionDisplay interact;
+public InteractionDisplayExit exit;
 
 //cache
 static Model square;
@@ -61,6 +62,7 @@ static {
 		armour=new Bar(Assets.textures.get("icon_health"), new Color(100, 100, 0), -10.5f, -6f, 100, 25);
 		hotbar=new Hotbar();
 		interact = new InteractionDisplay();
+		exit = new InteractionDisplayExit();
 	}
 	
 	public void render(Shader s, Matrix4f matrix) {
@@ -70,6 +72,7 @@ static {
 		armour.render(s, matrix);
 		hotbar.render(s, matrix);
 		interact.render(s, matrix);
+		exit.render(s, matrix);
 		
 		/*
 		try {

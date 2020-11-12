@@ -8,6 +8,7 @@ import com.bohdloss.fuckunclejack.components.entities.PlayerEntity;
 import com.bohdloss.fuckunclejack.editor.Editor;
 import com.bohdloss.fuckunclejack.generator.generators.OverworldWorld;
 import com.bohdloss.fuckunclejack.main.Game;
+import com.bohdloss.fuckunclejack.main.Main;
 import com.bohdloss.fuckunclejack.menutabs.MenuTab;
 import com.bohdloss.fuckunclejack.render.CMath;
 
@@ -82,6 +83,7 @@ public static void connect(String ip, int port) {
 
 public static void connect(String ip, int port, String name) {
 	fadeToBlack();
+	Main.name=name;
 	lWorld=new OverworldWorld("world");
 	lPlayer=new PlayerEntity(name);
 	IP=ip;
@@ -94,14 +96,26 @@ public static void connect(String ip, int port, String name) {
 public static void disconnect() {
 	IP=null;
 	PORT=0;
+	ClientState.locked=false;
+	ClientState.hardLocked=false;
+	ClientState.renderPlayer=true;
 	showMenu(true, true, "main");
 	lWorld=null;
 	lPlayer=null;
 	System.gc();
 }
 
+public static void toggleEditor() {
+	if(state==GAME) state=EDITMODE;
+	else if(state==EDITMODE) state=GAME;
+}
+
 public static void showMenu(boolean start, boolean end, String string) {
 	MenuTab.bindTab(start, end, string);
+}
+
+public static boolean renderRange(float x, float y)  {
+	return (CMath.diff(x, Game.camera.getX()/Game.scaleAmount) <= xdrawDistance) && (CMath.diff(y, Game.camera.getY()/Game.scaleAmount) <= ydrawDistance);
 }
 
 }

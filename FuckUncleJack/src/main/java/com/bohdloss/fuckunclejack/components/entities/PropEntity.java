@@ -18,6 +18,7 @@ protected float yscale;
 //cache
 private Object[] data=new Object[7];	
 static Model square;
+String texture;
 Texture txt;
 //
 	
@@ -34,6 +35,7 @@ static {
 		this.xscale=xscale;
 		this.yscale=yscale;
 		invulnerable=true;
+		this.texture=texture;
 		txt=Assets.textures.get(texture);
 		prioritizeRender=true;
 		updateBounds();
@@ -56,12 +58,19 @@ static {
 	}
 	
 	@Override
+	public void tick(float delta) {
+		super.tick(delta);
+		
+		//System.out.println("id: " + getUID() + " collision: "+collision+" physics: "+physics+" x: "+x+" y: "+y+" width: "+width+" height: "+height+" xscale: "+xscale+" yscale: "+yscale);
+	}
+	
+	@Override
 	public void render(Shader s, Matrix4f matrix) {
 		s.setUniform("red", red);
 		
 		res = matrix.translate(x, y, 0, res).scale(xscale, yscale, 1, res);
 		s.setProjection(res);
-		txt.bind(0);
+		Assets.textures.get(texture).bind(0);
 		square.render();
 		
 		s.setUniform("red", false);
