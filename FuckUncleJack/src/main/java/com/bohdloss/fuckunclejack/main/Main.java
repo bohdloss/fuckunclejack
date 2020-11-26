@@ -10,7 +10,7 @@ import com.bohdloss.fuckunclejack.server.Server;
 
 public class Main {
 
-public static String ip=true?"localhost":"95.111.250.134";
+public static String ip=false?"localhost":"fuckunclejack.ddns.net";
 public static String name=null;
 
 	public static void main(String[] args) {
